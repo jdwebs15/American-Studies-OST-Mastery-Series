@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AmStud Game 1 — Cause &amp; Effect (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="description" content="American Studies OST Mastery — Cause & Effect (0 misses required)" />
+
+  <style>
+    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    .panel{
+      background:rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+    .pill2{
+      font-size:12px; color:var(--text);
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 10px;
+      white-space:nowrap;
+    }
+    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .btn{
+      appearance:none; border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.10); }
+    .btn.danger:hover{ border-color:rgba(255,92,122,.45); background:rgba(255,92,122,.10); }
+    .btn.good:hover{ border-color:rgba(43,213,118,.40); background:rgba(43,213,118,.10); }
+    .divider{ height:1px; background:rgba(255,255,255,.10); margin:14px 0; }
+    .qbox{ background:rgba(17,26,47,.55); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px; }
+    .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+    .qnum{ font-weight:900; }
+    .small{ color:var(--muted); font-size:13px; }
+    .stem{ margin:10px 0 0; line-height:1.35; font-size:16px; }
+    .choices{ margin-top:12px; display:grid; gap:10px; }
+    .choice{
+      text-align:left;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:12px 12px;
+      cursor:pointer;
+      color:var(--text);
+      font-weight:700;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .choice:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.08); }
+    .choice[disabled]{ opacity:.65; cursor:not-allowed; transform:none; }
+    .msg{
+      margin-top:12px;
+      border-radius:14px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      display:none;
+    }
+    .msg.good{ display:block; background:rgba(43,213,118,.10); border-color:rgba(43,213,118,.35); }
+    .msg.bad{ display:block; background:rgba(255,92,122,.10); border-color:rgba(255,92,122,.35); }
+    .msg.warn{ display:block; background:rgba(255,209,102,.10); border-color:rgba(255,209,102,.35); }
+    .finish{
+      display:none;
+      margin-top:14px;
+      background:rgba(17,26,47,.65);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .finish h2{ margin:0 0 8px; }
+    .finish .grid2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
+    .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
+    .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+
+    #errBox{
+      display:none; margin-top:12px;
+      padding:12px; border-radius:14px;
+      background:rgba(255,92,122,.10);
+      border:1px solid rgba(255,92,122,.35);
+      color:var(--text);
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+    }
+    #gate{
+      display:block;
+      margin-top:12px;
+      background:rgba(17,26,47,.55);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .fieldRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input[type="text"]{
+      width:min(460px,100%);
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+      font-weight:800;
+    }
+    input[type="text"]:focus{ border-color:rgba(122,162,255,.45); }
+    .ghost{ color:var(--muted); font-size:13px; margin-top:10px; }
+
+    .ticketBox{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.12);
+      display:none;
+    }
+    textarea{
+      width:100%;
+      min-height:160px;
+      resize:vertical;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size:12px;
+      outline:none;
+    }
+  </style>
+
+  <!-- Load the prioritized question bank -->
+  <script src="../amstud_bank.js"></script>
+</head>
+
+<body>
+  <div class="gameWrap">
+    <div class="panel">
+      <div class="topbar">
+        <div>
+          <div class="k">LEGEND MASTERY SERIES</div>
+          <h1 style="margin:6px 0 4px; font-size:26px;">AmStud Game 1 — Cause &amp; Effect (Mastery)</h1>
+          <div class="small">Mastery = <b>0 misses</b>. Wrong answer → hint → must correct to move on (miss recorded).</div>
+        </div>
+
+        <div class="stats">
+          <div class="pill2">Player: <b id="playerName">—</b></div>
+          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
+          <div class="pill2">Accuracy: <b id="acc">—</b></div>
+          <div class="pill2">Misses: <b id="misses">0</b></div>
+          <div class="pill2">Q: <b id="qpos">0/0</b></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="small">
+          Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn danger" id="restartBtn" title="Hard restart: clears this game session">Hard Restart</button>
+        </div>
+      </div>
+
+      <div id="errBox"></div>
+      <div class="divider"></div>
+
+      <!-- START GATE -->
+      <section id="gate">
+        <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
+        <div class="fieldRow" style="margin-top:10px;">
+          <input id="nameInput" type="text" autocomplete="off" placeholder="Student name (required)" />
+          <button class="btn" id="startBtn">Start</button>
+        </div>
+        <div class="ghost">
+          Tip: Mastery requires finishing the full set with <b>0 misses</b>.
+          If you miss one, you can still finish, but you must hard restart to earn mastery + unlock the ticket.
+        </div>
+      </section>
+
+      <!-- GAME -->
+      <section id="game" style="display:none;">
+        <div class="qbox">
+          <div class="qmeta">
+            <div class="qnum" id="qnum">Question</div>
+            <div class="small" id="tag">OST-style • CS aligned</div>
+          </div>
+          <div class="stem" id="stem">—</div>
+          <div class="choices" id="choices"></div>
+
+          <div class="msg good" id="goodMsg"></div>
+          <div class="msg bad" id="badMsg"></div>
+          <div class="msg warn" id="hintMsg"></div>
+        </div>
+
+        <div class="finish" id="finish">
+          <h2>Finish Screen</h2>
+          <div class="small" style="margin-bottom:10px;">
+            Ticket unlock requires <b>0 misses</b>. Your session summary is stamped below.
+          </div>
+
+          <div class="grid2">
+            <div class="kv"><b>Student</b><div id="finName">—</div></div>
+            <div class="kv"><b>Date</b><div id="finDate">—</div></div>
+            <div class="kv"><b>Start Time</b><div id="finStart">—</div></div>
+            <div class="kv"><b>End Time</b><div id="finEnd">—</div></div>
+            <div class="kv"><b>Elapsed</b><div id="finElapsed">—</div></div>
+            <div class="kv"><b>Accuracy</b><div id="finAcc">—</div></div>
+            <div class="kv"><b>Misses</b><div id="finMiss">—</div></div>
+            <div class="kv"><b>Result</b><div id="finResult">—</div></div>
+          </div>
+
+          <div class="ticketBox" id="ticketBox">
+            <div class="small" style="margin-bottom:8px;">
+              <b>Submit Ticket</b> (copy + screenshot). This includes all required identifiers.
+            </div>
+            <textarea id="ticketText" readonly></textarea>
+            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn good" id="copyTicketBtn">Copy Ticket</button>
+              <button class="btn" id="downloadTicketBtn">Download Ticket (.txt)</button>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn danger" id="restartBtn2">Hard Restart (Try for Mastery)</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+      <div class="small" style="color:var(--muted);">
+        If the page ever “white screens,” the error box above will show where/why.
+      </div>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   HARDENED SHELL + SAFETY
+========================= */
+(function(){
+  const errBox = document.getElementById('errBox');
+  window.addEventListener('error', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent =
+      "Runtime Error:\n" + (e?.message || e) + "\n" +
+      (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Unhandled Promise Rejection:\n" + (e?.reason?.message || e?.reason || e);
+  });
+})();
+
+window.addEventListener('pageshow', (event) => { if (event.persisted) window.location.reload(); });
+
+(function(){
+  try{
+    history.replaceState({guard:1}, document.title, location.href);
+    window.addEventListener('popstate', ()=> history.pushState({guard:1}, document.title, location.href));
+  }catch(_){}
+})();
+
+/* =========================
+   CONFIG
+========================= */
+const GAME_CODE = "AMSTUD1";
+const VERSION = "V1";
+const KEY = `LEGEND_${GAME_CODE}_${VERSION}`;
+
+// 25–30 required
+const QUESTION_COUNT = 28;
+
+// prioritize: causality + skills + big units
+const CS_PRIORITY = new Set([
+  "CS 1 – Evaluating Source Credibility",
+  "CS 2 – Using Evidence to Form a Thesis",
+  "CS 3 – Cause, Effect, and Sequence Analysis",
+  "CS 8 – Rise of Industry & Technology",
+  "CS 9 – Labor, Unions & Laissez-Faire",
+  "CS 10 – Immigration, Migration & Urbanization",
+  "CS 14 – Rise as a World Power",
+  "CS 15 – Post-WWI Isolationism",
+  "CS 19 – Causes of the Great Depression & the New Deal",
+  "CS 20 – Shift from Isolation to World War II"
+]);
+
+/* =========================
+   UTIL
+========================= */
+const LETTERS = ["A","B","C","D"];
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function fmtElapsed(ms){
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+}
+function dateOnly(){
+  return new Date().toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+}
+function timeOnly(dt){
+  const d = dt ? new Date(dt) : new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function safeId(){
+  return Math.random().toString(16).slice(2) + "-" + Date.now().toString(16);
+}
+
+/* =========================
+   BALANCED ANSWER SHUFFLE
+========================= */
+function buildBalancedSet(raw){
+  const counts = {A:0,B:0,C:0,D:0};
+  const built = raw.map(q=>{
+    const base = q.choices.map((txt, idx)=>({txt, isCorrect: idx===q.answerIndex}));
+    let s = shuffle(base);
+    let ci = s.findIndex(x=>x.isCorrect);
+
+    const min = Math.min(counts.A,counts.B,counts.C,counts.D);
+    const candidates = LETTERS.filter(L=>counts[L]===min);
+    const targetLetter = candidates[Math.floor(Math.random()*candidates.length)];
+    const targetIndex = LETTERS.indexOf(targetLetter);
+
+    if(ci !== targetIndex){
+      const tmp = s[targetIndex];
+      s[targetIndex] = s[ci];
+      s[ci] = tmp;
+      ci = targetIndex;
+    }
+    counts[targetLetter]++;
+
+    return {
+      cs: q.cs || q.tag || "CS aligned",
+      tag: q.tag || "OST-style • CS aligned",
+      stem: q.stem,
+      hint: q.hint || "Hint: Identify what caused the change and what effect followed.",
+      explain: q.explain || "",
+      choices: s.map(x=>x.txt),
+      answerIndex: ci
+    };
+  });
+
+  return shuffle(built);
+}
+
+/* =========================
+   PICK QUESTIONS (PRIORITIZE BANK)
+========================= */
+function pickQuestions(){
+  if(typeof AMSTUD_BANK === "undefined" || !Array.isArray(AMSTUD_BANK)){
+    throw new Error("AMSTUD_BANK not found. Make sure amstud_bank.js is in repo root and defines const AMSTUD_BANK = [...]");
+  }
+
+  // prioritize CS list
+  const prioritized = AMSTUD_BANK.filter(q => CS_PRIORITY.has(q.cs || q.tag));
+  const backup = AMSTUD_BANK.filter(q => !CS_PRIORITY.has(q.cs || q.tag));
+
+  const picked = [];
+  for(const q of shuffle(prioritized)){
+    if(picked.length >= QUESTION_COUNT) break;
+    // must be 4-choice MCQ
+    if(Array.isArray(q.choices) && q.choices.length === 4 && Number.isInteger(q.answerIndex)){
+      picked.push(q);
+    }
+  }
+  for(const q of shuffle(backup)){
+    if(picked.length >= QUESTION_COUNT) break;
+    if(Array.isArray(q.choices) && q.choices.length === 4 && Number.isInteger(q.answerIndex)){
+      picked.push(q);
+    }
+  }
+
+  if(picked.length < QUESTION_COUNT){
+    throw new Error(`Not enough usable questions in AMSTUD_BANK. Need ${QUESTION_COUNT}, found ${picked.length}.`);
+  }
+
+  return buildBalancedSet(picked);
+}
+
+/* =========================
+   STATE + STORAGE
+========================= */
+let state = null;
+let timer = null;
+
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(_){ return null; }
+}
+function hardRestart(){
+  localStorage.removeItem(KEY);
+  window.location.reload();
+}
+
+/* =========================
+   DOM
+========================= */
+const elPlayerName = document.getElementById('playerName');
+const elElapsed = document.getElementById('elapsed');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+const elQpos = document.getElementById('qpos');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elDateStamp = document.getElementById('dateStamp');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const startBtn = document.getElementById('startBtn');
+const nameInput = document.getElementById('nameInput');
+
+const qnum = document.getElementById('qnum');
+const tag = document.getElementById('tag');
+const stem = document.getElementById('stem');
+const choicesBox = document.getElementById('choices');
+const goodMsg = document.getElementById('goodMsg');
+const badMsg = document.getElementById('badMsg');
+const hintMsg = document.getElementById('hintMsg');
+
+const finish = document.getElementById('finish');
+const finName = document.getElementById('finName');
+const finDate = document.getElementById('finDate');
+const finStart = document.getElementById('finStart');
+const finEnd = document.getElementById('finEnd');
+const finElapsed = document.getElementById('finElapsed');
+const finAcc = document.getElementById('finAcc');
+const finMiss = document.getElementById('finMiss');
+const finResult = document.getElementById('finResult');
+
+const ticketBox = document.getElementById('ticketBox');
+const ticketText = document.getElementById('ticketText');
+const copyTicketBtn = document.getElementById('copyTicketBtn');
+const downloadTicketBtn = document.getElementById('downloadTicketBtn');
+
+document.getElementById('restartBtn').addEventListener('click', hardRestart);
+document.getElementById('restartBtn2').addEventListener('click', hardRestart);
+
+startBtn.addEventListener('click', ()=>{
+  const nm = (nameInput.value||"").trim();
+  if(!nm){
+    nameInput.focus();
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Name is required to start.";
+    return;
+  }
+  startNew(nm);
+});
+nameInput.addEventListener('keydown', (e)=>{ if(e.key==="Enter") startBtn.click(); });
+
+function startNew(name){
+  const bank = pickQuestions();
+  const startAt = Date.now();
+
+  state = {
+    version: `${GAME_CODE}_${VERSION}`,
+    game: "AmStud Game 1 — Cause & Effect (Mastery)",
+    gameCode: GAME_CODE,
+    sessionId: safeId(),
+    name,
+    startAt,
+    endAt: null,
+    idx: 0,
+    bank,
+    misses: 0,
+    attempts: 0,
+    wrongSet: {},
+    finished: false
+  };
+  save();
+  beginUI();
+}
+
+function beginUI(){
+  gate.style.display="none";
+  game.style.display="block";
+
+  elPlayerName.textContent = state.name || "—";
+  elDateStamp.textContent = dateOnly();
+  elStartStamp.textContent = timeOnly(state.startAt);
+  elEndStamp.textContent = "—";
+
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=> elElapsed.textContent = fmtElapsed(Date.now()-state.startAt), 250);
+
+  render();
+}
+
+function computeAcc(){
+  const total = state.attempts;
+  const wrong = state.misses;
+  if(total===0) return "—";
+  const correct = total - wrong;
+  const pct = Math.round((correct/total)*1000)/10;
+  return `${pct}%`;
+}
+
+function resetMsgs(){
+  for(const el of [goodMsg,badMsg,hintMsg]){
+    el.style.display="none";
+    el.textContent="";
+  }
+}
+
+function lockChoices(lock=true){
+  choicesBox.querySelectorAll('button.choice').forEach(b=>b.disabled = lock);
+}
+
+function render(){
+  if(state.finished){ showFinish(); return; }
+
+  const q = state.bank[state.idx];
+  resetMsgs();
+
+  elMisses.textContent = String(state.misses);
+  elAcc.textContent = computeAcc();
+  elQpos.textContent = `${state.idx+1}/${state.bank.length}`;
+
+  qnum.textContent = `Question ${state.idx+1}`;
+  tag.textContent = q.cs || q.tag || "OST-style • CS aligned";
+  stem.textContent = q.stem;
+
+  choicesBox.innerHTML = "";
+  q.choices.forEach((c, i)=>{
+    const btn = document.createElement('button');
+    btn.className = "choice";
+    btn.type = "button";
+    btn.textContent = `${LETTERS[i]}. ${c}`;
+    btn.addEventListener('click', ()=>choose(i));
+    choicesBox.appendChild(btn);
+  });
+}
+
+function choose(choiceIndex){
+  const q = state.bank[state.idx];
+  state.attempts += 1;
+
+  const correct = (choiceIndex === q.answerIndex);
+  if(correct){
+    lockChoices(true);
+    goodMsg.className="msg good";
+    goodMsg.style.display="block";
+    goodMsg.textContent = "Correct. " + (q.explain || "");
+
+    save();
+    setTimeout(()=>{
+      state.idx += 1;
+      if(state.idx >= state.bank.length){
+        finishGame();
+      }else{
+        lockChoices(false);
+        save();
+        render();
+      }
+    }, 950);
+
+  }else{
+    if(!state.wrongSet[state.idx]){
+      state.wrongSet[state.idx] = true;
+      state.misses += 1;
+    }
+    badMsg.className="msg bad";
+    badMsg.style.display="block";
+    badMsg.textContent = "Not yet. A miss has been recorded. Use the hint, then try again.";
+
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent = q.hint || "Hint: Identify what caused the change and what effect followed.";
+
+    save();
+    elMisses.textContent = String(state.misses);
+    elAcc.textContent = computeAcc();
+  }
+}
+
+function finishGame(){
+  state.finished = true;
+  state.endAt = Date.now();
+  save();
+  showFinish();
+}
+
+function buildTicketText(passed){
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+
+  const lines = [
+    "LEGEND SUBMIT TICKET",
+    `Game: ${state.game}`,
+    `GameCode: ${state.gameCode}`,
+    `SessionID: ${state.sessionId}`,
+    "------------------------------",
+    `Name: ${state.name}`,
+    `Date: ${dateOnly()}`,
+    `Start: ${timeOnly(state.startAt)}`,
+    `End: ${timeOnly(state.endAt)}`,
+    `Elapsed: ${fmtElapsed(state.endAt - state.startAt)}`,
+    "------------------------------",
+    `Passed: ${passed ? "YES" : "NO"}`,
+    `Accuracy: ${pct}%`,
+    `Misses: ${state.misses}`,
+    `Attempts: ${state.attempts}`,
+  ];
+  return lines.join("\n");
+}
+
+function showFinish(){
+  if(timer) clearInterval(timer);
+  elEndStamp.textContent = timeOnly(state.endAt);
+  elAcc.textContent = computeAcc();
+  elMisses.textContent = String(state.misses);
+
+  finish.style.display="block";
+  finName.textContent = state.name || "—";
+  finDate.textContent = dateOnly();
+  finStart.textContent = timeOnly(state.startAt);
+  finEnd.textContent = timeOnly(state.endAt);
+  finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+  finAcc.textContent = `${pct}%`;
+  finMiss.textContent = String(state.misses);
+
+  const passed = (state.misses===0);
+
+  if(passed){
+    finResult.innerHTML = "<b style='color:var(--good)'>MASTERY ACHIEVED ✅ (0 misses)</b>";
+    // unlock ticket
+    ticketBox.style.display="block";
+    ticketText.value = buildTicketText(true);
+  }else{
+    finResult.innerHTML =
+      "<b style='color:var(--warn)'>Completed — Not Mastery</b>" +
+      "<div class='small'>Ticket locked. Hard Restart to try again for 0 misses.</div>";
+    ticketBox.style.display="none";
+    ticketText.value = "";
+  }
+
+  lockChoices(true);
+}
+
+copyTicketBtn.addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText(ticketText.value || "");
+    copyTicketBtn.textContent = "Copied ✅";
+    setTimeout(()=> copyTicketBtn.textContent = "Copy Ticket", 1200);
+  }catch(e){
+    alert("Copy failed on this browser. You can manually select/copy the ticket text.");
+  }
+});
+
+downloadTicketBtn.addEventListener('click', ()=>{
+  const blob = new Blob([ticketText.value || ""], {type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ticket_${GAME_CODE}_${(state.name||"student").replace(/\s+/g,"_")}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+/* =========================
+   BOOT (resume-safe + name-lock)
+========================= */
+(function boot(){
+  const existing = load();
+  if(existing && existing.version === `${GAME_CODE}_${VERSION}`){
+    state = existing;
+
+    // If name is missing (your lunch/close device issue), force re-entry.
+    if(!state.name || !String(state.name).trim()){
+      localStorage.removeItem(KEY);
+      gate.style.display="block";
+      game.style.display="none";
+      hintMsg.className="msg warn";
+      hintMsg.style.display="block";
+      hintMsg.textContent = "Name was missing in a saved session. Please restart and enter your name.";
+      return;
+    }
+
+    gate.style.display="none";
+    game.style.display="block";
+
+    elPlayerName.textContent = state.name;
+    elDateStamp.textContent = dateOnly();
+    elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+    elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+
+    if(!state.finished){
+      timer = setInterval(()=> elElapsed.textContent = fmtElapsed(Date.now()-state.startAt), 250);
+      render();
+    }else{
+      elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+      showFinish();
+    }
+  }else{
+    gate.style.display="block";
+    game.style.display="none";
+  }
+})();
+</script>
+</body>
+</html>
