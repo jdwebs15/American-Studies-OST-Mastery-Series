@@ -1458,4 +1458,177 @@ window.AMSTUD_BANK = [
   }
 ];
   // ...keep the rest of your G2 objects here, comma-separated...
-];
+/* =========================
+   GAME 3 (Best Explains) — starters
+   Accepts: tag:"Best Explains" OR tags:["G3"] OR type:"best-explains"
+========================= */
+{
+  id:"G3-001",
+  csNum:6,
+  cs:"CS 6 – Rise of Corporations & Industrial Growth",
+  tags:["G3"],
+  type:"best-explains",
+  stem:"Which statement best explains why railroads were a turning point for late-1800s industrial growth?",
+  choices:[
+    "They reduced the need for factories by encouraging home production",
+    "They connected raw materials, factories, and consumers into a national market",
+    "They ended immigration by making travel more expensive",
+    "They eliminated competition by banning interstate trade"
+  ],
+  answerIndex:1,
+  hint:"Think: national markets depend on moving goods cheaply and quickly.",
+  explain:"Railroads linked regions and lowered shipping costs, allowing firms to sell nationwide."
+},
+{
+  id:"G3-002",
+  csNum:7,
+  cs:"CS 7 – Labor Organizations",
+  tags:["G3"],
+  type:"best-explains",
+  stem:"Which option best explains why strikes often became violent in the late 1800s?",
+  choices:[
+    "Workers usually wanted to eliminate all wages immediately",
+    "Employers and governments sometimes used police or private guards to break strikes",
+    "Unions were illegal in every state and could never bargain",
+    "Factories closed permanently whenever workers protested"
+  ],
+  answerIndex:1,
+  hint:"Think: force used to maintain production and control labor.",
+  explain:"Companies and officials sometimes used force to end strikes, escalating conflict."
+},
+{
+  id:"G3-003",
+  csNum:8,
+  cs:"CS 8 – Laissez-faire & Big Business",
+  tags:["G3"],
+  type:"best-explains",
+  stem:"Which statement best explains how laissez-faire ideas helped trusts grow?",
+  choices:[
+    "Government avoided regulating consolidation, allowing firms to merge and dominate markets",
+    "Government required every business to keep the same prices",
+    "Government forced corporations to break into smaller companies",
+    "Government banned national advertising and branding"
+  ],
+  answerIndex:0,
+  hint:"Less oversight = easier consolidation.",
+  explain:"Limited regulation allowed large firms to combine power and reduce competition."
+},
+{
+  id:"G3-004",
+  csNum:10,
+  cs:"CS 10 – Immigration, Internal Migration, Urbanization",
+  tags:["G3"],
+  type:"best-explains",
+  stem:"Which choice best explains why disease spread quickly in many tenements around 1900?",
+  choices:[
+    "Overcrowding and poor sanitation created ideal conditions for contagious illness",
+    "Tenements required all residents to receive free medical care",
+    "Cities banned public transportation, forcing isolation",
+    "Most tenements were located far from other housing"
+  ],
+  answerIndex:0,
+  hint:"Crowding + sanitation problems = outbreaks.",
+  explain:"Tight quarters, limited ventilation, and poor sanitation increased transmission."
+},
+{
+  id:"G3-005",
+  csNum:11,
+  cs:"CS 11 – Progressive Era Reforms",
+  tags:["G3"],
+  type:"best-explains",
+  stem:"Which option best explains why muckraker journalism mattered to Progressive reform?",
+  choices:[
+    "It reduced public attention to social problems",
+    "It exposed corruption and unsafe conditions, increasing pressure for laws",
+    "It ended the need for elections by appointing reformers",
+    "It convinced citizens that regulation always harms consumers"
+  ],
+  answerIndex:1,
+  hint:"Exposure → public pressure → reform.",
+  explain:"Investigative reporting raised awareness and built support for regulation and reform."
+},
+{
+  id:"G3-006",
+  csNum:14,
+  cs:"CS 14 – Post-WWI Peace Efforts",
+  tags:["G3"],
+  type:"best-explains",
+  stem:"Which statement best explains why many senators opposed the League of Nations?",
+  choices:[
+    "They feared it would reduce U.S. control over decisions to enter future conflicts",
+    "They believed it required the U.S. to end all trade permanently",
+    "They wanted to colonize Europe after World War I",
+    "They believed it would abolish the U.S. Constitution"
+  ],
+  answerIndex:0,
+  hint:"Key issue: sovereignty and entangling commitments.",
+  explain:"Many worried collective security obligations could limit independent U.S. foreign policy."
+},
+{
+  id:"G3-007",
+  csNum:16,
+  cs:"CS 16 – Causes of the Great Depression",
+  tags:["G3"],
+  type:"best-explains",
+  stem:"Which option best explains how stock speculation increased economic risk in the 1920s?",
+  choices:[
+    "Investors borrowed heavily to buy stocks, magnifying losses when prices fell",
+    "Banks required all customers to stop buying stocks",
+    "Workers refused to save money, raising wages too quickly",
+    "The government banned consumer credit nationwide"
+  ],
+  answerIndex:0,
+  hint:"Borrowing to invest = bigger crash impact.",
+  explain:"Buying on margin amplified risk and worsened the crash when prices dropped."
+},
+{
+  id:"G3-008",
+  csNum:18,
+  cs:"CS 18 – New Deal & Federal Role",
+  tags:["G3"],
+  type:"best-explains",
+  stem:"Which statement best explains why the New Deal expanded federal power?",
+  choices:[
+    "It sought to eliminate state governments entirely",
+    "It responded to economic collapse with national relief, recovery, and reform programs",
+    "It ended elections and replaced Congress with agencies",
+    "It stopped all government involvement in the economy"
+  ],
+  answerIndex:1,
+  hint:"Crisis required national-scale action.",
+  explain:"The severity of the Depression led to federal programs to stabilize the economy and society."
+},
+{
+  id:"G3-009",
+  csNum:23,
+  cs:"CS 23 – Early Cold War Tensions",
+  tags:["G3"],
+  type:"best-explains",
+  stem:"Which option best explains why the U.S. and USSR became rivals after WWII?",
+  choices:[
+    "They shared identical political and economic systems",
+    "They competed for influence and had conflicting ideologies",
+    "They agreed to end all alliances and reduce militaries",
+    "They merged into one combined government"
+  ],
+  answerIndex:1,
+  hint:"Ideology + power competition.",
+  explain:"Capitalism vs. communism and security concerns drove the rivalry."
+},
+{
+  id:"G3-010",
+  csNum:33,
+  cs:"CS 33 – Struggles for Equality & Civil Rights Expansion (1945–1994)",
+  tags:["G3"],
+  type:"best-explains",
+  stem:"Which statement best explains why civil rights activism expanded after WWII?",
+  choices:[
+    "Discrimination ended nationwide, so activism became unnecessary",
+    "The gap between democratic ideals and unequal treatment became harder to ignore",
+    "The Constitution removed equal protection after the war",
+    "Most Americans stopped caring about political rights"
+  ],
+  answerIndex:1,
+  hint:"Contradiction between ideals and reality fuels movements.",
+  explain:"Postwar democracy rhetoric highlighted the injustice of continued discrimination."
+},
