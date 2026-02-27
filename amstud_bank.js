@@ -1116,7 +1116,7 @@
       answerIndex:1,
       hint:"Long-term weakness + pressure to change.",
       explain:"Economic strain and reform movements undermined centralized control."
-    }
+    },
      /* =========================
    GAME 4 (Sequence / Turning Point)
    How Game 4 reads these:
