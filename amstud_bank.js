@@ -1,4 +1,203 @@
 // American Studies OST Mastery — Shared Question Bank
+// MUST be in repo root and MUST expose: window.AMSTUD_BANK = [...]
+
+window.AMSTUD_BANK = [
+  // =========================
+  // CS1–CS5: Thinking Like a Historian (cause/effect framing)
+  // =========================
+  {
+    cs: "CS 1 – Evaluating Source Credibility",
+    tag: "Cause & Effect",
+    stem: "A historian claims a political cartoon from 1890 proves that all Americans supported new immigration restrictions. Which detail most weakens the historian’s conclusion?",
+    choices: [
+      "The cartoon was created during the same year as a national election",
+      "The cartoon reflects the viewpoint of one artist rather than the entire public",
+      "The cartoon includes labels that identify major political parties",
+      "The cartoon was printed in a newspaper rather than a history textbook"
+    ],
+    answerIndex: 1,
+    hint: "Credibility and causation claims collapse when the evidence is too narrow to represent the whole population.",
+    explain: "A single cartoon shows one perspective; it cannot by itself prove nationwide public agreement."
+  },
+  {
+    cs: "CS 2 – Analyzing Primary & Secondary Sources",
+    tag: "Cause & Effect",
+    stem: "A textbook chapter argues that a strike failed mainly because workers were “unpatriotic.” What is the best next step to evaluate that cause-and-effect claim?",
+    choices: [
+      "Accept it because textbooks are secondary sources written by experts",
+      "Compare it with primary sources such as newspapers, union statements, or employer records",
+      "Ignore it because secondary sources are always biased",
+      "Verify it by finding a single photograph from the strike"
+    ],
+    answerIndex: 1,
+    hint: "Test cause-and-effect claims by corroborating with multiple sources, especially primary evidence.",
+    explain: "Corroborating with primary sources helps verify whether the author’s explanation fits the evidence."
+  },
+  {
+    cs: "CS 3 – Cause, Effect, and Sequence",
+    tag: "Cause & Effect",
+    stem: "Which factor most directly contributed to the rapid growth of cities in the late 1800s?",
+    choices: [
+      "A decline in factory production",
+      "An increase in industrial jobs and transportation networks",
+      "A reduction in immigration to the United States",
+      "A decrease in international trade"
+    ],
+    answerIndex: 1,
+    hint: "City growth accelerates when jobs and access concentrate in one place.",
+    explain: "Industrial jobs and transportation (railroads/streetcars) pulled people into urban centers."
+  },
+  {
+    cs: "CS 4 – Contextualization",
+    tag: "Cause & Effect",
+    stem: "Why did many reformers during the Progressive Era focus on city governments?",
+    choices: [
+      "Because cities had no laws regulating business",
+      "Because corruption and public health problems were highly visible in rapidly growing cities",
+      "Because the federal government was the only level allowed to pass reforms",
+      "Because most Americans lived in rural areas"
+    ],
+    answerIndex: 1,
+    hint: "Connect reform priorities to the problems created by urbanization.",
+    explain: "Rapid urban growth exposed corruption, unsafe conditions, and health crises that reformers targeted."
+  },
+  {
+    cs: "CS 5 – Multiple Perspectives",
+    tag: "Cause & Effect",
+    stem: "Which explanation best accounts for why industrialists and labor leaders often disagreed about strikes?",
+    choices: [
+      "Industrialists believed strikes helped profits, while labor leaders opposed them",
+      "Industrialists prioritized property and production, while labor leaders prioritized wages and working conditions",
+      "Industrialists supported collective bargaining, while labor leaders rejected it",
+      "Industrialists wanted smaller workforces, while labor leaders wanted fewer workers"
+    ],
+    answerIndex: 1,
+    hint: "Think: competing interests create different interpretations of cause and blame.",
+    explain: "Different priorities led to different views about what caused workplace conflict and how to solve it."
+  },
+
+  // =========================
+  // CS6–CS10
+  // =========================
+  {
+    cs: "CS 6 – Rise of Corporations & Industrial Growth",
+    tag: "Cause & Effect",
+    stem: "Which development most directly helped corporations expand into national businesses during the late 1800s?",
+    choices: [
+      "The decline of railroads",
+      "The spread of national rail networks and new communication technology",
+      "The end of immigration to the U.S.",
+      "A reduction in consumer demand"
+    ],
+    answerIndex: 1,
+    hint: "National markets require national transportation and communication.",
+    explain: "Railroads and communication allowed businesses to reach customers and move goods nationwide."
+  },
+  {
+    cs: "CS 7 – Labor Organizations",
+    tag: "Cause & Effect",
+    stem: "Why did labor unions grow during the late 1800s?",
+    choices: [
+      "Workers wanted to eliminate wages and replace them with profit-sharing",
+      "Unsafe conditions, long hours, and low pay led workers to organize for reforms",
+      "Most employers supported collective bargaining and encouraged union membership",
+      "The federal government required all workers to join unions"
+    ],
+    answerIndex: 1,
+    hint: "Union growth is typically a reaction to workplace conditions and power imbalance.",
+    explain: "Poor conditions and limited worker power pushed laborers to organize for change."
+  },
+  {
+    cs: "CS 8 – Laissez-faire Policies & Big Business",
+    tag: "Cause & Effect",
+    stem: "How did laissez-faire attitudes most directly affect industrial America?",
+    choices: [
+      "They increased government regulation of wages and hours",
+      "They allowed powerful trusts/monopolies to grow with limited oversight",
+      "They eliminated competition by requiring all firms to set identical prices",
+      "They prevented corporations from expanding across state lines"
+    ],
+    answerIndex: 1,
+    hint: "Less regulation often means fewer limits on consolidation and corporate power.",
+    explain: "Minimal regulation enabled trusts and monopolies to expand and dominate industries."
+  },
+  {
+    cs: "CS 9 – Technological Innovation & Standard of Living",
+    tag: "Cause & Effect",
+    stem: "Which was a major effect of new technologies such as electric lighting and household appliances in the early 1900s?",
+    choices: [
+      "They increased the cost of living for most Americans by reducing production",
+      "They changed daily life by saving time and improving convenience",
+      "They ended factory work by eliminating the need for manufactured goods",
+      "They reduced urban growth by pushing people back to rural areas"
+    ],
+    answerIndex: 1,
+    hint: "Focus on how technology changes time, labor, and daily routines.",
+    explain: "New technology improved convenience and reshaped work and home life."
+  },
+  {
+    cs: "CS 10 – Immigration, Internal Migration, Urbanization",
+    tag: "Cause & Effect",
+    stem: "What was a common effect of mass immigration and urban growth around 1900?",
+    choices: [
+      "A decrease in demand for factory labor",
+      "Overcrowded housing and increased public health challenges",
+      "The end of ethnic neighborhoods in cities",
+      "A sharp decline in city infrastructure needs"
+    ],
+    answerIndex: 1,
+    hint: "Rapid population growth strains housing, sanitation, and health systems.",
+    explain: "Overcrowding and poor sanitation contributed to disease and major urban health challenges."
+  },
+
+  // =========================
+  // ... (keep your existing CS11–CS33 MCQs here exactly as you had them)
+  // =========================
+
+  // ✅ IMPORTANT: add a comma AFTER the last MCQ object before G2 block
+  // (I’m inserting the fixed comma here as the key change.)
+  // =========================
+  // CS33 – (last MCQ object)
+  // =========================
+  {
+    cs: "CS 33 – Struggles for Equality & Civil Rights Expansion (1945–1994)",
+    tag: "Cause & Effect",
+    stem: "How did federal legislation such as the Civil Rights Act (1964) and Voting Rights Act (1965) most directly affect U.S. society?",
+    choices: [
+      "They expanded legal segregation in public life",
+      "They strengthened enforcement of equal access and voting protections",
+      "They transferred all election control exclusively to private organizations",
+      "They reduced the role of the Constitution in civil rights"
+    ],
+    answerIndex: 1,
+    hint: "Think: enforcement mechanisms + access + protections.",
+    explain: "These laws expanded protections and enforcement against discrimination and voting barriers."
+  },
+
+  /* =========================
+     GAME 2 ADDITIONS (Select Two)
+     Tag: "G2"
+  ========================= */
+  {
+    id:"CS1-G2-001",
+    csNum:1,
+    cs:"CS 1 – Historical Thinking: Source Credibility",
+    tags:["G2","select-two"],
+    type:"select-two",
+    stem:"Select TWO reasons a single diary entry is limited evidence for proving that “most Americans” supported a policy.",
+    choices:[
+      "It reflects one person’s perspective and experiences",
+      "It represents opinions collected from a national poll",
+      "It may not include viewpoints from other regions or groups",
+      "It was written in the past, so it cannot be used by historians"
+    ],
+    correctIndices:[0,2],
+    hint:"Think: representativeness and sampling.",
+    explain:"A diary is one perspective and may not represent broader public opinion."
+  }
+
+  // ...keep the rest of your G2 objects here, comma-separated...
+];// American Studies OST Mastery — Shared Question Bank
 // MUST be in repo root and MUST define: const AMSTUD_BANK = [...]
 // Game 1 expects >= 28 usable questions tagged for Cause & Effect.
 
