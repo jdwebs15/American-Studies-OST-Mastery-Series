@@ -1117,6 +1117,7 @@
       hint:"Long-term weakness + pressure to change.",
       explain:"Economic strain and reform movements undermined centralized control."
     },
+     {
  // American Studies OST Mastery — Shared Question Bank
 // MUST be in repo root: /amstud_bank.js
 // MUST expose: window.AMSTUD_BANK (and global AMSTUD_BANK for backward-compat)
