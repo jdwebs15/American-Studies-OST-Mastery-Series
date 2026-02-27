@@ -1631,4 +1631,4 @@ window.AMSTUD_BANK = [
   hint:"Contradiction between ideals and reality fuels movements.",
   explain:"Postwar democracy rhetoric highlighted the injustice of continued discrimination."
 },
-  
+  ];
