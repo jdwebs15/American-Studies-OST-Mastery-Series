@@ -2,7 +2,7 @@
 // MUST be in repo root and MUST define: const AMSTUD_BANK = [...]
 // Game 1 expects >= 28 usable questions tagged for Cause & Effect.
 
-const AMSTUD_BANK = [
+window.AMSTUD_BANK = [
   // =========================
   // CS1–CS5: Thinking Like a Historian (cause/effect framing)
   // =========================
