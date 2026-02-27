@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AmStud Game 2 — Select Two (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="description" content="American Studies OST Mastery — Select Two (0 misses required)" />
+
+  <!-- Load the shared bank -->
+  <script src="../amstud_bank.js"></script>
+
+  <style>
+    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    .panel{
+      background:rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+    .pill2{
+      font-size:12px; color:var(--text);
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 10px;
+      white-space:nowrap;
+    }
+    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .btn{
+      appearance:none; border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(122,162,255,.35);
+      background:rgba(122,162,255,.10);
+    }
+    .btn.danger:hover{
+      border-color:rgba(255,92,122,.45);
+      background:rgba(255,92,122,.10);
+    }
+    .btn[disabled]{ opacity:.55; cursor:not-allowed; transform:none; }
+    .divider{ height:1px; background:rgba(255,255,255,.10); margin:14px 0; }
+    .qbox{ background:rgba(17,26,47,.55); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px; }
+    .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+    .qnum{ font-weight:900; }
+    .small{ color:var(--muted); font-size:13px; }
+    .stem{ margin:10px 0 0; line-height:1.35; font-size:16px; }
+    .choices{ margin-top:12px; display:grid; gap:10px; }
+
+    .choice{
+      text-align:left;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:12px 12px;
+      cursor:pointer;
+      color:var(--text);
+      font-weight:800;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+    }
+    .choice:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.08); }
+    .choice[aria-pressed="true"]{
+      border-color:rgba(122,162,255,.55);
+      background:rgba(122,162,255,.16);
+    }
+    .choice[disabled]{ opacity:.65; cursor:not-allowed; transform:none; }
+
+    .badge{
+      min-width:26px;
+      height:26px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.20);
+      font-weight:900;
+      font-size:12px;
+      margin-top:1px;
+    }
+
+    .msg{
+      margin-top:12px;
+      border-radius:14px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      display:none;
+    }
+    .msg.good{ display:block; background:rgba(43,213,118,.10); border-color:rgba(43,213,118,.35); }
+    .msg.bad{ display:block; background:rgba(255,92,122,.10); border-color:rgba(255,92,122,.35); }
+    .msg.warn{ display:block; background:rgba(255,209,102,.10); border-color:rgba(255,209,102,.35); }
+
+    .finish{
+      display:none;
+      margin-top:14px;
+      background:rgba(17,26,47,.65);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .finish h2{ margin:0 0 8px; }
+    .finish .grid2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
+
+    .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
+    .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+    .ticketBox{
+      margin-top:10px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.18);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+      white-space:pre-wrap;
+    }
+
+    /* On-page error box */
+    #errBox{
+      display:none; margin-top:12px;
+      padding:12px; border-radius:14px;
+      background:rgba(255,92,122,.10);
+      border:1px solid rgba(255,92,122,.35);
+      color:var(--text);
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+    }
+
+    /* Start gate */
+    #gate{
+      display:block;
+      margin-top:12px;
+      background:rgba(17,26,47,.55);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:16px;
+    }
+    .fieldRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input[type="text"]{
+      width:min(460px,100%);
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+      font-weight:900;
+    }
+    input[type="text"]:focus{ border-color:rgba(122,162,255,.45); }
+    .ghost{ color:var(--muted); font-size:13px; margin-top:10px; }
+
+    .actionsRow{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gameWrap">
+    <div class="panel">
+      <div class="topbar">
+        <div>
+          <div class="k">LEGEND MASTERY SERIES</div>
+          <h1 style="margin:6px 0 4px; font-size:26px;">AmStud Game 2 — Select Two (Mastery)</h1>
+          <div class="small">Mastery = <b>0 misses</b>. Wrong submission → hint → must correct to move on (miss recorded).</div>
+        </div>
+
+        <div class="stats">
+          <div class="pill2">Player: <b id="playerName">—</b></div>
+          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
+          <div class="pill2">Accuracy: <b id="acc">—</b></div>
+          <div class="pill2">Misses: <b id="misses">0</b></div>
+          <div class="pill2">Q: <b id="qpos">0/0</b></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="small">
+          Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn danger" id="restartBtn" title="Hard restart: clears this game session">Hard Restart</button>
+        </div>
+      </div>
+
+      <div id="errBox"></div>
+      <div class="divider"></div>
+
+      <!-- START GATE -->
+      <section id="gate">
+        <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
+        <div class="fieldRow" style="margin-top:10px;">
+          <input id="nameInput" type="text" autocomplete="off" placeholder="Student name (required)" />
+          <button class="btn" id="startBtn">Start</button>
+        </div>
+        <div class="ghost">Tip: You must finish with <b>0 misses</b> to unlock a mastery ticket.</div>
+      </section>
+
+      <!-- GAME -->
+      <section id="game" style="display:none;">
+        <div class="qbox">
+          <div class="qmeta">
+            <div class="qnum" id="qnum">Question</div>
+            <div class="small" id="tag">Select TWO • CS aligned</div>
+          </div>
+          <div class="stem" id="stem">—</div>
+
+          <div class="choices" id="choices"></div>
+
+          <div class="actionsRow">
+            <div class="small" id="pickMsg">Pick exactly <b>2</b> answers.</div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn" id="submitBtn" disabled>Submit</button>
+              <button class="btn" id="clearBtn">Clear</button>
+            </div>
+          </div>
+
+          <div class="msg good" id="goodMsg"></div>
+          <div class="msg bad" id="badMsg"></div>
+          <div class="msg warn" id="hintMsg"></div>
+        </div>
+
+        <div class="finish" id="finish">
+          <h2>Finish Screen</h2>
+          <div class="small" style="margin-bottom:10px;">
+            Mastery requires <b>0 misses</b>. Your session summary is stamped below.
+          </div>
+
+          <div class="grid2">
+            <div class="kv"><b>Student</b><div id="finName">—</div></div>
+            <div class="kv"><b>Date</b><div id="finDate">—</div></div>
+            <div class="kv"><b>Start Time</b><div id="finStart">—</div></div>
+            <div class="kv"><b>End Time</b><div id="finEnd">—</div></div>
+            <div class="kv"><b>Elapsed</b><div id="finElapsed">—</div></div>
+            <div class="kv"><b>Accuracy</b><div id="finAcc">—</div></div>
+            <div class="kv"><b>Misses</b><div id="finMiss">—</div></div>
+            <div class="kv"><b>Result</b><div id="finResult">—</div></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="small" style="margin-bottom:6px; font-weight:900;">Submission Ticket (copy/paste or screenshot):</div>
+          <div class="ticketBox" id="ticketBox">—</div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" id="copyTicketBtn">Copy Ticket</button>
+            <button class="btn danger" id="restartBtn2">Hard Restart (Try for Mastery)</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+      <div class="small" style="color:var(--muted);">
+        If the page ever “white screens,” the error box above will show where/why.
+      </div>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   HARDENED SHELL + SAFETY
+========================= */
+(function(){
+  const errBox = document.getElementById('errBox');
+  window.addEventListener('error', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Runtime Error:\\n" + (e?.message || e) + "\\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Unhandled Promise Rejection:\\n" + (e?.reason?.message || e?.reason || e);
+  });
+})();
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) window.location.reload();
+});
+
+(function(){
+  try{
+    history.replaceState({guard:1}, document.title, location.href);
+    window.addEventListener('popstate', ()=>{
+      history.pushState({guard:1}, document.title, location.href);
+    });
+  }catch(_){}
+})();
+
+/* =========================
+   CONFIG
+========================= */
+const GAME_ID = "AMSTUD_G2";
+const SESSION_KEY = "LEGEND_AMSTUD_G2_V1";
+const SEEN_KEY = "LEGEND_AMSTUD_G2_SEEN_V1";
+const QUESTION_COUNT = 28; // adjust 25–30 if desired
+
+const LETTERS = ["A","B","C","D"];
+
+function nowStr(){
+  const d = new Date();
+  return d.toLocaleString([], {year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function dateOnly(){
+  const d = new Date();
+  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+}
+function timeOnly(dt){
+  const d = dt ? new Date(dt) : new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function fmtElapsed(ms){
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function safeJsonParse(x, fallback){
+  try{ return JSON.parse(x); }catch(_){ return fallback; }
+}
+
+/* =========================
+   BANK LOADING + FILTERING
+========================= */
+function normalizeSelectTwo(q){
+  // Accept different field names; normalize to:
+  // { id, cs, csNum, tagText, stem, choices[4], correctIndices[2], hint, explain }
+  const id = q.id || q.qid || null;
+  const cs = q.cs || "";
+  const csNum = Number.isFinite(q.csNum) ? q.csNum : (()=>{
+    const m = String(cs).match(/CS\s*([0-9]{1,2})/i);
+    return m ? Number(m[1]) : null;
+  })();
+  const tags = Array.isArray(q.tags) ? q.tags : [];
+  const type = q.type || "";
+  const stem = q.stem || "";
+  const choices = Array.isArray(q.choices) ? q.choices : [];
+  const correct =
+    Array.isArray(q.correctIndices) ? q.correctIndices :
+    Array.isArray(q.answerIndices) ? q.answerIndices :
+    (Array.isArray(q.correct) ? q.correct : null);
+
+  const hint = q.hint || "Hint: Identify both statements that are accurate and supported by the prompt.";
+  const explain = q.explain || "";
+
+  if(!id) return null;
+  if(!stem || choices.length !== 4) return null;
+  if(!Array.isArray(correct) || correct.length !== 2) return null;
+
+  const c0 = Number(correct[0]), c1 = Number(correct[1]);
+  if(!Number.isInteger(c0) || !Number.isInteger(c1)) return null;
+  if(c0<0 || c0>3 || c1<0 || c1>3 || c0===c1) return null;
+
+  return {
+    id,
+    cs,
+    csNum,
+    tags,
+    type,
+    tagText: `Select TWO • ${cs || "CS aligned"}`,
+    stem,
+    choices,
+    correctIndices: [c0, c1].sort((a,b)=>a-b),
+    hint,
+    explain
+  };
+}
+
+function getSeenSet(){
+  const raw = localStorage.getItem(SEEN_KEY);
+  const arr = safeJsonParse(raw, []);
+  return new Set(Array.isArray(arr) ? arr : []);
+}
+function saveSeenSet(set){
+  localStorage.setItem(SEEN_KEY, JSON.stringify([...set]));
+}
+
+function buildQuestionSet(){
+  if(typeof AMSTUD_BANK === "undefined"){
+    throw new Error("AMSTUD_BANK is not defined. Ensure ../amstud_bank.js is loaded before this script.");
+  }
+  const normalized = AMSTUD_BANK.map(normalizeSelectTwo).filter(Boolean);
+
+  // Only G2 select-two tagged items
+  const pool = normalized.filter(q => Array.isArray(q.tags) && q.tags.includes("G2") && (q.type === "select-two" || q.type === "select2" || q.tags.includes("select-two")));
+
+  const seen = getSeenSet();
+  const unseen = pool.filter(q => !seen.has(q.id));
+  const need = QUESTION_COUNT;
+
+  let pick = [];
+  if(unseen.length >= need){
+    pick = shuffle(unseen).slice(0, need);
+  }else{
+    // Take all unseen, then fill from seen pool (still random)
+    const remaining = need - unseen.length;
+    pick = shuffle(unseen).concat(shuffle(pool.filter(q => seen.has(q.id))).slice(0, remaining));
+  }
+
+  if(pick.length < need){
+    throw new Error(`Not enough usable questions in AMSTUD_BANK for G2. Need ${need}, found ${pick.length}.`);
+  }
+
+  // Mark these as seen for next attempt
+  pick.forEach(q => seen.add(q.id));
+  saveSeenSet(seen);
+
+  // Shuffle each question's answer order while preserving correct indices
+  // (keeps answer position patterns from forming)
+  return pick.map(q => {
+    const paired = q.choices.map((txt, idx)=>({txt, idx}));
+    const shuffled = shuffle(paired);
+
+    const newChoices = shuffled.map(x=>x.txt);
+    const correctOld = new Set(q.correctIndices);
+    const newCorrect = shuffled
+      .map((x, newIdx)=>({newIdx, oldIdx:x.idx}))
+      .filter(x => correctOld.has(x.oldIdx))
+      .map(x => x.newIdx)
+      .sort((a,b)=>a-b);
+
+    return {
+      ...q,
+      choices: newChoices,
+      correctIndices: newCorrect
+    };
+  });
+}
+
+/* =========================
+   STATE + UI
+========================= */
+let state = null;
+let timer = null;
+
+const elPlayerName = document.getElementById('playerName');
+const elElapsed = document.getElementById('elapsed');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+const elQpos = document.getElementById('qpos');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elDateStamp = document.getElementById('dateStamp');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const startBtn = document.getElementById('startBtn');
+const nameInput = document.getElementById('nameInput');
+
+const qnum = document.getElementById('qnum');
+const tag = document.getElementById('tag');
+const stem = document.getElementById('stem');
+const choicesBox = document.getElementById('choices');
+
+const pickMsg = document.getElementById('pickMsg');
+const submitBtn = document.getElementById('submitBtn');
+const clearBtn = document.getElementById('clearBtn');
+
+const goodMsg = document.getElementById('goodMsg');
+const badMsg = document.getElementById('badMsg');
+const hintMsg = document.getElementById('hintMsg');
+
+const finish = document.getElementById('finish');
+const finName = document.getElementById('finName');
+const finDate = document.getElementById('finDate');
+const finStart = document.getElementById('finStart');
+const finEnd = document.getElementById('finEnd');
+const finElapsed = document.getElementById('finElapsed');
+const finAcc = document.getElementById('finAcc');
+const finMiss = document.getElementById('finMiss');
+const finResult = document.getElementById('finResult');
+const ticketBox = document.getElementById('ticketBox');
+const copyTicketBtn = document.getElementById('copyTicketBtn');
+
+function save(){ localStorage.setItem(SESSION_KEY, JSON.stringify(state)); }
+function load(){ return safeJsonParse(localStorage.getItem(SESSION_KEY), null); }
+
+function hardRestart(){
+  localStorage.removeItem(SESSION_KEY);
+  window.location.reload();
+}
+document.getElementById('restartBtn').addEventListener('click', hardRestart);
+document.getElementById('restartBtn2').addEventListener('click', hardRestart);
+
+function computeAcc(){
+  const total = state.attempts;
+  const wrong = state.misses;
+  if(total===0) return "—";
+  const correct = total - wrong;
+  const pct = Math.round((correct/total)*1000)/10;
+  return `${pct}%`;
+}
+
+function resetMsgs(){
+  goodMsg.style.display="none";
+  badMsg.style.display="none";
+  hintMsg.style.display="none";
+  goodMsg.textContent="";
+  badMsg.textContent="";
+  hintMsg.textContent="";
+}
+
+function startNew(name){
+  const bank = buildQuestionSet();
+  const startAt = Date.now();
+
+  state = {
+    version: "AMSTUD_G2_V1",
+    name,
+    startAt,
+    endAt: null,
+    idx: 0,
+    bank,
+    misses: 0,
+    attempts: 0,      // number of submissions
+    wrongSet: {},     // record miss once per question
+    finished: false,
+    selected: []      // current selection indices
+  };
+  save();
+  beginUI();
+}
+
+function beginUI(){
+  gate.style.display="none";
+  game.style.display="block";
+
+  elPlayerName.textContent = state.name;
+  elDateStamp.textContent = dateOnly();
+  elStartStamp.textContent = timeOnly(state.startAt);
+  elEndStamp.textContent = "—";
+
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+
+  render();
+}
+
+function render(){
+  if(state.finished){ showFinish(); return; }
+
+  const q = state.bank[state.idx];
+  resetMsgs();
+
+  elMisses.textContent = String(state.misses);
+  elAcc.textContent = computeAcc();
+  elQpos.textContent = `${state.idx+1}/${state.bank.length}`;
+
+  qnum.textContent = `Question ${state.idx+1}`;
+  tag.textContent = q.tagText || "Select TWO • CS aligned";
+  stem.textContent = q.stem;
+
+  state.selected = [];
+  updatePickUI();
+
+  // build choices
+  choicesBox.innerHTML = "";
+  q.choices.forEach((c, i)=>{
+    const btn = document.createElement('button');
+    btn.className = "choice";
+    btn.type = "button";
+    btn.setAttribute("aria-pressed","false");
+
+    const badge = document.createElement('div');
+    badge.className = "badge";
+    badge.textContent = LETTERS[i];
+
+    const text = document.createElement('div');
+    text.textContent = c;
+
+    btn.appendChild(badge);
+    btn.appendChild(text);
+
+    btn.addEventListener('click', ()=>togglePick(i, btn));
+    choicesBox.appendChild(btn);
+  });
+
+  save();
+}
+
+function updatePickUI(){
+  const n = state.selected.length;
+  pickMsg.innerHTML = n===2 ? `Ready — selected <b>2</b>.` : `Pick exactly <b>2</b> answers. Selected: <b>${n}</b>`;
+  submitBtn.disabled = (n !== 2);
+}
+
+function togglePick(i, btn){
+  if(state.finished) return;
+
+  const idx = state.selected.indexOf(i);
+  if(idx >= 0){
+    state.selected.splice(idx, 1);
+    btn.setAttribute("aria-pressed","false");
+  }else{
+    if(state.selected.length >= 2) return; // must be exactly two
+    state.selected.push(i);
+    btn.setAttribute("aria-pressed","true");
+  }
+  state.selected.sort((a,b)=>a-b);
+  updatePickUI();
+  save();
+}
+
+function clearPicks(){
+  state.selected = [];
+  choicesBox.querySelectorAll('button.choice').forEach(b=>b.setAttribute("aria-pressed","false"));
+  updatePickUI();
+  save();
+}
+clearBtn.addEventListener('click', clearPicks);
+
+function lockChoices(lock=true){
+  choicesBox.querySelectorAll('button.choice').forEach(b=>b.disabled = lock);
+  submitBtn.disabled = lock ? true : (state.selected.length !== 2);
+  clearBtn.disabled = lock;
+}
+
+submitBtn.addEventListener('click', ()=>{
+  if(state.finished) return;
+  if(state.selected.length !== 2) return;
+
+  const q = state.bank[state.idx];
+  state.attempts += 1;
+
+  const sel = state.selected.slice().sort((a,b)=>a-b);
+  const cor = q.correctIndices.slice().sort((a,b)=>a-b);
+  const correct = (sel[0]===cor[0] && sel[1]===cor[1]);
+
+  if(correct){
+    lockChoices(true);
+    goodMsg.className="msg good";
+    goodMsg.style.display="block";
+    goodMsg.textContent = "Correct. " + (q.explain || "");
+
+    save();
+
+    setTimeout(()=>{
+      state.idx += 1;
+      if(state.idx >= state.bank.length){
+        finishGame();
+      }else{
+        lockChoices(false);
+        render();
+      }
+    }, 1100);
+
+  }else{
+    // record miss once per question
+    if(!state.wrongSet[state.idx]){
+      state.wrongSet[state.idx] = true;
+      state.misses += 1;
+    }
+
+    badMsg.className="msg bad";
+    badMsg.style.display="block";
+    badMsg.textContent = "Not yet. A miss has been recorded. Use the hint, then correct your selections.";
+
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent = q.hint || "Hint: Two choices are correct. Identify both accurate statements.";
+
+    elMisses.textContent = String(state.misses);
+    elAcc.textContent = computeAcc();
+
+    save();
+  }
+});
+
+function finishGame(){
+  state.finished = true;
+  state.endAt = Date.now();
+  save();
+  showFinish();
+}
+
+function buildTicketText(){
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+
+  const result = (state.misses===0) ? "MASTERY ACHIEVED" : "COMPLETED (NOT MASTERY)";
+  const lines = [
+    "LEGEND MASTERY SERIES — AMERICAN STUDIES",
+    "Game: AmStud Game 2 — Select Two",
+    `Student: ${state.name}`,
+    `Date: ${dateOnly()}`,
+    `Start: ${timeOnly(state.startAt)}`,
+    `End: ${timeOnly(state.endAt)}`,
+    `Elapsed: ${fmtElapsed(state.endAt - state.startAt)}`,
+    `Accuracy: ${pct}%`,
+    `Misses: ${state.misses}`,
+    `Result: ${result}`,
+    `Timestamp: ${nowStr()}`
+  ];
+  return lines.join("\\n");
+}
+
+function showFinish(){
+  if(timer) clearInterval(timer);
+
+  elEndStamp.textContent = timeOnly(state.endAt);
+  elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+  elAcc.textContent = computeAcc();
+  elMisses.textContent = String(state.misses);
+
+  finish.style.display="block";
+
+  finName.textContent = state.name;
+  finDate.textContent = dateOnly();
+  finStart.textContent = timeOnly(state.startAt);
+  finEnd.textContent = timeOnly(state.endAt);
+  finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+
+  const total = state.attempts;
+  const wrong = state.misses;
+  const correct = total - wrong;
+  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
+
+  finAcc.textContent = `${pct}%`;
+  finMiss.textContent = String(state.misses);
+
+  if(state.misses===0){
+    finResult.innerHTML = "<b style='color:var(--good)'>MASTERY ACHIEVED ✅ (0 misses)</b>";
+  }else{
+    finResult.innerHTML = "<b style='color:var(--warn)'>Completed — Not Mastery</b><div class='small'>Hard Restart to try again for 0 misses.</div>";
+  }
+
+  ticketBox.textContent = buildTicketText();
+  lockChoices(true);
+}
+
+copyTicketBtn.addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText(ticketBox.textContent || "");
+    copyTicketBtn.textContent = "Copied ✅";
+    setTimeout(()=>copyTicketBtn.textContent="Copy Ticket", 900);
+  }catch(_){
+    copyTicketBtn.textContent = "Copy failed";
+    setTimeout(()=>copyTicketBtn.textContent="Copy Ticket", 900);
+  }
+});
+
+/* =========================
+   START GATE + BOOT
+========================= */
+startBtn.addEventListener('click', ()=>{
+  const nm = (nameInput.value||"").trim();
+  if(!nm){
+    nameInput.focus();
+    hintMsg.className="msg warn";
+    hintMsg.style.display="block";
+    hintMsg.textContent="Name is required to start.";
+    return;
+  }
+  startNew(nm);
+});
+nameInput.addEventListener('keydown', (e)=>{ if(e.key==="Enter") startBtn.click(); });
+
+(function boot(){
+  const existing = load();
+  if(existing && existing.version==="AMSTUD_G2_V1"){
+    state = existing;
+
+    gate.style.display = "none";
+    game.style.display = "block";
+
+    elPlayerName.textContent = state.name || "—";
+    elDateStamp.textContent = dateOnly();
+    elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+    elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+
+    if(!state.finished){
+      timer = setInterval(()=>{ elElapsed.textContent = fmtElapsed(Date.now()-state.startAt); }, 250);
+      render();
+    }else{
+      showFinish();
+    }
+  }else{
+    gate.style.display="block";
+    game.style.display="none";
+  }
+})();
+</script>
+</body>
+</html>
