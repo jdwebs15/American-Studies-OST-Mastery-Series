@@ -756,16 +756,6 @@ printTicket.addEventListener('click', ()=>{
     localStorage.removeItem(SESSION_KEY);
   }
 })();
-<!-- LOAD BANK FIRST -->
-<script src="../amstud_bank.js"></script>
-
-<!-- THEN LOAD GAME LOGIC -->
-<script>
-  if (typeof AMSTUD_BANK === "undefined") {
-    throw new Error("AMSTUD_BANK is not defined. Ensure ../amstud_bank.js is loaded before this script.");
-  }
-
-  // game logic continues...
 </script>
 </body>
 </html>
