@@ -1117,44 +1117,21 @@
       hint:"Long-term weakness + pressure to change.",
       explain:"Economic strain and reform movements undermined centralized control."
     },
-     {
- // American Studies OST Mastery — Shared Question Bank
-// MUST be in repo root: /amstud_bank.js
-// MUST expose: window.AMSTUD_BANK (and global AMSTUD_BANK for backward-compat)
+    }
+    // ✅ END OF GAME 3 (G3) — LAST OBJECT ABOVE
+    // ✅ TRANSITION: paste GAME 4 objects starting on the next line
+    ,
 
-(function () {
-  "use strict";
-
-  // =========================
-  // PUT ALL QUESTION OBJECTS INSIDE THIS ARRAY
-  // - Each object must be comma-separated
-  // - NO extra brackets inside
-  // - Only ONE closing ]; at the very end
-  // =========================
-  const bank = [
-
-    // ✅ PASTE YOUR EXISTING CS1–CS33 MCQs HERE (Cause & Effect objects)
-    // Example:
-    // { cs:"CS 1 ...", tag:"Cause & Effect", stem:"...", choices:[...], answerIndex:1, hint:"...", explain:"..." },
-
-    // ✅ PASTE YOUR EXISTING GAME 2 (G2 / select-two) OBJECTS HERE
-    // Example:
-    // { id:"CS1-G2-001", csNum:1, tags:["G2"], type:"select-two", stem:"...", choices:[...], correctIndices:[0,2], hint:"...", explain:"..." },
-
-    // ✅ PASTE YOUR EXISTING GAME 3 (G3 / best-explains) OBJECTS HERE
-    // Example:
-    // { id:"G3-001", csNum:6, tags:["G3"], type:"best-explains", stem:"...", choices:[...], answerIndex:1, hint:"...", explain:"..." },
-
-    // =========================
-    // GAME 4 (Sequence / Turning Point)
-    // How Game 4 reads these:
-    // - tags includes "G4" OR type === "sequence-turning-point"
-    // Required fields:
-    // - stem
-    // - events: [4 strings]
-    // - correctOrder: [4 indices]
-    // - turningPoint: number 0–3
-    // =========================
+    /* =========================
+       GAME 4 (Sequence / Turning Point)
+       How Game 4 reads these:
+       - tags includes "G4" OR type === "sequence-turning-point"
+       Required fields:
+       - stem
+       - events: [4 strings]
+       - correctOrder: [4 indices]
+       - turningPoint: number 0–3
+    ========================= */
 
     {
       id:"G4-001",
@@ -1384,7 +1361,7 @@
       explain:"Federal legislation/enforcement is the turning point that changes civil rights from local battles to national standards."
     }
 
-  ]; // ✅ ONLY ONE closing bracket/semicolon for the bank array
+  ]; // ✅ end bank array — ONLY ONE closing bracket in entire file
 
   // Expose the bank for ALL games
   window.AMSTUD_BANK = bank;
@@ -1397,3 +1374,4 @@
   // Optional: quick sanity marker
   window.AMSTUD_BANK_VERSION = "2026-02-27";
 })();
+
