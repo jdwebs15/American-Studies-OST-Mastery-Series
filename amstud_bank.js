@@ -1455,7 +1455,7 @@ window.AMSTUD_BANK = [
     correctIndices:[0,2],
     hint:"Think: representativeness and sampling.",
     explain:"A diary is one perspective and may not represent broader public opinion."
-  }
+  },
 
   // ...keep the rest of your G2 objects here, comma-separated...
 ];
