@@ -1355,7 +1355,7 @@
   turningPoint:2,
   hint:"The turning point is when enforcement becomes national policy.",
   explain:"Federal legislation/enforcement is the turning point that changes civil rights from local battles to national standards."
-}
+},
   ];
 
   // Expose the bank for ALL games
