@@ -1455,8 +1455,7 @@ window.AMSTUD_BANK = [
     correctIndices:[0,2],
     hint:"Think: representativeness and sampling.",
     explain:"A diary is one perspective and may not represent broader public opinion."
-  }
-];
+  },
   // ...keep the rest of your G2 objects here, comma-separated...
 /* =========================
    GAME 3 (Best Explains) — starters
@@ -1632,3 +1631,4 @@ window.AMSTUD_BANK = [
   hint:"Contradiction between ideals and reality fuels movements.",
   explain:"Postwar democracy rhetoric highlighted the injustice of continued discrimination."
 },
+  
