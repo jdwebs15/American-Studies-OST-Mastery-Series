@@ -1,7 +1,7 @@
 // American Studies OST Mastery — Shared Question Bank
 // MUST be in repo root and MUST expose: window.AMSTUD_BANK = [...]
 
-window.AMSTUD_BANK = [
+const AMSTUD_BANK = [
   // =========================
   // CS1–CS5: Thinking Like a Historian (cause/effect framing)
   // =========================
@@ -1455,7 +1455,7 @@ window.AMSTUD_BANK = [
     correctIndices:[0,2],
     hint:"Think: representativeness and sampling.",
     explain:"A diary is one perspective and may not represent broader public opinion."
-  },
-
+  }
+];
   // ...keep the rest of your G2 objects here, comma-separated...
 ];
