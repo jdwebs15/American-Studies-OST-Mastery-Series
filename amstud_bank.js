@@ -506,4 +506,558 @@ const AMSTUD_BANK = [
     hint: "Think: enforcement mechanisms + access + protections.",
     explain: "These laws expanded protections and enforcement against discrimination and voting barriers."
   }
+  /* =========================
+   GAME 2 ADDITIONS (Select Two) — 30 items
+   Tag: "G2"
+========================= */
+{
+  id:"CS1-G2-001",
+  csNum:1,
+  cs:"CS 1 – Historical Thinking: Source Credibility",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO reasons a single diary entry is limited evidence for proving that “most Americans” supported a policy.",
+  choices:[
+    "It reflects one person’s perspective and experiences",
+    "It represents opinions collected from a national poll",
+    "It may not include viewpoints from other regions or groups",
+    "It was written in the past, so it cannot be used by historians"
+  ],
+  correctIndices:[0,2],
+  hint:"Think: representativeness and sampling.",
+  explain:"A diary is one perspective and may not represent broader public opinion."
+},
+{
+  id:"CS2-G2-002",
+  csNum:2,
+  cs:"CS 2 – Primary vs. Secondary Sources",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO examples of primary sources a historian could use to study urban living conditions around 1900.",
+  choices:[
+    "Photographs of tenements taken at the time",
+    "A modern textbook summary chapter about urbanization",
+    "City health department inspection reports from 1900",
+    "A 2020 documentary film reflecting on the Progressive Era"
+  ],
+  correctIndices:[0,2],
+  hint:"Primary sources come from the time period being studied.",
+  explain:"Photos and inspection reports created during the era are primary sources."
+},
+{
+  id:"CS3-G2-003",
+  csNum:3,
+  cs:"CS 3 – Cause and Effect",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO factors that helped drive rapid industrial growth in the late 1800s.",
+  choices:[
+    "Expanded railroad networks and national markets",
+    "A sharp reduction in new inventions and patents",
+    "Large labor supply from immigration and migration",
+    "The elimination of factory production"
+  ],
+  correctIndices:[0,2],
+  hint:"Look for conditions that expand markets and labor.",
+  explain:"Railroads connected markets; labor supply grew through immigration/migration."
+},
+{
+  id:"CS4-G2-004",
+  csNum:4,
+  cs:"CS 4 – Contextualization",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO reasons reformers focused on city governments during rapid urbanization.",
+  choices:[
+    "Corruption and machine politics shaped many city services",
+    "Cities had no problems with sanitation or housing",
+    "Overcrowding increased public health risks",
+    "Most Americans lived on isolated farms far from cities"
+  ],
+  correctIndices:[0,2],
+  hint:"Urbanization often creates visible problems and pressure for reform.",
+  explain:"Corruption and public health crises became urgent in growing cities."
+},
+{
+  id:"CS5-G2-005",
+  csNum:5,
+  cs:"CS 5 – Multiple Perspectives",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO reasons business owners and workers often disagreed during major strikes.",
+  choices:[
+    "Owners prioritized profits and uninterrupted production",
+    "Workers prioritized better wages and safer working conditions",
+    "Owners believed unions should set national laws",
+    "Workers wanted to end all employment and close factories"
+  ],
+  correctIndices:[0,1],
+  hint:"Competing interests create different solutions and blame.",
+  explain:"Owners and workers valued different goals: production/profit vs. conditions/pay."
+},
+
+{
+  id:"CS6-G2-006",
+  csNum:6,
+  cs:"CS 6 – Rise of Corporations & Industrialization",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO developments that helped corporations expand into national businesses.",
+  choices:[
+    "Railroads and national distribution networks",
+    "A complete end to advertising and branding",
+    "Telegraph/telephone and faster communication",
+    "A ban on interstate trade"
+  ],
+  correctIndices:[0,2],
+  hint:"National scale requires national transport + communication.",
+  explain:"Rail networks and communication technology enabled national business growth."
+},
+{
+  id:"CS7-G2-007",
+  csNum:7,
+  cs:"CS 7 – Labor Organizations",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO common goals of labor unions in the late 1800s and early 1900s.",
+  choices:[
+    "Shorter workdays and safer working conditions",
+    "Higher wages or fairer pay practices",
+    "Replacing elections with rule by corporations",
+    "Ending all workplace rules and safety standards"
+  ],
+  correctIndices:[0,1],
+  hint:"Unions formed to improve labor conditions and bargaining power.",
+  explain:"Unions pushed for safer conditions, shorter hours, and better pay."
+},
+{
+  id:"CS8-G2-008",
+  csNum:8,
+  cs:"CS 8 – Laissez-faire & Big Business",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO outcomes that often resulted from laissez-faire attitudes toward big business.",
+  choices:[
+    "Growth of trusts/monopolies with limited oversight",
+    "Increased government regulation of factory safety",
+    "Greater concentration of economic power in fewer firms",
+    "The immediate elimination of all corporate profits"
+  ],
+  correctIndices:[0,2],
+  hint:"Less oversight can allow consolidation and concentration of power.",
+  explain:"Minimal regulation enabled monopolies and concentrated corporate power."
+},
+{
+  id:"CS9-G2-009",
+  csNum:9,
+  cs:"CS 9 – Technology & the Economy/Society",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO ways new technology affected daily life in the early 1900s.",
+  choices:[
+    "Improved communication or access to information",
+    "Saved time or changed household labor routines",
+    "Eliminated all demand for factory-made goods",
+    "Ended the need for transportation networks"
+  ],
+  correctIndices:[0,1],
+  hint:"Think: communication and household/consumer life changes.",
+  explain:"Technology improved communication and reshaped home/work routines."
+},
+{
+  id:"CS10-G2-010",
+  csNum:10,
+  cs:"CS 10 – Immigration, Migration & Urbanization",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO challenges associated with overcrowded tenement housing around 1900.",
+  choices:[
+    "Poor ventilation and the spread of diseases like tuberculosis",
+    "Increased access to clean water and sanitation in every building",
+    "Rapid spread of cholera due to contaminated water and poor sanitation",
+    "Guaranteed spacious living areas for large families"
+  ],
+  correctIndices:[0,2],
+  hint:"Overcrowding + sanitation problems = public health crises.",
+  explain:"Tenements often had poor ventilation and sanitation, increasing disease spread."
+},
+
+{
+  id:"CS11-G2-011",
+  csNum:11,
+  cs:"CS 11 – Progressive Era Reforms",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO reasons Progressive reformers supported stronger regulation of food and medicines.",
+  choices:[
+    "Public exposure of unsafe products and misleading labels",
+    "A desire to eliminate all government action permanently",
+    "Growing public pressure for consumer protection",
+    "A goal of ending public health inspections"
+  ],
+  correctIndices:[0,2],
+  hint:"Progressive reforms often followed publicity about harms.",
+  explain:"Unsafe products and public pressure drove consumer protection reforms."
+},
+{
+  id:"CS12-G2-012",
+  csNum:12,
+  cs:"CS 12 – Women’s Suffrage",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO strategies suffrage activists used to win voting rights.",
+  choices:[
+    "Organized petitions, marches, and public campaigns",
+    "Direct lobbying of lawmakers and building coalitions",
+    "Rejecting all political participation",
+    "Calling for the abolition of elections"
+  ],
+  correctIndices:[0,1],
+  hint:"Think organized activism + political pressure.",
+  explain:"Activists used public organizing and lobbying to build support for an amendment."
+},
+{
+  id:"CS13-G2-013",
+  csNum:13,
+  cs:"CS 13 – U.S. Involvement in World War I",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO factors that increased U.S. pressure to enter World War I.",
+  choices:[
+    "Unrestricted submarine warfare threatening ships",
+    "U.S. neutrality laws requiring immediate war",
+    "Economic ties and trade interests with Allied powers",
+    "A national decision to eliminate all overseas trade"
+  ],
+  correctIndices:[0,2],
+  hint:"Think threats + interests.",
+  explain:"Submarine warfare and economic ties increased pressure to enter the conflict."
+},
+{
+  id:"CS14-G2-014",
+  csNum:14,
+  cs:"CS 14 – Post-WWI Peace Efforts",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO reasons many U.S. senators opposed joining the League of Nations.",
+  choices:[
+    "Fear the U.S. would be drawn into future wars",
+    "Belief it could limit U.S. independence in foreign policy",
+    "Desire to increase U.S. military commitments worldwide immediately",
+    "Belief the League required the U.S. to end all trade"
+  ],
+  correctIndices:[0,1],
+  hint:"Opposition centered on entanglement and sovereignty.",
+  explain:"Many feared entangling alliances and limits on independent decision-making."
+},
+{
+  id:"CS15-G2-015",
+  csNum:15,
+  cs:"CS 15 – Isolationism in the 1930s",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO examples of policies reflecting U.S. isolationist tendencies before WWII.",
+  choices:[
+    "Neutrality Acts limiting aid or involvement",
+    "Cash-and-carry restrictions on trade with belligerents",
+    "Truman Doctrine and global containment commitments",
+    "NATO collective defense agreements"
+  ],
+  correctIndices:[0,1],
+  hint:"Isolationism = avoiding commitments that pull the U.S. into war.",
+  explain:"Neutrality Acts and cash-and-carry were designed to avoid involvement."
+},
+
+{
+  id:"CS16-G2-016",
+  csNum:16,
+  cs:"CS 16 – Causes of the Great Depression",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO factors that contributed to the Great Depression.",
+  choices:[
+    "Stock market speculation and risky investing",
+    "Weak banking practices and bank failures",
+    "The GI Bill expanding college access",
+    "The Marshall Plan rebuilding Europe"
+  ],
+  correctIndices:[0,1],
+  hint:"Think 1920s weaknesses + collapse mechanisms.",
+  explain:"Speculation and fragile banking helped trigger and deepen the depression."
+},
+{
+  id:"CS17-G2-017",
+  csNum:17,
+  cs:"CS 17 – Effects of the Great Depression",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO major effects of the Great Depression on Americans.",
+  choices:[
+    "Widespread unemployment and poverty",
+    "Increased demand for government relief programs",
+    "A sudden nationwide increase in wages",
+    "A total end to all political debate"
+  ],
+  correctIndices:[0,1],
+  hint:"Think hardship + pressure for action.",
+  explain:"Unemployment and suffering increased demand for government response."
+},
+{
+  id:"CS18-G2-018",
+  csNum:18,
+  cs:"CS 18 – New Deal & Federal Role",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO goals of the New Deal.",
+  choices:[
+    "Provide relief for unemployed and struggling Americans",
+    "Reform financial systems to reduce future crashes",
+    "Eliminate all private businesses permanently",
+    "End state governments"
+  ],
+  correctIndices:[0,1],
+  hint:"New Deal = relief, recovery, reform.",
+  explain:"Programs aimed to relieve suffering and reform systems like banking/markets."
+},
+{
+  id:"CS19-G2-019",
+  csNum:19,
+  cs:"CS 19 – Rise of Dictatorships & Global Tension",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO conditions that helped dictators gain power between WWI and WWII.",
+  choices:[
+    "Economic crisis and mass unemployment",
+    "Political instability and weak democratic institutions",
+    "Stable democracies with rising satisfaction",
+    "An end to nationalism across Europe"
+  ],
+  correctIndices:[0,1],
+  hint:"Authoritarian movements grow when systems look like they are failing.",
+  explain:"Economic and political instability made extreme leaders more appealing to some citizens."
+},
+{
+  id:"CS20-G2-020",
+  csNum:20,
+  cs:"CS 20 – U.S. Entry into WWII",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO actions that moved the U.S. closer to involvement in WWII before Pearl Harbor.",
+  choices:[
+    "Lend-Lease aid to Allied nations",
+    "Atlantic Charter cooperation with Britain",
+    "The U.S. declaration to join the Axis powers",
+    "A law banning all U.S. trade worldwide"
+  ],
+  correctIndices:[0,1],
+  hint:"Look for policies supporting Allies short of declaring war.",
+  explain:"Lend-Lease and Atlantic Charter increased cooperation and support for Allies."
+},
+
+{
+  id:"CS21-G2-021",
+  csNum:21,
+  cs:"CS 21 – WWII Homefront",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO ways WWII changed the U.S. homefront.",
+  choices:[
+    "Rationing and increased government management of resources",
+    "Women’s expanded roles in industrial work",
+    "An immediate end to wartime production",
+    "The collapse of all factories"
+  ],
+  correctIndices:[0,1],
+  hint:"Think: mobilization changes labor and resources.",
+  explain:"War mobilization brought rationing and expanded workforce roles for women."
+},
+{
+  id:"CS22-G2-022",
+  csNum:22,
+  cs:"CS 22 – Postwar Boom",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO factors that contributed to U.S. economic growth after WWII.",
+  choices:[
+    "Rising consumer demand and suburban expansion",
+    "Expanded access to education and home loans",
+    "A total ban on consumer spending",
+    "The elimination of manufacturing"
+  ],
+  correctIndices:[0,1],
+  hint:"Pent-up demand + housing + education access.",
+  explain:"Spending, suburbanization, and expanded access to loans/education fueled growth."
+},
+{
+  id:"CS23-G2-023",
+  csNum:23,
+  cs:"CS 23 – Cold War Causes",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO reasons Cold War tensions developed after WWII.",
+  choices:[
+    "Competing ideologies: capitalism vs. communism",
+    "Mistrust over postwar influence and security",
+    "A shared plan to unify under one government",
+    "An agreement to eliminate all alliances"
+  ],
+  correctIndices:[0,1],
+  hint:"Ideological rivalry + security competition.",
+  explain:"Ideology and power competition fueled tensions."
+},
+{
+  id:"CS24-G2-024",
+  csNum:24,
+  cs:"CS 24 – Containment",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO examples of U.S. actions consistent with containment.",
+  choices:[
+    "Providing economic or military aid to resist communist expansion",
+    "Forming alliances to deter Soviet influence",
+    "Withdrawing from global affairs entirely",
+    "Supporting the spread of communism"
+  ],
+  correctIndices:[0,1],
+  hint:"Containment = block expansion.",
+  explain:"Aid and alliances were tools used to limit Soviet/communist expansion."
+},
+{
+  id:"CS25-G2-025",
+  csNum:25,
+  cs:"CS 25 – Red Scare",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO factors that fueled anti-communist fear in the U.S. during the early Cold War.",
+  choices:[
+    "International rivalry and conflicts with the Soviet bloc",
+    "Espionage cases and fears of internal subversion",
+    "The end of all political propaganda",
+    "An immediate worldwide peace settlement"
+  ],
+  correctIndices:[0,1],
+  hint:"Think external conflict + internal suspicion.",
+  explain:"Global tensions and espionage fears heightened domestic suspicion."
+},
+
+{
+  id:"CS26-G2-026",
+  csNum:26,
+  cs:"CS 26 – Civil Rights Movement",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO outcomes of civil rights activism in the 1950s–60s.",
+  choices:[
+    "Legal challenges and court rulings against segregation",
+    "Federal legislation strengthening equal access and voting rights",
+    "Expansion of Jim Crow laws nationwide",
+    "The elimination of constitutional protections"
+  ],
+  correctIndices:[0,1],
+  hint:"Look for legal and legislative changes that expanded rights.",
+  explain:"Court rulings and federal laws expanded protections and enforcement."
+},
+{
+  id:"CS27-G2-027",
+  csNum:27,
+  cs:"CS 27 – Rights Movements for Other Groups",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO reasons rights movements expanded after WWII beyond African American civil rights.",
+  choices:[
+    "Activists used democratic ideals to argue for broader equality",
+    "Media coverage helped spread awareness of unequal treatment",
+    "A federal policy required segregation for all groups",
+    "Courts refused to hear any civil liberties cases"
+  ],
+  correctIndices:[0,1],
+  hint:"Think activism + visibility + ideals.",
+  explain:"Democratic ideals and media attention helped broaden demands for equality."
+},
+{
+  id:"CS28-G2-028",
+  csNum:28,
+  cs:"CS 28 – Social/Cultural Change (1945–1994)",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO ways mass media influenced American culture after WWII.",
+  choices:[
+    "Created shared national experiences through TV/radio",
+    "Helped spread new music, trends, and youth culture",
+    "Ended communication between different regions",
+    "Eliminated advertising"
+  ],
+  correctIndices:[0,1],
+  hint:"Media spreads shared culture and trends.",
+  explain:"TV/radio helped standardize and spread popular culture nationwide."
+},
+{
+  id:"CS29-G2-029",
+  csNum:29,
+  cs:"CS 29 – Immigration Patterns (post-1965)",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO effects of changes in U.S. immigration policy after the mid-1960s.",
+  choices:[
+    "Changed the regions many immigrants came from",
+    "Increased cultural and demographic diversity in many communities",
+    "Ended immigration entirely",
+    "Required immigrants to settle only in rural areas"
+  ],
+  correctIndices:[0,1],
+  hint:"Policy changes can reshape origin patterns and diversity.",
+  explain:"Post-1960s reforms reshaped immigration origins and increased diversity."
+},
+{
+  id:"CS30-G2-030",
+  csNum:30,
+  cs:"CS 30 – End of the Cold War",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO factors that contributed to the collapse of communist governments by 1991.",
+  choices:[
+    "Economic stagnation and declining living standards",
+    "Reform movements challenging one-party control",
+    "A massive expansion of Soviet prosperity",
+    "A worldwide agreement to ban political protest"
+  ],
+  correctIndices:[0,1],
+  hint:"Think internal weaknesses + pressure for reform.",
+  explain:"Economic stagnation and reform movements undermined communist control."
+},
+
+{
+  id:"CS33-G2-031",
+  csNum:33,
+  cs:"CS 33 – Equality & Civil Rights Expansion (1945–1994)",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO reasons civil rights activism intensified after World War II.",
+  choices:[
+    "The contradiction between democratic ideals and discrimination became harder to defend",
+    "Returning veterans and activists demanded fuller rights and protections",
+    "The federal government eliminated all civil rights laws",
+    "Segregation ended everywhere by 1946"
+  ],
+  correctIndices:[0,1],
+  hint:"Look for pressure points: ideals vs reality + organized demands for change.",
+  explain:"Postwar contradictions and increased activism fueled stronger movements."
+},
+{
+  id:"CS33-G2-032",
+  csNum:33,
+  cs:"CS 33 – Equality & Civil Rights Expansion (1945–1994)",
+  tags:["G2","select-two"],
+  type:"select-two",
+  stem:"Select TWO ways federal actions in the 1960s strengthened civil rights protections.",
+  choices:[
+    "Created enforcement tools against discrimination in public accommodations and employment",
+    "Protected voting rights by targeting barriers like discriminatory practices",
+    "Required states to legalize segregation in schools",
+    "Ended the 14th Amendment’s equal protection clause"
+  ],
+  correctIndices:[0,1],
+  hint:"Think: enforcement + voting protections.",
+  explain:"Federal laws strengthened enforcement against discrimination and barriers to voting."
+}
 ];
