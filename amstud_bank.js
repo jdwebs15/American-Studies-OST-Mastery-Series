@@ -1117,251 +1117,278 @@
       hint:"Long-term weakness + pressure to change.",
       explain:"Economic strain and reform movements undermined centralized control."
     },
-     /* =========================
-   GAME 4 (Sequence / Turning Point)
-   How Game 4 reads these:
-   - tags includes "G4" OR
-   - type === "sequence-turning-point"
-   Required fields:
-   - stem
-   - events: [4 strings]
-   - correctOrder: [4 indices]  (order of events by index)
-   - turningPoint: number (0-3) index of the turning-point event in events[]
-========================= */
+ // American Studies OST Mastery — Shared Question Bank
+// MUST be in repo root: /amstud_bank.js
+// MUST expose: window.AMSTUD_BANK (and global AMSTUD_BANK for backward-compat)
 
-{
-  id:"G4-001",
-  csNum:6,
-  cs:"CS 6 – Rise of Corporations & Industrial Growth",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Put these developments in the most logical sequence that helps explain how corporations became national businesses. Then identify the turning point.",
-  events:[
-    "Railroads expand and lower shipping costs across regions",
-    "Factories increase output using new machinery and methods",
-    "Businesses distribute goods to customers in distant markets",
-    "National brands and large corporations grow in size and influence"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:0,
-  hint:"Transportation is the unlock that makes national markets possible.",
-  explain:"Railroads connect regions. That connection is the turning point that allows scale, distribution, and national corporate growth."
-},
+(function () {
+  "use strict";
 
-{
-  id:"G4-002",
-  csNum:7,
-  cs:"CS 7 – Labor Organizations",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Sequence the chain that explains why unions gained influence. Then identify the turning point.",
-  events:[
-    "Workers face long hours, low pay, and unsafe conditions",
-    "Workers organize unions to increase bargaining power",
-    "Workers use strikes/boycotts to pressure employers",
-    "Employers respond with concessions or conflict (injunctions, strikebreakers)"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:1,
-  hint:"The turning point is when workers stop acting individually and organize.",
-  explain:"Conditions existed before. Union organization changes the balance of power and makes collective pressure possible."
-},
+  // =========================
+  // PUT ALL QUESTION OBJECTS INSIDE THIS ARRAY
+  // - Each object must be comma-separated
+  // - NO extra brackets inside
+  // - Only ONE closing ]; at the very end
+  // =========================
+  const bank = [
 
-{
-  id:"G4-003",
-  csNum:8,
-  cs:"CS 8 – Laissez-faire & Big Business",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Order the cause-and-effect sequence describing how laissez-faire attitudes helped trusts form. Then identify the turning point.",
-  events:[
-    "Government limits regulation of business practices",
-    "Large firms merge or coordinate to reduce competition",
-    "Trusts/monopolies gain control of prices and output",
-    "Smaller competitors struggle or collapse"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:0,
-  hint:"The turning point is the policy environment that allows consolidation.",
-  explain:"Minimal regulation made consolidation easier and helped trusts form and dominate."
-},
+    // ✅ PASTE YOUR EXISTING CS1–CS33 MCQs HERE (Cause & Effect objects)
+    // Example:
+    // { cs:"CS 1 ...", tag:"Cause & Effect", stem:"...", choices:[...], answerIndex:1, hint:"...", explain:"..." },
 
-{
-  id:"G4-004",
-  csNum:10,
-  cs:"CS 10 – Immigration, Internal Migration, Urbanization",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Sequence what typically happened in fast-growing cities around 1900. Then identify the turning point.",
-  events:[
-    "Large numbers of immigrants and migrants arrive for jobs",
-    "Cities struggle to provide housing, sanitation, and services",
-    "Overcrowded tenements increase disease and health crises",
-    "Reformers push public health laws and city reforms"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:0,
-  hint:"Population movement triggers everything that follows.",
-  explain:"Mass migration/immigration is the turning point that strains infrastructure and creates urgent reform pressures."
-},
+    // ✅ PASTE YOUR EXISTING GAME 2 (G2 / select-two) OBJECTS HERE
+    // Example:
+    // { id:"CS1-G2-001", csNum:1, tags:["G2"], type:"select-two", stem:"...", choices:[...], correctIndices:[0,2], hint:"...", explain:"..." },
 
-{
-  id:"G4-005",
-  csNum:11,
-  cs:"CS 11 – Progressive Era Reforms",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Put the Progressive reform pattern in order. Then identify the turning point.",
-  events:[
-    "Journalists/public investigations expose problems (muckrakers)",
-    "Public outrage increases pressure on government",
-    "Reform laws/regulations are passed",
-    "Conditions improve over time (inspection, standards, enforcement)"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:0,
-  hint:"Exposure creates pressure; pressure creates policy.",
-  explain:"Muckrakers exposing abuse is often the turning point that converts hidden problems into political action."
-},
+    // ✅ PASTE YOUR EXISTING GAME 3 (G3 / best-explains) OBJECTS HERE
+    // Example:
+    // { id:"G3-001", csNum:6, tags:["G3"], type:"best-explains", stem:"...", choices:[...], answerIndex:1, hint:"...", explain:"..." },
 
-{
-  id:"G4-006",
-  csNum:14,
-  cs:"CS 14 – Post-WWI Peace Efforts",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Sequence the path from WWI ending to U.S. rejection of the Treaty of Versailles. Then identify the turning point.",
-  events:[
-    "WWI ends and peace terms are negotiated",
-    "Treaty includes League of Nations and collective security commitments",
-    "Senate debates sovereignty/entanglement concerns",
-    "U.S. rejects the treaty and avoids joining the League"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:1,
-  hint:"The League of Nations clause is the controversy trigger.",
-  explain:"The League commitment is the turning point that sparks Senate opposition and drives rejection."
-},
+    // =========================
+    // GAME 4 (Sequence / Turning Point)
+    // How Game 4 reads these:
+    // - tags includes "G4" OR type === "sequence-turning-point"
+    // Required fields:
+    // - stem
+    // - events: [4 strings]
+    // - correctOrder: [4 indices]
+    // - turningPoint: number 0–3
+    // =========================
 
-{
-  id:"G4-007",
-  csNum:15,
-  cs:"CS 15 – Isolationism in the 1930s",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Sequence how the U.S. tried to avoid another war in the 1930s. Then identify the turning point.",
-  events:[
-    "Memories of WWI costs increase anti-war sentiment",
-    "Congress passes Neutrality Acts to limit involvement",
-    "International tensions rise as aggressors expand",
-    "U.S. slowly shifts toward aiding allies as threats grow"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:1,
-  hint:"Policy is the turning point — it changes how the U.S. responds.",
-  explain:"Neutrality laws are the turning point because they formalize isolationist strategy before later erosion."
-},
+    {
+      id:"G4-001",
+      csNum:6,
+      cs:"CS 6 – Rise of Corporations & Industrial Growth",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Put these developments in the most logical sequence that helps explain how corporations became national businesses. Then identify the turning point.",
+      events:[
+        "Railroads expand and lower shipping costs across regions",
+        "Factories increase output using new machinery and methods",
+        "Businesses distribute goods to customers in distant markets",
+        "National brands and large corporations grow in size and influence"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:0,
+      hint:"Transportation is the unlock that makes national markets possible.",
+      explain:"Railroads connect regions. That connection is the turning point that allows scale, distribution, and national corporate growth."
+    },
 
-{
-  id:"G4-008",
-  csNum:16,
-  cs:"CS 16 – Causes of the Great Depression",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Sequence the crash-to-depression chain. Then identify the turning point.",
-  events:[
-    "Stock speculation increases risk (buying on margin)",
-    "Stock market crash destroys confidence and wealth",
-    "Bank failures reduce savings and credit",
-    "Businesses cut production and unemployment rises"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:1,
-  hint:"The crash converts risk into collapse.",
-  explain:"Speculation is a condition; the crash is the turning point that triggers cascading failures."
-},
+    {
+      id:"G4-002",
+      csNum:7,
+      cs:"CS 7 – Labor Organizations",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Sequence the chain that explains why unions gained influence. Then identify the turning point.",
+      events:[
+        "Workers face long hours, low pay, and unsafe conditions",
+        "Workers organize unions to increase bargaining power",
+        "Workers use strikes/boycotts to pressure employers",
+        "Employers respond with concessions or conflict (injunctions, strikebreakers)"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:1,
+      hint:"The turning point is when workers stop acting individually and organize.",
+      explain:"Conditions existed before. Union organization changes the balance of power and makes collective pressure possible."
+    },
 
-{
-  id:"G4-009",
-  csNum:18,
-  cs:"CS 18 – New Deal & Expanded Federal Role",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Sequence why the federal government expanded its role in the 1930s. Then identify the turning point.",
-  events:[
-    "Economic collapse creates widespread hardship",
-    "Government launches relief/recovery/reform programs",
-    "New agencies regulate banks/markets and provide jobs",
-    "Federal expectations of responsibility increase long-term"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:1,
-  hint:"The turning point is the policy response to crisis.",
-  explain:"The New Deal program launch is the turning point where federal action becomes systematic and large-scale."
-},
+    {
+      id:"G4-003",
+      csNum:8,
+      cs:"CS 8 – Laissez-faire & Big Business",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Order the cause-and-effect sequence describing how laissez-faire attitudes helped trusts form. Then identify the turning point.",
+      events:[
+        "Government limits regulation of business practices",
+        "Large firms merge or coordinate to reduce competition",
+        "Trusts/monopolies gain control of prices and output",
+        "Smaller competitors struggle or collapse"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:0,
+      hint:"The turning point is the policy environment that allows consolidation.",
+      explain:"Minimal regulation made consolidation easier and helped trusts form and dominate."
+    },
 
-{
-  id:"G4-010",
-  csNum:20,
-  cs:"CS 20 – U.S. Entry into WWII",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Sequence the road from tension to U.S. entry into WWII. Then identify the turning point.",
-  events:[
-    "War expands in Europe and Asia; U.S. debates involvement",
-    "U.S. increases aid to Allies (e.g., Lend-Lease)",
-    "Japan attacks Pearl Harbor",
-    "U.S. declares war and fully mobilizes"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:2,
-  hint:"The turning point is the direct attack.",
-  explain:"Pearl Harbor is the turning point that ends debate and triggers formal entry."
-},
+    {
+      id:"G4-004",
+      csNum:10,
+      cs:"CS 10 – Immigration, Internal Migration, Urbanization",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Sequence what typically happened in fast-growing cities around 1900. Then identify the turning point.",
+      events:[
+        "Large numbers of immigrants and migrants arrive for jobs",
+        "Cities struggle to provide housing, sanitation, and services",
+        "Overcrowded tenements increase disease and health crises",
+        "Reformers push public health laws and city reforms"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:0,
+      hint:"Population movement triggers everything that follows.",
+      explain:"Mass migration/immigration is the turning point that strains infrastructure and creates urgent reform pressures."
+    },
 
-{
-  id:"G4-011",
-  csNum:23,
-  cs:"CS 23 – Early Cold War Tensions",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Sequence how Cold War rivalry formed. Then identify the turning point.",
-  events:[
-    "WWII ends with the U.S. and USSR as major powers",
-    "Ideological conflict grows over postwar influence and security",
-    "Each side builds alliances and competes for global influence",
-    "Long-term rivalry shapes foreign and domestic policy"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:1,
-  hint:"The turning point is when cooperation turns into rivalry.",
-  explain:"Ideological conflict and mistrust is the pivot that turns wartime alliance into Cold War competition."
-},
+    {
+      id:"G4-005",
+      csNum:11,
+      cs:"CS 11 – Progressive Era Reforms",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Put the Progressive reform pattern in order. Then identify the turning point.",
+      events:[
+        "Journalists/public investigations expose problems (muckrakers)",
+        "Public outrage increases pressure on government",
+        "Reform laws/regulations are passed",
+        "Conditions improve over time (inspection, standards, enforcement)"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:0,
+      hint:"Exposure creates pressure; pressure creates policy.",
+      explain:"Muckrakers exposing abuse is often the turning point that converts hidden problems into political action."
+    },
 
-{
-  id:"G4-012",
-  csNum:26,
-  cs:"CS 26 – Civil Rights Movement",
-  tags:["G4"],
-  type:"sequence-turning-point",
-  stem:"Sequence the path from segregation to federal enforcement. Then identify the turning point.",
-  events:[
-    "Segregation and discrimination continue after WWII",
-    "Activists challenge policies through protest and court cases",
-    "Federal government passes/enforces civil rights legislation",
-    "Legal protections expand and enforcement increases"
-  ],
-  correctOrder:[0,1,2,3],
-  turningPoint:2,
-  hint:"The turning point is when enforcement becomes national policy.",
-  explain:"Federal legislation/enforcement is the turning point that changes civil rights from local battles to national standards."
-},
-  ];
+    {
+      id:"G4-006",
+      csNum:14,
+      cs:"CS 14 – Post-WWI Peace Efforts",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Sequence the path from WWI ending to U.S. rejection of the Treaty of Versailles. Then identify the turning point.",
+      events:[
+        "WWI ends and peace terms are negotiated",
+        "Treaty includes League of Nations and collective security commitments",
+        "Senate debates sovereignty/entanglement concerns",
+        "U.S. rejects the treaty and avoids joining the League"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:1,
+      hint:"The League of Nations clause is the controversy trigger.",
+      explain:"The League commitment is the turning point that sparks Senate opposition and drives rejection."
+    },
+
+    {
+      id:"G4-007",
+      csNum:15,
+      cs:"CS 15 – Isolationism in the 1930s",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Sequence how the U.S. tried to avoid another war in the 1930s. Then identify the turning point.",
+      events:[
+        "Memories of WWI costs increase anti-war sentiment",
+        "Congress passes Neutrality Acts to limit involvement",
+        "International tensions rise as aggressors expand",
+        "U.S. slowly shifts toward aiding allies as threats grow"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:1,
+      hint:"Policy is the turning point — it changes how the U.S. responds.",
+      explain:"Neutrality laws are the turning point because they formalize isolationist strategy before later erosion."
+    },
+
+    {
+      id:"G4-008",
+      csNum:16,
+      cs:"CS 16 – Causes of the Great Depression",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Sequence the crash-to-depression chain. Then identify the turning point.",
+      events:[
+        "Stock speculation increases risk (buying on margin)",
+        "Stock market crash destroys confidence and wealth",
+        "Bank failures reduce savings and credit",
+        "Businesses cut production and unemployment rises"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:1,
+      hint:"The crash converts risk into collapse.",
+      explain:"Speculation is a condition; the crash is the turning point that triggers cascading failures."
+    },
+
+    {
+      id:"G4-009",
+      csNum:18,
+      cs:"CS 18 – New Deal & Expanded Federal Role",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Sequence why the federal government expanded its role in the 1930s. Then identify the turning point.",
+      events:[
+        "Economic collapse creates widespread hardship",
+        "Government launches relief/recovery/reform programs",
+        "New agencies regulate banks/markets and provide jobs",
+        "Federal expectations of responsibility increase long-term"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:1,
+      hint:"The turning point is the policy response to crisis.",
+      explain:"The New Deal program launch is the turning point where federal action becomes systematic and large-scale."
+    },
+
+    {
+      id:"G4-010",
+      csNum:20,
+      cs:"CS 20 – U.S. Entry into WWII",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Sequence the road from tension to U.S. entry into WWII. Then identify the turning point.",
+      events:[
+        "War expands in Europe and Asia; U.S. debates involvement",
+        "U.S. increases aid to Allies (e.g., Lend-Lease)",
+        "Japan attacks Pearl Harbor",
+        "U.S. declares war and fully mobilizes"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:2,
+      hint:"The turning point is the direct attack.",
+      explain:"Pearl Harbor is the turning point that ends debate and triggers formal entry."
+    },
+
+    {
+      id:"G4-011",
+      csNum:23,
+      cs:"CS 23 – Early Cold War Tensions",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Sequence how Cold War rivalry formed. Then identify the turning point.",
+      events:[
+        "WWII ends with the U.S. and USSR as major powers",
+        "Ideological conflict grows over postwar influence and security",
+        "Each side builds alliances and competes for global influence",
+        "Long-term rivalry shapes foreign and domestic policy"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:1,
+      hint:"The turning point is when cooperation turns into rivalry.",
+      explain:"Ideological conflict and mistrust is the pivot that turns wartime alliance into Cold War competition."
+    },
+
+    {
+      id:"G4-012",
+      csNum:26,
+      cs:"CS 26 – Civil Rights Movement",
+      tags:["G4"],
+      type:"sequence-turning-point",
+      stem:"Sequence the path from segregation to federal enforcement. Then identify the turning point.",
+      events:[
+        "Segregation and discrimination continue after WWII",
+        "Activists challenge policies through protest and court cases",
+        "Federal government passes/enforces civil rights legislation",
+        "Legal protections expand and enforcement increases"
+      ],
+      correctOrder:[0,1,2,3],
+      turningPoint:2,
+      hint:"The turning point is when enforcement becomes national policy.",
+      explain:"Federal legislation/enforcement is the turning point that changes civil rights from local battles to national standards."
+    }
+
+  ]; // ✅ ONLY ONE closing bracket/semicolon for the bank array
 
   // Expose the bank for ALL games
   window.AMSTUD_BANK = bank;
 
-  // Backward/compat: some games check AMSTUD_BANK directly (not window.AMSTUD_BANK)
+  // Backward-compat: some games check AMSTUD_BANK directly (not window.AMSTUD_BANK)
   // Using var ensures it becomes a true global.
   // eslint-disable-next-line no-var
   var AMSTUD_BANK = window.AMSTUD_BANK;
