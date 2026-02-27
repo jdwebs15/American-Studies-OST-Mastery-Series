@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AmStud Game 4 — Sequence / Turning Point (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <meta name="description" content="American Studies OST Mastery — Sequence / Turning Point (0 misses required)" />
+
+  <!-- Load the shared bank (repo root) -->
+  <script src="../amstud_bank.js?v=1"></script>
+
+  <style>
+    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    .panel{
+      background:rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
+    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+    .pill2{
+      font-size:12px; color:var(--text);
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 10px;
+      white-space:nowrap;
+    }
+    h1{ margin:6px 0 6px; font-size:26px; line-height:1.15; }
+    .sub{ margin:0; color:var(--muted); max-width:90ch; line-height:1.35; }
+
+    .err{
+      display:none;
+      margin:12px 0;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,92,122,.45);
+      background:rgba(255,92,122,.10);
+      color:var(--text);
+      white-space:pre-wrap;
+      text-align:left;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size:12px;
+    }
+
+    .gate{ margin-top:12px; display:block; }
+    .gateRow{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    input[type="text"]{
+      flex:1;
+      min-width:220px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      outline:none;
+    }
+    .btn{
+      appearance:none;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.10); }
+    .btn.danger:hover{ border-color:rgba(255,92,122,.35); background:rgba(255,92,122,.10); }
+
+    .game{ display:none; margin-top:12px; }
+
+    .qbox{
+      margin-top:12px;
+      padding:14px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(0,0,0,.18);
+    }
+    .qmeta{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:8px; }
+    .tag{
+      font-size:12px; color:var(--text);
+      background:rgba(0,0,0,.22);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:6px 10px;
+      white-space:nowrap;
+    }
+    .stem{ font-size:16px; font-weight:800; line-height:1.35; margin:8px 0 10px; color:var(--text); }
+
+    .grid4{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+    @media (max-width:860px){ .grid4{ grid-template-columns:1fr; } }
+
+    /* IMPORTANT: ensure readable text */
+    button.choice{
+      width:100%;
+      text-align:left;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.03);
+      color:var(--text);          /* <- fix black text issue */
+      cursor:pointer;
+      transition:transform .08s ease, border-color .12s ease, background .12s ease;
+      font-size:14px;
+      line-height:1.35;
+    }
+    button.choice:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.08); }
+    button.choice.lock{ cursor:not-allowed; opacity:.9; }
+    button.choice.good{ border-color:rgba(43,213,118,.55); background:rgba(43,213,118,.10); }
+    button.choice.bad{ border-color:rgba(255,92,122,.55); background:rgba(255,92,122,.10); }
+
+    .selectedRow{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.18);
+      background:rgba(0,0,0,.14);
+      color:var(--muted);
+      line-height:1.35;
+    }
+
+    .msg{
+      display:none;
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      color:var(--muted);
+      text-align:left;
+      line-height:1.35;
+    }
+    .msg.show{ display:block; }
+    .msg b{ color:var(--text); }
+
+    .finish{
+      display:none;
+      margin-top:12px;
+      padding:14px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(0,0,0,.18);
+    }
+    textarea{
+      width:100%;
+      min-height:160px;
+      resize:vertical;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size:12px;
+      margin-top:10px;
+    }
+    .rowBtns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .tiny{ font-size:12px; color:var(--muted); margin-top:8px; }
+  </style>
+</head>
+
+<body>
+  <div class="gameWrap">
+    <div class="panel">
+      <div class="topbar">
+        <div>
+          <div class="k">LEGEND MASTERY SERIES</div>
+          <h1>AmStud Game 4 — Sequence / Turning Point (Mastery)</h1>
+          <p class="sub">Mastery = 0 misses. Wrong selection = hint → must correct to proceed (miss recorded). Correct sequences auto-advance after <b>2500ms</b>.</p>
+        </div>
+        <div class="stats">
+          <div class="pill2">Player: <b id="playerName">—</b></div>
+          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
+          <div class="pill2">Accuracy: <b id="acc">—</b></div>
+          <div class="pill2">Misses: <b id="misses">0</b></div>
+          <div class="pill2"><b id="prog">0/0</b></div>
+          <button class="btn danger" id="hardRestart">Hard Restart</button>
+        </div>
+      </div>
+
+      <div class="tiny">Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b></div>
+
+      <div id="errBox" class="err"></div>
+
+      <div id="gate" class="gate">
+        <div class="qbox">
+          <div class="stem" style="margin:0 0 10px;">Enter your name to begin:</div>
+          <div class="gateRow">
+            <input id="nameInput" type="text" placeholder="e.g., dave" autocomplete="off" />
+            <button class="btn" id="startBtn">Start</button>
+          </div>
+          <div class="tiny">Tip: You must finish with 0 misses to unlock a mastery ticket.</div>
+        </div>
+      </div>
+
+      <div id="game" class="game">
+        <div class="qbox">
+          <div class="qmeta">
+            <div class="tag" id="csTag">CS —</div>
+            <div class="tag" id="typeTag">Sequence / Turning Point</div>
+          </div>
+
+          <div class="stem" id="stem">—</div>
+
+          <div class="selectedRow" id="selectedRow">Select events in order: <b id="selText">—</b></div>
+
+          <div class="grid4" id="eventChoices"></div>
+
+          <div class="qbox" style="margin-top:12px; display:none;" id="tpBox">
+            <div class="stem" style="margin:0 0 10px;">Which event was the turning point?</div>
+            <div class="grid4" id="tpChoices"></div>
+          </div>
+
+          <div id="msg" class="msg"></div>
+        </div>
+
+        <div id="finish" class="finish">
+          <div class="stem" style="margin:0;">Finish</div>
+          <div class="tiny" id="finishLine"></div>
+          <textarea id="ticket" readonly></textarea>
+          <div class="rowBtns">
+            <button class="btn" id="copyTicket">Copy Ticket</button>
+            <button class="btn" id="printTicket">Print</button>
+          </div>
+          <div class="tiny">If you didn’t earn mastery, use <b>Hard Restart</b> to reset and try again.</div>
+        </div>
+      </div>
+
+      <div class="tiny" style="margin-top:10px;">
+        If the page ever “white screens,” the error box above will show where/why.
+      </div>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   HARDENED SHELL + SAFETY
+========================= */
+(function(){
+  const errBox = document.getElementById('errBox');
+  window.addEventListener('error', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Runtime Error:\n" + (e?.message || e) + "\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    errBox.style.display='block';
+    errBox.textContent = "Unhandled Promise Rejection:\n" + (e?.reason?.message || e?.reason || e);
+  });
+})();
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) window.location.reload();
+});
+
+(function(){
+  try{
+    history.replaceState({guard:1}, document.title, location.href);
+    window.addEventListener('popstate', ()=>{
+      history.pushState({guard:1}, document.title, location.href);
+    });
+  }catch(_){}
+})();
+
+/* =========================
+   CONFIG
+========================= */
+const GAME_ID = "AMSTUD_G4";
+const SESSION_KEY = "LEGEND_AMSTUD_G4_V1";
+const SEEN_KEY = "LEGEND_AMSTUD_G4_SEEN_V1";
+const QUESTION_COUNT = 28;
+const ADVANCE_MS = 2500;
+
+function dateOnly(){
+  const d = new Date();
+  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+}
+function timeOnly(dt){
+  const d = dt ? new Date(dt) : new Date();
+  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function fmtElapsed(ms){
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s%60;
+  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
+
+function loadSeen(){
+  try{ return JSON.parse(localStorage.getItem(SEEN_KEY) || "[]"); }catch(_){ return []; }
+}
+function saveSeen(list){
+  localStorage.setItem(SEEN_KEY, JSON.stringify(list.slice(-800)));
+}
+function resetAll(){
+  localStorage.removeItem(SESSION_KEY);
+  location.reload();
+}
+
+/* =========================
+   BANK FILTER (Game 4)
+========================= */
+function isG4(q){
+  const type = String(q.type || "").toLowerCase();
+  const tags = Array.isArray(q.tags) ? q.tags.map(x=>String(x).toLowerCase()) : [];
+  const tag = String(q.tag || "").toLowerCase();
+  return type === "sequence-turning-point"
+    || tags.includes("g4")
+    || tags.includes("sequence")
+    || tags.includes("turning point")
+    || tag === "sequence / turning point"
+    || tag === "sequence";
+}
+
+function normalizeG4(q){
+  if(!q.stem || !Array.isArray(q.events) || q.events.length !== 4) return null;
+  if(!Array.isArray(q.correctOrder) || q.correctOrder.length !== 4) return null;
+  if(!Number.isInteger(q.turningPoint) || q.turningPoint < 0 || q.turningPoint > 3) return null;
+
+  const okOrder = q.correctOrder.every(n => Number.isInteger(n) && n>=0 && n<=3);
+  if(!okOrder) return null;
+
+  return {
+    id: q.id || (q.cs || q.stem).slice(0,60),
+    cs: q.cs || `CS ${q.csNum || "?"}`,
+    csNum: q.csNum || null,
+    stem: q.stem,
+    events: q.events.slice(),
+    correctOrder: q.correctOrder.slice(),
+    turningPoint: q.turningPoint,
+    hint: q.hint || "Re-check sequence logic and identify the pivot event.",
+    explain: q.explain || ""
+  };
+}
+
+function buildDeck(){
+  if(!window.AMSTUD_BANK) throw new Error("AMSTUD_BANK is not defined. Ensure ../amstud_bank.js is loaded before this script.");
+  if(!Array.isArray(window.AMSTUD_BANK)) throw new Error("AMSTUD_BANK is not an array.");
+
+  const seen = new Set(loadSeen());
+  const pool = window.AMSTUD_BANK.filter(isG4).map(normalizeG4).filter(Boolean);
+
+  const unseen = pool.filter(q => !seen.has(q.id));
+  const fallback = pool.filter(q => seen.has(q.id));
+  const ordered = shuffle(unseen).concat(shuffle(fallback));
+
+  if(ordered.length < QUESTION_COUNT){
+    throw new Error(`Not enough usable questions for Game 4. Need ${QUESTION_COUNT}, found ${ordered.length}. Add more G4 items to amstud_bank.js (must include events[4], correctOrder[4], turningPoint 0–3).`);
+  }
+
+  const deck = ordered.slice(0, QUESTION_COUNT);
+  deck.forEach(q => seen.add(q.id));
+  saveSeen(Array.from(seen));
+  return deck;
+}
+
+/* =========================
+   STATE
+========================= */
+let timer = null;
+let deck = [];
+let idx = 0;
+
+const state = {
+  name:"",
+  date:"",
+  startAt:null,
+  endAt:null,
+  correct:0,
+  wrong:0,
+  finished:false
+};
+
+function saveSession(){
+  localStorage.setItem(SESSION_KEY, JSON.stringify({state, idx, deck}));
+}
+function loadSession(){
+  try{
+    const raw = localStorage.getItem(SESSION_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch(_){ return null; }
+}
+
+/* =========================
+   UI HOOKS
+========================= */
+const elPlayerName = document.getElementById('playerName');
+const elElapsed = document.getElementById('elapsed');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+const elProg = document.getElementById('prog');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elDateStamp = document.getElementById('dateStamp');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const nameInput = document.getElementById('nameInput');
+const startBtn = document.getElementById('startBtn');
+const hardRestart = document.getElementById('hardRestart');
+
+const csTag = document.getElementById('csTag');
+const stemEl = document.getElementById('stem');
+const msgEl = document.getElementById('msg');
+
+const selectedRow = document.getElementById('selectedRow');
+const selText = document.getElementById('selText');
+const eventChoices = document.getElementById('eventChoices');
+
+const tpBox = document.getElementById('tpBox');
+const tpChoices = document.getElementById('tpChoices');
+
+const finishBox = document.getElementById('finish');
+const finishLine = document.getElementById('finishLine');
+const ticketEl = document.getElementById('ticket');
+const copyTicket = document.getElementById('copyTicket');
+const printTicket = document.getElementById('printTicket');
+
+/* =========================
+   RENDER HELPERS
+========================= */
+function renderTop(){
+  elPlayerName.textContent = state.name || "—";
+  elDateStamp.textContent = state.date || dateOnly();
+  elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+  elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+  elMisses.textContent = String(state.wrong);
+
+  const total = state.correct + state.wrong;
+  const acc = total ? Math.round((state.correct/total)*100) : 0;
+  elAcc.textContent = total ? `${acc}%` : "—";
+
+  elProg.textContent = `${clamp(idx,0,deck.length)}/${deck.length || 0}`;
+}
+
+function showMsg(html){
+  msgEl.style.display = "block";
+  msgEl.className = "msg show";
+  msgEl.innerHTML = html;
+}
+function clearMsg(){
+  msgEl.style.display = "none";
+  msgEl.className = "msg";
+  msgEl.innerHTML = "";
+}
+
+function makeBtn(text, onClick){
+  const b = document.createElement('button');
+  b.className = "choice";
+  b.type = "button";
+  b.textContent = text;
+  b.addEventListener('click', onClick);
+  return b;
+}
+function lockAll(container, lock=true){
+  container.querySelectorAll('button.choice').forEach(b=>{
+    b.disabled = !!lock;
+    if(lock) b.classList.add('lock');
+    else b.classList.remove('lock');
+  });
+}
+
+/* =========================
+   QUESTION LOGIC
+========================= */
+let working = null;        // current q
+let orderMap = null;       // mapping from displayed event index -> original event index
+let picked = [];           // picked displayed indices in order
+let phase = "sequence";    // "sequence" or "turning"
+
+function renderPicked(){
+  if(picked.length === 0){
+    selText.textContent = "—";
+    return;
+  }
+  const labels = picked.map((dispIdx, n)=>{
+    const origIdx = orderMap[dispIdx];
+    return `${n+1}) ${working.events[origIdx]}`;
+  });
+  selText.textContent = labels.join("  |  ");
+}
+
+function renderQuestion(){
+  clearMsg();
+  tpBox.style.display = "none";
+  tpChoices.innerHTML = "";
+  phase = "sequence";
+  picked = [];
+
+  working = deck[idx];
+
+  // shuffle event display order
+  const disp = shuffle([0,1,2,3]);
+  orderMap = disp; // displayed index -> original index
+
+  csTag.textContent = working.cs || "CS —";
+  stemEl.textContent = working.stem;
+
+  eventChoices.innerHTML = "";
+  disp.forEach((origIdx, dispIdx)=>{
+    const btn = makeBtn(working.events[origIdx], ()=>pickEvent(dispIdx));
+    eventChoices.appendChild(btn);
+  });
+
+  renderPicked();
+  renderTop();
+  saveSession();
+}
+
+function pickEvent(dispIdx){
+  if(state.finished) return;
+  if(phase !== "sequence") return;
+
+  picked.push(dispIdx);
+  renderPicked();
+
+  // visually mark selected
+  const btns = eventChoices.querySelectorAll('button.choice');
+  btns[dispIdx].classList.add('good');
+  btns[dispIdx].disabled = true;
+
+  if(picked.length < 4) return;
+
+  // Evaluate sequence
+  lockAll(eventChoices, true);
+
+  const pickedOrig = picked.map(d => orderMap[d]);
+  const isCorrect = pickedOrig.every((orig, i)=> orig === working.correctOrder[i]);
+
+  if(!isCorrect){
+    state.wrong++;
+    showMsg(`<b>Wrong sequence.</b> Hint: <b>${working.hint}</b><br><span style="color:var(--muted)">${working.explain || ""}</span><br><b>Try the same question again.</b>`);
+    renderTop();
+    saveSession();
+
+    setTimeout(()=>{
+      lockAll(eventChoices, false);
+      renderQuestion(); // reset same question (miss recorded)
+    }, 400);
+    return;
+  }
+
+  // sequence correct -> move to turning point phase
+  showMsg(`<b>Sequence correct.</b> Now identify the turning point. ${working.explain ? ("<br><span style='color:var(--muted)'>"+working.explain+"</span>") : ""}`);
+  tpBox.style.display = "block";
+  tpChoices.innerHTML = "";
+
+  phase = "turning";
+
+  // Turning point choices should match the SAME displayed set/order for cognition
+  orderMap.forEach((origIdx)=>{
+    const b = makeBtn(working.events[origIdx], ()=>pickTurning(origIdx, b));
+    tpChoices.appendChild(b);
+  });
+
+  lockAll(eventChoices, true);
+  lockAll(tpChoices, false);
+
+  renderTop();
+  saveSession();
+}
+
+function pickTurning(origIdx, btn){
+  if(state.finished) return;
+  if(phase !== "turning") return;
+
+  lockAll(tpChoices, true);
+
+  const correctOrig = working.turningPoint;
+  if(origIdx === correctOrig){
+    state.correct++;
+    btn.classList.add('good');
+    showMsg(`<b>Correct.</b> Turning point identified. ${working.explain ? ("<br><span style='color:var(--muted)'>"+working.explain+"</span>") : ""}`);
+
+    renderTop();
+    saveSession();
+
+    setTimeout(()=>{
+      idx++;
+      if(idx >= deck.length){
+        finish();
+      }else{
+        renderQuestion();
+      }
+    }, ADVANCE_MS);
+
+  }else{
+    state.wrong++;
+    btn.classList.add('bad');
+
+    // mark correct
+    tpChoices.querySelectorAll('button.choice').forEach(b=>{
+      if(b.textContent === working.events[correctOrig]) b.classList.add('good');
+    });
+
+    showMsg(`<b>Wrong turning point.</b> Hint: <b>${working.hint}</b><br><span style="color:var(--muted)">${working.explain || ""}</span><br><b>Pick the turning point to proceed.</b>`);
+    renderTop();
+    saveSession();
+
+    setTimeout(()=>{
+      lockAll(tpChoices, false);
+    }, 300);
+  }
+}
+
+/* =========================
+   FINISH / TICKET
+========================= */
+function finish(){
+  state.finished = true;
+  state.endAt = Date.now();
+  clearInterval(timer);
+  timer = null;
+
+  const total = state.correct + state.wrong;
+  const acc = total ? Math.round((state.correct/total)*100) : 0;
+  const elapsedMs = state.endAt - state.startAt;
+  const passed = (state.wrong === 0);
+
+  finishBox.style.display = "block";
+  finishLine.innerHTML = `Result: <b>${passed ? "MASTERED ✅" : "NOT MASTERED ❌"}</b> · Accuracy: <b>${acc}%</b> · Misses: <b>${state.wrong}</b> · Elapsed: <b>${fmtElapsed(elapsedMs)}</b>`;
+
+  const ticket =
+`LEGEND MASTERY TICKET
+Game: AmStud Game 4 — Sequence / Turning Point (Mastery)
+Name: ${state.name}
+Date: ${state.date}
+Start: ${timeOnly(state.startAt)}
+End: ${timeOnly(state.endAt)}
+Elapsed: ${fmtElapsed(elapsedMs)}
+Passed: ${passed ? "YES" : "NO"}
+Accuracy: ${acc}%
+Misses: ${state.wrong}
+Questions: ${deck.length}
+
+Teacher Notes:
+- Mastery requires 0 misses.
+- Wrong sequence or turning-point selection is recorded as a miss.
+- Student must correct the item to proceed.
+`;
+  ticketEl.value = ticket;
+
+  renderTop();
+  saveSession();
+}
+
+function startGame(name){
+  state.name = (name || "").trim();
+  if(!state.name) throw new Error("Please enter a name.");
+
+  state.date = dateOnly();
+  state.startAt = Date.now();
+  state.endAt = null;
+  state.correct = 0;
+  state.wrong = 0;
+  state.finished = false;
+
+  deck = buildDeck();
+  idx = 0;
+
+  gate.style.display = "none";
+  game.style.display = "block";
+  finishBox.style.display = "none";
+
+  renderTop();
+  renderQuestion();
+
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{
+    elElapsed.textContent = fmtElapsed(Date.now() - state.startAt);
+  }, 250);
+
+  saveSession();
+}
+
+/* =========================
+   EVENTS
+========================= */
+startBtn.addEventListener('click', ()=> startGame(nameInput.value));
+nameInput.addEventListener('keydown', (e)=>{ if(e.key === "Enter") startGame(nameInput.value); });
+
+hardRestart.addEventListener('click', ()=>{
+  if(confirm("Hard Restart will reset this game attempt. Continue?")) resetAll();
+});
+
+copyTicket.addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText(ticketEl.value);
+    alert("Ticket copied.");
+  }catch(_){
+    ticketEl.select();
+    document.execCommand("copy");
+    alert("Ticket copied.");
+  }
+});
+printTicket.addEventListener('click', ()=>{
+  const w = window.open("", "_blank");
+  w.document.write(`<pre style="font-family: ui-monospace, Menlo, Consolas, monospace; white-space:pre-wrap;">${ticketEl.value.replace(/</g,"&lt;")}</pre>`);
+  w.document.close();
+  w.focus();
+  w.print();
+});
+
+/* =========================
+   RESUME
+========================= */
+(function resume(){
+  const saved = loadSession();
+  if(!saved) return;
+
+  try{
+    if(saved?.state?.name && saved?.deck?.length){
+      Object.assign(state, saved.state);
+      deck = saved.deck;
+      idx = saved.idx || 0;
+
+      gate.style.display = "none";
+      game.style.display = "block";
+
+      renderTop();
+
+      if(state.finished){
+        elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+        finishBox.style.display = "block";
+        finish();
+      }else{
+        finishBox.style.display = "none";
+        renderQuestion();
+        if(timer) clearInterval(timer);
+        timer = setInterval(()=>{
+          elElapsed.textContent = fmtElapsed(Date.now() - state.startAt);
+        }, 250);
+      }
+    }
+  }catch(_){
+    localStorage.removeItem(SESSION_KEY);
+  }
+})();
+</script>
+</body>
+</html>
