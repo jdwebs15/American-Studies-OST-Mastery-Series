@@ -505,7 +505,7 @@ window.AMSTUD_BANK = [
     answerIndex: 1,
     hint: "Think: enforcement mechanisms + access + protections.",
     explain: "These laws expanded protections and enforcement against discrimination and voting barriers."
-  }
+  },
   /* =========================
    GAME 2 ADDITIONS (Select Two) — 30 items
    Tag: "G2"
