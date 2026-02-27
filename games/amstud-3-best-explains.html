@@ -94,15 +94,18 @@
     }
     .stem{ font-size:16px; font-weight:800; line-height:1.35; margin:8px 0 10px; }
     .choice{
-      margin:10px 0;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.03);
-      cursor:pointer;
-      text-align:left;
-      transition:transform .08s ease, border-color .12s ease, background .12s ease;
-    }
+  margin:10px 0;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.03);
+  cursor:pointer;
+  text-align:left;
+  transition:transform .08s ease, border-color .12s ease, background .12s ease;
+
+  color: var(--text) !important;
+}
+.choice b{ color: var(--text) !important; }
     .choice:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.08); }
     .choice.lock{ cursor:not-allowed; opacity:.9; }
     .choice.good{ border-color:rgba(43,213,118,.55); background:rgba(43,213,118,.10); }
