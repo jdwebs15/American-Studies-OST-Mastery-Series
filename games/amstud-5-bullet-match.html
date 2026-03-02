@@ -1,256 +1,743 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>American Studies — Game 5: Bullet Match</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AmStud Game 5 — Bullet Match (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css"/>
 
-<script src="../amstud_bank.js"></script>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111a2f;
+      --text:#e7eefc;
+      --muted:#a8b4cf;
+      --line:rgba(255,255,255,.12);
+      --good:#2bd576;
+      --bad:#ff5c7a;
+      --warn:#ffd166;
+      --accent:#7aa2ff;
+      --chip:rgba(122,162,255,.14);
+      --chipLine:rgba(122,162,255,.28);
+      --radius:18px;
+      --shadow:0 18px 55px rgba(0,0,0,.40);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,#0b1220,#070b14);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    }
+    .wrap{width:min(1100px,92vw);margin:28px auto 60px;}
+    .panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .topbar{
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+      margin-bottom:14px;
+    }
+    .title{
+      display:flex;flex-direction:column;gap:4px;
+    }
+    .kicker{
+      font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+    }
+    h1{margin:0;font-size:20px}
+    .meta{
+      display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;
+    }
+    .pill{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:8px 10px;border-radius:999px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      font-size:12px;color:var(--muted);
+    }
+    .pill b{color:var(--text);font-weight:650}
+    .pill .dot{width:8px;height:8px;border-radius:99px;background:var(--accent);display:inline-block}
+    .row2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      margin-top:12px;
+    }
+    @media (max-width: 820px){
+      .row2{grid-template-columns:1fr}
+    }
+    .box{
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+    .boxtitle{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:10px;
+    }
+    .boxtitle .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      background:var(--chip);
+      border:1px solid var(--chipLine);
+      color:var(--text);
+      font-size:12px;
+    }
+    .boxtitle .tag small{color:var(--muted)}
+    .list{display:flex;flex-direction:column;gap:10px}
+    .item{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      user-select:none;
+      transition:transform .06s ease, border-color .12s ease, background .12s ease;
+    }
+    .item:hover{border-color:rgba(122,162,255,.55)}
+    .item:active{transform:scale(.995)}
+    .item.lock{cursor:not-allowed;opacity:.72}
+    .item.sel{
+      border-color:rgba(122,162,255,.75);
+      box-shadow:0 0 0 2px rgba(122,162,255,.18) inset;
+      background:rgba(122,162,255,.08);
+    }
+    .item.good{
+      border-color:rgba(43,213,118,.75);
+      background:rgba(43,213,118,.10);
+    }
+    .item.bad{
+      border-color:rgba(255,92,122,.75);
+      background:rgba(255,92,122,.10);
+    }
+    .msg{
+      margin-top:12px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      display:none;
+    }
+    .msg.show{display:block}
+    .msg .hint{color:var(--warn);font-weight:700}
+    .footerbar{
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+      margin-top:14px;
+    }
+    .btn{
+      appearance:none;border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px;border-radius:14px;
+      cursor:pointer;font-weight:650;
+    }
+    .btn:hover{border-color:rgba(122,162,255,.55)}
+    .btn.danger:hover{border-color:rgba(255,92,122,.55)}
+    .gate{
+      display:block;
+      padding:20px;
+    }
+    .gate .inner{
+      max-width:520px;margin:0 auto;
+      display:flex;flex-direction:column;gap:12px;
+    }
+    .input{
+      width:100%;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-size:16px;
+      outline:none;
+    }
+    .fine{color:var(--muted);font-size:13px;line-height:1.4}
+    .finish{
+      display:none;
+      margin-top:14px;
+    }
+    .ticket{
+      margin-top:12px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.22);
+      background:rgba(0,0,0,.18);
+      font-family:var(--mono);
+      font-size:12px;
+      white-space:pre-wrap;
+    }
+  </style>
 
-<style>
-:root{
-  --bg:#0b1220;
-  --panel:#111a2f;
-  --text:#e7eefc;
-  --muted:#a8b4cf;
-  --line:rgba(255,255,255,.12);
-  --accent:#7aa2ff;
-  --good:#2bd576;
-  --bad:#ff5c7a;
-  --warn:#ffd166;
-  --radius:18px;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  background:linear-gradient(180deg,#0b1220,#070b14);
-  color:var(--text);
-  font-family:system-ui;
-}
-.wrap{width:min(1100px,92vw);margin:30px auto;}
-.panel{
-  background:var(--panel);
-  border:1px solid var(--line);
-  padding:20px;
-  border-radius:var(--radius);
-  margin-bottom:16px;
-}
-h1{margin:0 0 10px}
-.meta{color:var(--muted);font-size:14px;margin-bottom:10px}
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-}
-.item{
-  padding:12px;
-  border:1px solid var(--line);
-  border-radius:12px;
-  margin-bottom:10px;
-  cursor:pointer;
-}
-.item:hover{border-color:var(--accent)}
-.selected{border-color:var(--accent);background:rgba(122,162,255,.15)}
-.correct{border-color:var(--good);background:rgba(43,213,118,.12)}
-.incorrect{border-color:var(--bad);background:rgba(255,92,122,.15)}
-button{
-  padding:10px 16px;
-  border:none;
-  border-radius:10px;
-  background:var(--accent);
-  color:white;
-  cursor:pointer;
-}
-button:hover{opacity:.9}
-.msg{margin-top:10px}
-.good{color:var(--good)}
-.bad{color:var(--bad)}
-.warn{color:var(--warn)}
-input{
-  padding:10px;
-  border-radius:10px;
-  border:1px solid var(--line);
-  background:#0f1730;
-  color:white;
-}
-.ticket{
-  background:#0f1730;
-  padding:16px;
-  border-radius:12px;
-  border:1px solid var(--line);
-  font-family:monospace;
-  white-space:pre-line;
-}
-</style>
+  <!-- Bank -->
+  <script src="../amstud_bank.js"></script>
 </head>
+
 <body>
+  <div class="wrap">
+    <div class="panel">
+      <div class="topbar">
+        <div class="title">
+          <div class="kicker">LEGEND MASTERY SERIES</div>
+          <h1>AmStud Game 5 — Bullet Match</h1>
+          <div class="fine">Mastery = <b>0 misses</b>. Click a left bullet, then click the matching right term.</div>
+        </div>
 
-<div class="wrap">
+        <div class="meta">
+          <div class="pill"><span class="dot"></span> Player: <b id="playerName">—</b></div>
+          <div class="pill">Date: <b id="dateStamp">—</b></div>
+          <div class="pill">Start: <b id="startStamp">—</b></div>
+          <div class="pill">End: <b id="endStamp">—</b></div>
+          <div class="pill">Elapsed: <b id="elapsed">—</b></div>
+          <div class="pill">Progress: <b id="prog">—</b></div>
+          <div class="pill">Accuracy: <b id="acc">—</b></div>
+          <div class="pill">Misses: <b id="misses">0</b></div>
+        </div>
+      </div>
 
-<div class="panel" id="startPanel">
-  <h1>Game 5 — Bullet Match</h1>
-  <div class="meta">28 Sets • 100% Accuracy Required</div>
-  <input id="nameInput" placeholder="Enter your full name"/>
-  <button onclick="startGame()">Start</button>
-  <div id="errorMsg" class="msg bad"></div>
-</div>
+      <!-- NAME GATE -->
+      <div id="gate" class="gate">
+        <div class="inner">
+          <div class="fine"><b>Name required</b> to start and to generate the submit ticket.</div>
+          <input id="nameInput" class="input" placeholder="Type your name (first + last)..." autocomplete="name"/>
+          <button id="startBtn" class="btn" type="button">Start Game</button>
+          <div class="fine">
+            Tip: If a student closes a laptop mid-game, this game restores from local storage — but the name is stored too.
+          </div>
+        </div>
+      </div>
 
-<div id="gamePanel" style="display:none;">
-  <div class="panel">
-    <div class="meta" id="stats"></div>
-    <div class="grid">
-      <div id="leftCol"></div>
-      <div id="rightCol"></div>
+      <!-- GAME -->
+      <div id="game" style="display:none;">
+        <div class="row2">
+          <div class="box">
+            <div class="boxtitle">
+              <div class="tag">Left Bullets <small>(pick one)</small></div>
+              <div class="tag"><span id="csTag">CS —</span></div>
+            </div>
+            <div id="leftList" class="list"></div>
+          </div>
+
+          <div class="box">
+            <div class="boxtitle">
+              <div class="tag">Right Terms <small>(match it)</small></div>
+              <div class="tag">Set: <b id="setId">—</b></div>
+            </div>
+            <div id="rightList" class="list"></div>
+          </div>
+        </div>
+
+        <div id="msg" class="msg"></div>
+
+        <div class="footerbar">
+          <button id="restartBtn" class="btn danger" type="button">Restart Game</button>
+        </div>
+
+        <div id="finish" class="finish">
+          <div class="msg show" id="finishLine"></div>
+          <div class="ticket" id="ticket"></div>
+          <div class="footerbar">
+            <button id="copyTicket" class="btn" type="button">Copy Ticket</button>
+            <button id="printTicket" class="btn" type="button">Print Ticket</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="msg" id="feedback"></div>
   </div>
-</div>
-
-<div id="endPanel" style="display:none;">
-  <div class="panel">
-    <h2>Submit Ticket</h2>
-    <div class="ticket" id="ticket"></div>
-    <button onclick="location.reload()">Restart</button>
-  </div>
-</div>
-
-</div>
 
 <script>
+/* =========================
+   CONFIG
+========================= */
+const GAME_ID = "amstud-g5-bullet-match";
+const ADVANCE_MS = 650;
+const SESSION_KEY = GAME_ID + "::session";
 
-const REQUIRED = 28;
-let gameItems = [];
-let currentSet = 0;
-let selectedLeft = null;
-let misses = 0;
-let startTime;
-let playerName;
-
-function startGame(){
-  playerName = document.getElementById("nameInput").value.trim();
-  if(!playerName){
-    document.getElementById("errorMsg").textContent="Name required.";
-    return;
+/* =========================
+   UTIL
+========================= */
+function pad(n){ return String(n).padStart(2,"0"); }
+function dateOnly(ts=Date.now()){
+  const d = new Date(ts);
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function timeOnly(ts=Date.now()){
+  const d = new Date(ts);
+  let h = d.getHours();
+  const m = pad(d.getMinutes());
+  const s = pad(d.getSeconds());
+  const ap = h >= 12 ? "PM" : "AM";
+  h = h % 12; if(h===0) h=12;
+  return `${h}:${m}:${s} ${ap}`;
+}
+function fmtElapsed(ms){
+  const sec = Math.max(0, Math.floor(ms/1000));
+  const h = Math.floor(sec/3600);
+  const m = Math.floor((sec%3600)/60);
+  const s = sec%60;
+  if(h>0) return `${h}:${pad(m)}:${pad(s)}`;
+  return `${m}:${pad(s)}`;
+}
+function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
   }
+  return a;
+}
+function safeText(s){ return String(s ?? "").replace(/[<>]/g, ""); }
 
-  if(typeof AMSTUD_BANK === "undefined"){
-    document.getElementById("errorMsg").textContent="AMSTUD_BANK not found.";
-    return;
-  }
-
-  const pool = AMSTUD_BANK.filter(q =>
-    q.type==="bullet-match" && q.tags && q.tags.includes("G5")
+/* =========================
+   LOAD BANK
+========================= */
+function getBank(){
+  const bank = (window.AMSTUD_BANK || []);
+  // We expect type: "bullet-match" and tags include "G5"
+  const filtered = bank.filter(x =>
+    x && (x.type === "bullet-match") &&
+    Array.isArray(x.tags) && x.tags.includes("G5")
   );
+  return filtered;
+}
 
-  if(pool.length < REQUIRED){
-    document.getElementById("errorMsg").textContent=
-      "Only "+pool.length+" G5 items found. 28 required.";
-    return;
+/* =========================
+   STATE
+========================= */
+let deck = [];
+let idx = 0;
+
+let state = {
+  name: "",
+  date: "",
+  startAt: null,
+  endAt: null,
+  correct: 0,  // sets completed
+  wrong: 0,    // wrong attempts (misses)
+  finished: false
+};
+
+let timer = null;
+
+/* =========================
+   UI HOOKS
+========================= */
+const elPlayerName = document.getElementById('playerName');
+const elDateStamp = document.getElementById('dateStamp');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elElapsed = document.getElementById('elapsed');
+const elProg = document.getElementById('prog');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const nameInput = document.getElementById('nameInput');
+const startBtn = document.getElementById('startBtn');
+
+const csTag = document.getElementById('csTag');
+const setIdEl = document.getElementById('setId');
+const leftList = document.getElementById('leftList');
+const rightList = document.getElementById('rightList');
+const msgEl = document.getElementById('msg');
+
+const restartBtn = document.getElementById('restartBtn');
+
+const finishBox = document.getElementById('finish');
+const finishLine = document.getElementById('finishLine');
+const ticketEl = document.getElementById('ticket');
+const copyTicket = document.getElementById('copyTicket');
+const printTicket = document.getElementById('printTicket');
+
+/* =========================
+   SESSION SAVE/LOAD
+========================= */
+function saveSession(){
+  localStorage.setItem(SESSION_KEY, JSON.stringify({state, idx, deck}));
+}
+function loadSession(){
+  try{
+    const raw = localStorage.getItem(SESSION_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch(_){ return null; }
+}
+function clearSession(){
+  localStorage.removeItem(SESSION_KEY);
+}
+
+/* =========================
+   TOP RENDER
+========================= */
+function renderTop(){
+  elPlayerName.textContent = state.name || "—";
+  elDateStamp.textContent = state.date || dateOnly();
+  elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+  elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+  elMisses.textContent = String(state.wrong);
+
+  const totalAttempts = state.correct + state.wrong;
+  const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
+  elAcc.textContent = totalAttempts ? `${acc}%` : "—";
+
+  elProg.textContent = `${clamp(idx,0,deck.length)}/${deck.length || 0}`;
+}
+
+/* =========================
+   MESSAGES
+========================= */
+function showMsg(html){
+  msgEl.className = "msg show";
+  msgEl.innerHTML = html;
+}
+function clearMsg(){
+  msgEl.className = "msg";
+  msgEl.innerHTML = "";
+}
+
+/* =========================
+   TIMER
+========================= */
+function startTimer(){
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{
+    if(!state.startAt) return;
+    const now = Date.now();
+    elElapsed.textContent = fmtElapsed(now - state.startAt);
+  }, 250);
+}
+
+/* =========================
+   GAME MECHANICS
+========================= */
+let working = null;           // current set
+let leftOrder = [];           // indices 0..3 shuffled
+let rightOrder = [];          // indices 0..3 shuffled
+let leftSel = null;           // left index selected (original 0..3)
+let matchedLeft = new Set();  // left indices already matched
+let matchedRight = new Set(); // right indices already matched
+
+function makeItem(text, onClick){
+  const d = document.createElement('div');
+  d.className = "item";
+  d.textContent = text;
+  d.addEventListener('click', onClick);
+  return d;
+}
+
+function setLocked(el, locked=true){
+  if(locked){
+    el.classList.add('lock');
+  }else{
+    el.classList.remove('lock');
   }
-
-  gameItems = shuffle(pool).slice(0,REQUIRED);
-  startTime = new Date();
-  document.getElementById("startPanel").style.display="none";
-  document.getElementById("gamePanel").style.display="block";
-  renderSet();
 }
 
 function renderSet(){
-  if(currentSet>=REQUIRED){
-    endGame();
+  clearMsg();
+  finishBox.style.display = "none";
+
+  working = deck[idx];
+  if(!working){
+    // safety
+    finish();
     return;
   }
 
-  const item = gameItems[currentSet];
-  document.getElementById("feedback").textContent="";
-  document.getElementById("feedback").className="msg";
+  leftSel = null;
+  matchedLeft = new Set();
+  matchedRight = new Set();
 
-  document.getElementById("stats").textContent=
-    "Set "+(currentSet+1)+" of "+REQUIRED+
-    " | Misses: "+misses+
-    " | Accuracy: "+calcAccuracy()+"%";
+  // expect: left[4], right[4], matchIndex[4] where matchIndex[i] points to left index for right[i]
+  const left = Array.isArray(working.left) ? working.left.slice(0,4) : [];
+  const right = Array.isArray(working.right) ? working.right.slice(0,4) : [];
+  const matchIndex = Array.isArray(working.matchIndex) ? working.matchIndex.slice(0,4) : [];
 
-  const leftCol = document.getElementById("leftCol");
-  const rightCol = document.getElementById("rightCol");
-  leftCol.innerHTML="";
-  rightCol.innerHTML="";
-  selectedLeft=null;
+  leftOrder = shuffle([0,1,2,3]);
+  rightOrder = shuffle([0,1,2,3]);
 
-  item.left.forEach((l,i)=>{
-    const div=document.createElement("div");
-    div.className="item";
-    div.textContent=l;
-    div.onclick=()=>selectLeft(div,i);
-    leftCol.appendChild(div);
+  csTag.textContent = working.cs || "CS —";
+  setIdEl.textContent = safeText(working.id || `G5-${idx+1}`);
+
+  leftList.innerHTML = "";
+  rightList.innerHTML = "";
+
+  // Render left items
+  leftOrder.forEach((li)=>{
+    const el = makeItem(left[li] ?? "(missing left text)", ()=>{
+      if(state.finished) return;
+      if(matchedLeft.has(li)) return;
+
+      // select left
+      leftSel = li;
+      // clear selection styles
+      leftList.querySelectorAll('.item').forEach(x=>x.classList.remove('sel'));
+      // mark this one selected
+      el.classList.add('sel');
+    });
+    el.dataset.leftIndex = String(li);
+    leftList.appendChild(el);
   });
 
-  const shuffledRight=shuffle(item.right.slice());
+  // Render right items
+  rightOrder.forEach((ri)=>{
+    const el = makeItem(right[ri] ?? "(missing right text)", ()=>{
+      if(state.finished) return;
+      if(matchedRight.has(ri)) return;
 
-  shuffledRight.forEach(r=>{
-    const div=document.createElement("div");
-    div.className="item";
-    div.textContent=r.text;
-    div.onclick=()=>selectRight(div,r.matchIndex);
-    rightCol.appendChild(div);
+      if(leftSel === null){
+        showMsg(`Pick a <b>left bullet</b> first, then select the matching term.`);
+        return;
+      }
+
+      // Determine if right[ri] matches selected leftSel
+      const correctLeftForThisRight = matchIndex[ri];
+
+      if(correctLeftForThisRight === leftSel){
+        // correct match
+        matchedLeft.add(leftSel);
+        matchedRight.add(ri);
+
+        // mark left as good + lock
+        leftList.querySelectorAll('.item').forEach(x=>{
+          if(x.dataset.leftIndex === String(leftSel)){
+            x.classList.remove('sel');
+            x.classList.add('good');
+            setLocked(x, true);
+          }
+        });
+
+        // mark right as good + lock
+        el.classList.add('good');
+        setLocked(el, true);
+
+        // clear selection
+        leftSel = null;
+        leftList.querySelectorAll('.item').forEach(x=>x.classList.remove('sel'));
+
+        clearMsg();
+
+        // if set complete -> advance
+        if(matchedLeft.size === 4 && matchedRight.size === 4){
+          state.correct++;
+          renderTop();
+          saveSession();
+
+          setTimeout(()=>{
+            idx++;
+            if(idx >= deck.length) finish();
+            else renderSet();
+          }, ADVANCE_MS);
+        }else{
+          renderTop();
+          saveSession();
+        }
+      }else{
+        // wrong attempt (miss)
+        state.wrong++;
+        renderTop();
+        saveSession();
+
+        // flash wrong
+        el.classList.add('bad');
+        setTimeout(()=>el.classList.remove('bad'), 350);
+
+        const hint = working.hint ? `<div class="hint">Hint:</div> <b>${safeText(working.hint)}</b>` : "";
+        const explain = working.explain ? `<div style="color:var(--muted);margin-top:6px;">${safeText(working.explain)}</div>` : "";
+        showMsg(`<b>Not a match.</b> ${hint}${explain}<div style="margin-top:6px;"><b>Try again:</b> pick the correct term for that bullet.</div>`);
+      }
+    });
+
+    el.dataset.rightIndex = String(ri);
+    rightList.appendChild(el);
   });
+
+  renderTop();
+  saveSession();
 }
 
-function selectLeft(el,index){
-  if(el.classList.contains("correct")) return;
-  document.querySelectorAll("#leftCol .item").forEach(x=>x.classList.remove("selected"));
-  el.classList.add("selected");
-  selectedLeft=index;
+/* =========================
+   FINISH / TICKET
+========================= */
+function buildTicket(passed, acc, elapsedMs){
+  const lines = [];
+  lines.push("LEGEND MASTERY — SUBMIT TICKET");
+  lines.push("--------------------------------");
+  lines.push(`Game: ${GAME_ID}`);
+  lines.push(`Name: ${state.name || "—"}`);
+  lines.push(`Date: ${state.date || "—"}`);
+  lines.push(`Start: ${state.startAt ? timeOnly(state.startAt) : "—"}`);
+  lines.push(`End: ${state.endAt ? timeOnly(state.endAt) : "—"}`);
+  lines.push(`Elapsed: ${fmtElapsed(elapsedMs)}`);
+  lines.push("--------------------------------");
+  lines.push(`Sets Completed: ${state.correct}/${deck.length}`);
+  lines.push(`Misses: ${state.wrong}`);
+  lines.push(`Accuracy: ${acc}%`);
+  lines.push(`Passed: ${passed ? "YES ✅" : "NO ❌"}`);
+  lines.push("--------------------------------");
+  lines.push(`Bank Version: ${window.AMSTUD_BANK_VERSION || "unknown"}`);
+  return lines.join("\n");
 }
 
-function selectRight(el,matchIndex){
-  if(selectedLeft===null) return;
+function finish(){
+  state.finished = true;
+  state.endAt = Date.now();
+  if(timer) clearInterval(timer);
+  timer = null;
 
-  if(matchIndex===selectedLeft){
-    el.classList.add("correct");
-    document.querySelectorAll("#leftCol .item")[selectedLeft].classList.add("correct");
-    document.getElementById("feedback").textContent="Correct.";
-    document.getElementById("feedback").className="msg good";
-    setTimeout(()=>{
-      currentSet++;
-      renderSet();
-    },600);
-  } else {
-    el.classList.add("incorrect");
-    misses++;
-    document.getElementById("feedback").textContent=
-      gameItems[currentSet].hint || "Incorrect.";
-    document.getElementById("feedback").className="msg bad";
+  const totalAttempts = state.correct + state.wrong;
+  const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
+
+  const elapsedMs = (state.startAt && state.endAt) ? (state.endAt - state.startAt) : 0;
+  const passed = (state.wrong === 0) && (state.correct === deck.length);
+
+  renderTop();
+  elElapsed.textContent = fmtElapsed(elapsedMs);
+
+  finishBox.style.display = "block";
+  finishLine.innerHTML =
+    `Result: <b>${passed ? "MASTERED ✅" : "NOT MASTERED ❌"}</b> · ` +
+    `Accuracy: <b>${acc}%</b> · Misses: <b>${state.wrong}</b> · ` +
+    `Elapsed: <b>${fmtElapsed(elapsedMs)}</b>`;
+
+  ticketEl.textContent = buildTicket(passed, acc, elapsedMs);
+  saveSession();
+}
+
+/* =========================
+   START / RESTART
+========================= */
+function startNew(name){
+  deck = getBank().slice();
+  if(deck.length < 28){
+    alert(`Bank does not have 28 bullet-match (G5) sets.\nFound: ${deck.length}\nFix amstud_bank.js first.`);
+    return;
   }
+
+  // Use first 28 in bank order (stable). If you want randomized sets, swap to shuffle(deck).
+  deck = deck.slice(0, 28);
+
+  idx = 0;
+  state = {
+    name,
+    date: dateOnly(),
+    startAt: Date.now(),
+    endAt: null,
+    correct: 0,
+    wrong: 0,
+    finished: false
+  };
+
+  gate.style.display = "none";
+  game.style.display = "block";
+
+  renderTop();
+  startTimer();
+  renderSet();
 }
 
-function calcAccuracy(){
-  const totalAttempts=currentSet+misses;
-  if(totalAttempts===0) return 100;
-  return Math.max(0,Math.round((currentSet/totalAttempts)*100));
+function hardRestart(){
+  if(!confirm("Restart the entire game? This clears progress and the submit ticket.")) return;
+  clearSession();
+  // return to gate
+  if(timer) clearInterval(timer);
+  timer = null;
+
+  deck = [];
+  idx = 0;
+  state = {name:"",date:"",startAt:null,endAt:null,correct:0,wrong:0,finished:false};
+
+  elElapsed.textContent = "—";
+  finishBox.style.display = "none";
+  clearMsg();
+
+  gate.style.display = "block";
+  game.style.display = "none";
+
+  nameInput.value = "";
+  renderTop();
 }
 
-function endGame(){
-  document.getElementById("gamePanel").style.display="none";
-  document.getElementById("endPanel").style.display="block";
+/* =========================
+   EVENTS
+========================= */
+startBtn.addEventListener('click', ()=>{
+  const name = (nameInput.value || "").trim();
+  if(!name){
+    alert("Name is required.");
+    nameInput.focus();
+    return;
+  }
+  startNew(name);
+});
 
-  const endTime=new Date();
-  const accuracy=calcAccuracy();
-  const passed=(accuracy===100);
+nameInput.addEventListener('keydown', (e)=>{
+  if(e.key === "Enter") startBtn.click();
+});
 
-  document.getElementById("ticket").textContent=
-`Name: ${playerName}
-Start: ${startTime}
-Finish: ${endTime}
-Accuracy: ${accuracy}%
-Misses: ${misses}
-Passed: ${passed ? "YES" : "NO"}`;
-}
+restartBtn.addEventListener('click', hardRestart);
 
-function shuffle(arr){
-  return arr.sort(()=>Math.random()-0.5);
-}
+copyTicket.addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText(ticketEl.textContent || "");
+    showMsg("<b>Ticket copied.</b> Paste it in the assignment comment if needed.");
+    setTimeout(clearMsg, 1200);
+  }catch(_){
+    showMsg("<b>Copy failed.</b> Manually select and copy the ticket text.");
+  }
+});
 
+printTicket.addEventListener('click', ()=>{
+  window.print();
+});
+
+/* =========================
+   RESUME IF POSSIBLE
+========================= */
+(function boot(){
+  const saved = loadSession();
+  if(saved && saved.state && saved.deck && Array.isArray(saved.deck) && saved.deck.length){
+    // Restore
+    state = saved.state;
+    deck = saved.deck;
+    idx = saved.idx ?? 0;
+
+    // If they had no name (shouldn't happen), force gate
+    if(!state.name){
+      clearSession();
+      renderTop();
+      return;
+    }
+
+    gate.style.display = "none";
+    game.style.display = "block";
+
+    // If finished, show ticket; else resume set
+    renderTop();
+    if(state.startAt && !state.finished){
+      startTimer();
+      renderSet();
+    }else if(state.finished){
+      // Ensure stamps are visible
+      const elapsedMs = (state.startAt && state.endAt) ? (state.endAt - state.startAt) : 0;
+      elElapsed.textContent = fmtElapsed(elapsedMs);
+      finishBox.style.display = "block";
+      ticketEl.textContent = buildTicket((state.wrong===0 && state.correct===deck.length),
+        (state.correct+state.wrong ? Math.round((state.correct/(state.correct+state.wrong))*100) : 0),
+        elapsedMs
+      );
+    }
+  }else{
+    renderTop();
+  }
+})();
 </script>
-
 </body>
 </html>
