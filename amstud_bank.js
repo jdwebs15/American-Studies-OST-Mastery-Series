@@ -3157,6 +3157,117 @@ const AMSTUD_BANK = [
   correctOrder:[0,1,2,3],
   hint:"Higher rates reduce spending."
 }
+{
+  id:"G6-022",
+  cs:"CS 5 — Federalism",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace how federalism divides power.",
+  chain:[
+    "U.S. Constitution establishes national government",
+    "10th Amendment reserves powers to states",
+    "States pass laws on local matters",
+    "Power remains divided between national and state governments"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"The amendment reinforces state authority."
+},
+
+{
+  id:"G6-023",
+  cs:"CS 6 — Necessary & Proper Clause",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace expansion of implied powers.",
+  chain:[
+    "Congress creates a national bank",
+    "State of Maryland attempts to tax the bank",
+    "Supreme Court reviews case in McCulloch v. Maryland",
+    "Court upholds implied powers under Necessary & Proper Clause"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Judicial review clarified implied powers."
+},
+
+{
+  id:"G6-024",
+  cs:"CS 8 — 10th Amendment",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace reserved powers in action.",
+  chain:[
+    "Federal government does not regulate education curriculum",
+    "States establish public school standards",
+    "Local districts implement policies",
+    "Power exercised at state and local levels"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"If not delegated federally, it is reserved."
+},
+
+{
+  id:"G6-025",
+  cs:"CS 14 — Incorporation Expansion",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace incorporation through the 14th Amendment.",
+  chain:[
+    "Bill of Rights originally limits federal government only",
+    "14th Amendment includes Due Process Clause",
+    "Supreme Court applies rights to states",
+    "State governments must protect civil liberties"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Due process is the vehicle for incorporation."
+},
+
+{
+  id:"G6-026",
+  cs:"CS 11 — 22nd Amendment",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace presidential term limits.",
+  chain:[
+    "Franklin Roosevelt elected four times",
+    "Concern about executive power concentration",
+    "22nd Amendment proposed and ratified",
+    "Presidents limited to two terms"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Reform followed extended tenure."
+},
+
+{
+  id:"G6-027",
+  cs:"CS 11 — 23rd Amendment",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace electoral votes for Washington, D.C.",
+  chain:[
+    "Residents of Washington, D.C. lack presidential vote",
+    "Public pressure increases",
+    "23rd Amendment ratified",
+    "D.C. receives electoral votes"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Amendment expanded participation."
+},
+
+{
+  id:"G6-028",
+  cs:"CS 11 — 25th Amendment",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace presidential succession process.",
+  chain:[
+    "President becomes incapacitated",
+    "Vice President assumes authority",
+    "Cabinet confirms inability",
+    "Continuity of executive leadership maintained"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Succession ensures stability."
+}
 ];
 
 // Exports (do not remove)
