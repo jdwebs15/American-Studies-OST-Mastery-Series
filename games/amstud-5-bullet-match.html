@@ -42,12 +42,8 @@
       display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
       margin-bottom:14px;
     }
-    .title{
-      display:flex;flex-direction:column;gap:4px;
-    }
-    .kicker{
-      font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
-    }
+    .title{display:flex;flex-direction:column;gap:4px;}
+    .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
     h1{margin:0;font-size:20px}
     .meta{
       display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;
@@ -67,9 +63,7 @@
       gap:14px;
       margin-top:12px;
     }
-    @media (max-width: 820px){
-      .row2{grid-template-columns:1fr}
-    }
+    @media (max-width: 820px){ .row2{grid-template-columns:1fr} }
     .box{
       background:rgba(255,255,255,.03);
       border:1px solid var(--line);
@@ -139,14 +133,8 @@
     }
     .btn:hover{border-color:rgba(122,162,255,.55)}
     .btn.danger:hover{border-color:rgba(255,92,122,.55)}
-    .gate{
-      display:block;
-      padding:20px;
-    }
-    .gate .inner{
-      max-width:520px;margin:0 auto;
-      display:flex;flex-direction:column;gap:12px;
-    }
+    .gate{display:block;padding:20px;}
+    .gate .inner{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
     .input{
       width:100%;
       padding:12px 14px;
@@ -158,10 +146,7 @@
       outline:none;
     }
     .fine{color:var(--muted);font-size:13px;line-height:1.4}
-    .finish{
-      display:none;
-      margin-top:14px;
-    }
+    .finish{display:none;margin-top:14px;}
     .ticket{
       margin-top:12px;
       padding:12px 12px;
@@ -174,7 +159,6 @@
     }
   </style>
 
-  <!-- Bank -->
   <script src="../amstud_bank.js"></script>
 </head>
 
@@ -200,19 +184,15 @@
         </div>
       </div>
 
-      <!-- NAME GATE -->
       <div id="gate" class="gate">
         <div class="inner">
           <div class="fine"><b>Name required</b> to start and to generate the submit ticket.</div>
           <input id="nameInput" class="input" placeholder="Type your name (first + last)..." autocomplete="name"/>
           <button id="startBtn" class="btn" type="button">Start Game</button>
-          <div class="fine">
-            Tip: If a student closes a laptop mid-game, this game restores from local storage — but the name is stored too.
-          </div>
+          <div class="fine">If a student closes a laptop mid-game, this restores from local storage (including name).</div>
         </div>
       </div>
 
-      <!-- GAME -->
       <div id="game" style="display:none;">
         <div class="row2">
           <div class="box">
@@ -294,17 +274,38 @@ function shuffle(arr){
 }
 function safeText(s){ return String(s ?? "").replace(/[<>]/g, ""); }
 
+/* ✅ NEW: display helper for object-based bank items */
+function itemText(x){
+  if (typeof x === "string") return x;
+  if (x && typeof x === "object"){
+    // common key names your bank might use
+    return x.text ?? x.term ?? x.label ?? x.answer ?? x.value ?? x.name ?? "";
+  }
+  return String(x ?? "");
+}
+
+/* ✅ NEW: match helper for object-based right items */
+function rightToLeftIndex(working, rightIndex){
+  // Preferred: explicit matchIndex array
+  if (Array.isArray(working.matchIndex)) return working.matchIndex[rightIndex];
+
+  // Otherwise: right item object carries its own match pointer
+  const r = working.right?.[rightIndex];
+  if (r && typeof r === "object"){
+    return r.matchIndex ?? r.leftIndex ?? r.matchLeft ?? r.left ?? r.correctLeft ?? null;
+  }
+  return null;
+}
+
 /* =========================
    LOAD BANK
 ========================= */
 function getBank(){
   const bank = (window.AMSTUD_BANK || []);
-  // We expect type: "bullet-match" and tags include "G5"
-  const filtered = bank.filter(x =>
+  return bank.filter(x =>
     x && (x.type === "bullet-match") &&
     Array.isArray(x.tags) && x.tags.includes("G5")
   );
-  return filtered;
 }
 
 /* =========================
@@ -318,8 +319,8 @@ let state = {
   date: "",
   startAt: null,
   endAt: null,
-  correct: 0,  // sets completed
-  wrong: 0,    // wrong attempts (misses)
+  correct: 0,
+  wrong: 0,
   finished: false
 };
 
@@ -369,9 +370,7 @@ function loadSession(){
     return JSON.parse(raw);
   }catch(_){ return null; }
 }
-function clearSession(){
-  localStorage.removeItem(SESSION_KEY);
-}
+function clearSession(){ localStorage.removeItem(SESSION_KEY); }
 
 /* =========================
    TOP RENDER
@@ -417,12 +416,12 @@ function startTimer(){
 /* =========================
    GAME MECHANICS
 ========================= */
-let working = null;           // current set
-let leftOrder = [];           // indices 0..3 shuffled
-let rightOrder = [];          // indices 0..3 shuffled
-let leftSel = null;           // left index selected (original 0..3)
-let matchedLeft = new Set();  // left indices already matched
-let matchedRight = new Set(); // right indices already matched
+let working = null;
+let leftOrder = [];
+let rightOrder = [];
+let leftSel = null;
+let matchedLeft = new Set();
+let matchedRight = new Set();
 
 function makeItem(text, onClick){
   const d = document.createElement('div');
@@ -431,13 +430,9 @@ function makeItem(text, onClick){
   d.addEventListener('click', onClick);
   return d;
 }
-
 function setLocked(el, locked=true){
-  if(locked){
-    el.classList.add('lock');
-  }else{
-    el.classList.remove('lock');
-  }
+  if(locked) el.classList.add('lock');
+  else el.classList.remove('lock');
 }
 
 function renderSet(){
@@ -445,20 +440,19 @@ function renderSet(){
   finishBox.style.display = "none";
 
   working = deck[idx];
-  if(!working){
-    // safety
-    finish();
-    return;
-  }
+  if(!working){ finish(); return; }
 
   leftSel = null;
   matchedLeft = new Set();
   matchedRight = new Set();
 
-  // expect: left[4], right[4], matchIndex[4] where matchIndex[i] points to left index for right[i]
-  const left = Array.isArray(working.left) ? working.left.slice(0,4) : [];
-  const right = Array.isArray(working.right) ? working.right.slice(0,4) : [];
-  const matchIndex = Array.isArray(working.matchIndex) ? working.matchIndex.slice(0,4) : [];
+  // ✅ object-safe: left/right can be strings OR objects
+  const leftRaw = Array.isArray(working.left) ? working.left.slice(0,4) : [];
+  const rightRaw = Array.isArray(working.right) ? working.right.slice(0,4) : [];
+
+  // Convert display text safely
+  const left = leftRaw.map(itemText);
+  const right = rightRaw.map(itemText);
 
   leftOrder = shuffle([0,1,2,3]);
   rightOrder = shuffle([0,1,2,3]);
@@ -469,26 +463,21 @@ function renderSet(){
   leftList.innerHTML = "";
   rightList.innerHTML = "";
 
-  // Render left items
   leftOrder.forEach((li)=>{
-    const el = makeItem(left[li] ?? "(missing left text)", ()=>{
+    const el = makeItem(left[li] || "(missing left text)", ()=>{
       if(state.finished) return;
       if(matchedLeft.has(li)) return;
 
-      // select left
       leftSel = li;
-      // clear selection styles
       leftList.querySelectorAll('.item').forEach(x=>x.classList.remove('sel'));
-      // mark this one selected
       el.classList.add('sel');
     });
     el.dataset.leftIndex = String(li);
     leftList.appendChild(el);
   });
 
-  // Render right items
   rightOrder.forEach((ri)=>{
-    const el = makeItem(right[ri] ?? "(missing right text)", ()=>{
+    const el = makeItem(right[ri] || "(missing right text)", ()=>{
       if(state.finished) return;
       if(matchedRight.has(ri)) return;
 
@@ -497,15 +486,13 @@ function renderSet(){
         return;
       }
 
-      // Determine if right[ri] matches selected leftSel
-      const correctLeftForThisRight = matchIndex[ri];
+      // ✅ robust match lookup
+      const correctLeftForThisRight = rightToLeftIndex(working, ri);
 
       if(correctLeftForThisRight === leftSel){
-        // correct match
         matchedLeft.add(leftSel);
         matchedRight.add(ri);
 
-        // mark left as good + lock
         leftList.querySelectorAll('.item').forEach(x=>{
           if(x.dataset.leftIndex === String(leftSel)){
             x.classList.remove('sel');
@@ -514,17 +501,13 @@ function renderSet(){
           }
         });
 
-        // mark right as good + lock
         el.classList.add('good');
         setLocked(el, true);
 
-        // clear selection
         leftSel = null;
         leftList.querySelectorAll('.item').forEach(x=>x.classList.remove('sel'));
-
         clearMsg();
 
-        // if set complete -> advance
         if(matchedLeft.size === 4 && matchedRight.size === 4){
           state.correct++;
           renderTop();
@@ -540,12 +523,10 @@ function renderSet(){
           saveSession();
         }
       }else{
-        // wrong attempt (miss)
         state.wrong++;
         renderTop();
         saveSession();
 
-        // flash wrong
         el.classList.add('bad');
         setTimeout(()=>el.classList.remove('bad'), 350);
 
@@ -594,7 +575,6 @@ function finish(){
 
   const totalAttempts = state.correct + state.wrong;
   const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
-
   const elapsedMs = (state.startAt && state.endAt) ? (state.endAt - state.startAt) : 0;
   const passed = (state.wrong === 0) && (state.correct === deck.length);
 
@@ -620,8 +600,6 @@ function startNew(name){
     alert(`Bank does not have 28 bullet-match (G5) sets.\nFound: ${deck.length}\nFix amstud_bank.js first.`);
     return;
   }
-
-  // Use first 28 in bank order (stable). If you want randomized sets, swap to shuffle(deck).
   deck = deck.slice(0, 28);
 
   idx = 0;
@@ -646,7 +624,6 @@ function startNew(name){
 function hardRestart(){
   if(!confirm("Restart the entire game? This clears progress and the submit ticket.")) return;
   clearSession();
-  // return to gate
   if(timer) clearInterval(timer);
   timer = null;
 
@@ -670,48 +647,41 @@ function hardRestart(){
 ========================= */
 startBtn.addEventListener('click', ()=>{
   const name = (nameInput.value || "").trim();
-  if(!name){
-    alert("Name is required.");
-    nameInput.focus();
-    return;
-  }
+  if(!name){ alert("Name is required."); nameInput.focus(); return; }
   startNew(name);
 });
-
-nameInput.addEventListener('keydown', (e)=>{
-  if(e.key === "Enter") startBtn.click();
-});
-
+nameInput.addEventListener('keydown', (e)=>{ if(e.key === "Enter") startBtn.click(); });
 restartBtn.addEventListener('click', hardRestart);
 
 copyTicket.addEventListener('click', async ()=>{
   try{
     await navigator.clipboard.writeText(ticketEl.textContent || "");
-    showMsg("<b>Ticket copied.</b> Paste it in the assignment comment if needed.");
-    setTimeout(clearMsg, 1200);
+    showMsg("<b>Ticket copied.</b>");
+    setTimeout(clearMsg, 900);
   }catch(_){
     showMsg("<b>Copy failed.</b> Manually select and copy the ticket text.");
   }
 });
-
-printTicket.addEventListener('click', ()=>{
-  window.print();
-});
+printTicket.addEventListener('click', ()=>window.print());
 
 /* =========================
    RESUME IF POSSIBLE
 ========================= */
 (function boot(){
-  const saved = loadSession();
+  const saved = (()=>{
+    try{
+      const raw = localStorage.getItem(SESSION_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(_){ return null; }
+  })();
+
   if(saved && saved.state && saved.deck && Array.isArray(saved.deck) && saved.deck.length){
-    // Restore
     state = saved.state;
     deck = saved.deck;
     idx = saved.idx ?? 0;
 
-    // If they had no name (shouldn't happen), force gate
     if(!state.name){
-      clearSession();
+      localStorage.removeItem(SESSION_KEY);
       renderTop();
       return;
     }
@@ -719,20 +689,17 @@ printTicket.addEventListener('click', ()=>{
     gate.style.display = "none";
     game.style.display = "block";
 
-    // If finished, show ticket; else resume set
     renderTop();
     if(state.startAt && !state.finished){
       startTimer();
       renderSet();
     }else if(state.finished){
-      // Ensure stamps are visible
       const elapsedMs = (state.startAt && state.endAt) ? (state.endAt - state.startAt) : 0;
       elElapsed.textContent = fmtElapsed(elapsedMs);
       finishBox.style.display = "block";
-      ticketEl.textContent = buildTicket((state.wrong===0 && state.correct===deck.length),
-        (state.correct+state.wrong ? Math.round((state.correct/(state.correct+state.wrong))*100) : 0),
-        elapsedMs
-      );
+      const totalAttempts = state.correct + state.wrong;
+      const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
+      ticketEl.textContent = buildTicket((state.wrong===0 && state.correct===deck.length), acc, elapsedMs);
     }
   }else{
     renderTop();
