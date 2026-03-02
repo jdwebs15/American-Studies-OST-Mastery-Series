@@ -2817,6 +2817,346 @@ const AMSTUD_BANK = [
       hint:"Debate → aid → attack → war.",
       explain:"The direct attack created immediate political unity and action."
     }
+   // ==========================
+// GAME 6 — Cause & Effect Chain
+// tags: ["G6"], type:"cause-effect-chain"
+// ==========================
+
+{
+  id:"G6-001",
+  cs:"CS 1 — Civic Involvement",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Organize how a citizen influences a state bill.",
+  chain:[
+    "Identify a proposed bill in the Ohio General Assembly",
+    "Research the impact of the bill",
+    "Contact state legislators through a letter-writing campaign",
+    "Legislators consider public input before voting"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Engagement starts with awareness before persuasion."
+},
+
+{
+  id:"G6-002",
+  cs:"CS 3 — Credible Sources",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Organize the process of verifying political information online.",
+  chain:[
+    "Read a claim about a candidate on social media",
+    "Check multiple credible news sources",
+    "Compare consistency of reported facts",
+    "Form an informed opinion"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Verification happens before forming conclusions."
+},
+
+{
+  id:"G6-003",
+  cs:"CS 4 — Democratic Process",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Order the steps leading to treaty ratification.",
+  chain:[
+    "President negotiates treaty",
+    "President persuades senators and public",
+    "Senate debates treaty",
+    "Two-thirds Senate approval"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Negotiation comes before Senate approval."
+},
+
+{
+  id:"G6-004",
+  cs:"CS 5 — Popular Sovereignty",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace the principle of popular sovereignty.",
+  chain:[
+    "Constitution begins with 'We the People'",
+    "Citizens vote in elections",
+    "Elected officials pass laws",
+    "Government derives authority from the people"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"The Preamble establishes the principle."
+},
+
+{
+  id:"G6-005",
+  cs:"CS 6 — Bill of Rights Debate",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Order events in the Federalist–Anti-Federalist debate.",
+  chain:[
+    "Constitution proposed",
+    "Anti-Federalists demand protections",
+    "Federalists promise amendments",
+    "Bill of Rights adopted"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Ratification pressure led to amendments."
+},
+
+{
+  id:"G6-006",
+  cs:"CS 8 — Bill of Rights",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Order the Gideon v. Wainwright process.",
+  chain:[
+    "Defendant denied attorney in state court",
+    "Case appealed to Supreme Court",
+    "Court applies Sixth Amendment via incorporation",
+    "States required to provide counsel"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Incorporation extends federal rights to states."
+},
+
+{
+  id:"G6-007",
+  cs:"CS 9 — Reconstruction Amendments",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace protections extended during Reconstruction.",
+  chain:[
+    "13th Amendment abolishes slavery",
+    "14th Amendment extends citizenship",
+    "15th Amendment protects voting rights",
+    "States resist through Jim Crow laws"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Amendments precede resistance."
+},
+
+{
+  id:"G6-008",
+  cs:"CS 10 — Suffrage",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace expansion of voting rights.",
+  chain:[
+    "15th Amendment prohibits racial discrimination in voting",
+    "States use poll taxes",
+    "24th Amendment eliminates poll taxes",
+    "Voting access expands"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Economic barriers were removed later."
+},
+
+{
+  id:"G6-009",
+  cs:"CS 11 — Electoral College",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace reform of the Electoral College.",
+  chain:[
+    "Election of 1800 results in tie",
+    "Political crisis in House of Representatives",
+    "12th Amendment proposed",
+    "Separate balloting required"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"The crisis led to procedural reform."
+},
+
+{
+  id:"G6-010",
+  cs:"CS 12 — Branch Powers",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Organize how a federal law is created.",
+  chain:[
+    "Bill introduced in Congress",
+    "House and Senate debate and vote",
+    "President signs or vetoes",
+    "Law implemented by executive branch"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Legislative action comes before executive enforcement."
+},
+
+{
+  id:"G6-011",
+  cs:"CS 13 — Checks & Balances",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace a veto override.",
+  chain:[
+    "Congress passes a bill",
+    "President vetoes bill",
+    "Congress overrides veto",
+    "Bill becomes law"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Override follows veto."
+},
+
+{
+  id:"G6-012",
+  cs:"CS 14 — Rights & Responsibilities",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace exercising the right to vote responsibly.",
+  chain:[
+    "Register to vote",
+    "Research candidates and issues",
+    "Cast ballot in election",
+    "Government reflects voter choices"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Information precedes participation."
+},
+
+{
+  id:"G6-013",
+  cs:"CS 15 — Minority Rights",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace civil rights extension through legislation.",
+  chain:[
+    "Discrimination persists",
+    "Public pressure increases",
+    "Congress passes Civil Rights Act",
+    "Protections expand to minorities"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Legislation follows public pressure."
+},
+
+{
+  id:"G6-014",
+  cs:"CS 16 — Ohio Constitution",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace reform in the 1851 Ohio Constitution.",
+  chain:[
+    "Debt and governance problems",
+    "Constitutional convention held",
+    "Direct election of judges established",
+    "Debt limitations instituted"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Problems lead to reform."
+},
+
+{
+  id:"G6-015",
+  cs:"CS 17 — Ohio Civic Role",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace citizen assistance at local level.",
+  chain:[
+    "Identify community issue",
+    "Attend local board meeting",
+    "Offer public comment",
+    "Local government adjusts policy"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Engagement leads to policy response."
+},
+
+{
+  id:"G6-016",
+  cs:"CS 18 — Public Policy",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace collaboration in foreign policy.",
+  chain:[
+    "President negotiates treaty",
+    "Senate reviews treaty",
+    "Senate approves treaty",
+    "Policy implemented internationally"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Approval precedes implementation."
+},
+
+{
+  id:"G6-017",
+  cs:"CS 19 — Public Input",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace influencing local public policy.",
+  chain:[
+    "Public meeting announced",
+    "Citizen prepares testimony",
+    "Citizen offers comments at city council",
+    "Council considers input in decision"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Preparation comes before speaking."
+},
+
+{
+  id:"G6-018",
+  cs:"CS 20 — Fiscal Policy",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace contractionary fiscal policy.",
+  chain:[
+    "Government increases taxes",
+    "Government reduces spending",
+    "Consumer demand decreases",
+    "Economic growth slows"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Tax and spending changes affect demand."
+},
+
+{
+  id:"G6-019",
+  cs:"CS 20 — Regulatory Policy",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace impact of environmental regulation.",
+  chain:[
+    "EPA proposes regulation",
+    "Companies incur compliance costs",
+    "Corporate profits decline",
+    "Consumer protections increase"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Costs follow regulation."
+},
+
+{
+  id:"G6-020",
+  cs:"CS 21 — Monetary Policy",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace expansionary monetary policy.",
+  chain:[
+    "Federal Reserve buys government bonds",
+    "Money supply increases",
+    "Interest rates decrease",
+    "Economic growth encouraged"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Buying bonds injects money."
+},
+
+{
+  id:"G6-021",
+  cs:"CS 21 — Monetary Policy",
+  tags:["G6"],
+  type:"cause-effect-chain",
+  prompt:"Trace contractionary monetary policy.",
+  chain:[
+    "Federal Reserve increases interest rates",
+    "Borrowing becomes more expensive",
+    "Consumer spending decreases",
+    "Inflation slows"
+  ],
+  correctOrder:[0,1,2,3],
+  hint:"Higher rates reduce spending."
+}
 ];
 
 // Exports (do not remove)
