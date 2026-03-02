@@ -2493,3 +2493,4 @@
   // Optional: quick sanity marker
   window.AMSTUD_BANK_VERSION = "2026-02-27";
 })();
+};
