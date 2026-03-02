@@ -2166,6 +2166,657 @@ const AMSTUD_BANK = [
     explain:
       "Economic weakness is a condition; reform movements are the turning point that transforms weakness into political change."
   }
+       ,
+    // =========================================================
+    // GAME 5 (Bullet Match) — tags:["G5"], type:"bullet-match"
+    // Each item:
+    // - left: 4 prompts
+    // - right: 4 answers with matchIndex pointing to left item
+    // =========================================================
+
+    {
+      id:"G5-001",
+      csNum:1,
+      cs:"CS 1 – Source Credibility",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each evidence issue to the best credibility concern.",
+      left:[
+        "A source was created years after the event",
+        "A source only shows one person's viewpoint",
+        "A source has a clear purpose to persuade",
+        "A source is missing corroborating evidence"
+      ],
+      right:[
+        {text:"Potential bias/agenda in the message", matchIndex:2},
+        {text:"Limited representativeness", matchIndex:1},
+        {text:"Needs confirmation with other sources", matchIndex:3},
+        {text:"May suffer from memory/retelling distortion", matchIndex:0}
+      ],
+      hint:"Credibility = time, purpose, representativeness, corroboration.",
+      explain:"Each issue changes how confidently historians can generalize from the evidence."
+    },
+
+    {
+      id:"G5-002",
+      csNum:2,
+      cs:"CS 2 – Primary vs Secondary Sources",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each source to whether it is primary or secondary for studying 1900 urban life.",
+      left:[
+        "Tenement photograph taken in 1900",
+        "City health inspection report from 1901",
+        "A 2022 textbook chapter on urbanization",
+        "A modern documentary analyzing Progressive reforms"
+      ],
+      right:[
+        {text:"Primary source", matchIndex:1},
+        {text:"Secondary source", matchIndex:3},
+        {text:"Primary source", matchIndex:0},
+        {text:"Secondary source", matchIndex:2}
+      ],
+      hint:"Primary = created during the time period; Secondary = later analysis.",
+      explain:"Photos/reports from the era are primary; textbooks/documentaries are secondary."
+    },
+
+    {
+      id:"G5-003",
+      csNum:3,
+      cs:"CS 3 – Cause, Effect, and Sequence",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each cause to its most direct effect in late-1800s America.",
+      left:[
+        "Industrial job growth in cities",
+        "Railroad expansion",
+        "Mechanization in farming",
+        "Mass immigration"
+      ],
+      right:[
+        {text:"Migration to urban centers increases", matchIndex:0},
+        {text:"National markets become easier to access", matchIndex:1},
+        {text:"Fewer farm laborers needed; rural-to-urban movement rises", matchIndex:2},
+        {text:"City overcrowding and ethnic neighborhoods grow", matchIndex:3}
+      ],
+      hint:"Stick to the *most direct* link, not a long chain.",
+      explain:"Each cause produced a clear, immediate downstream change."
+    },
+
+    {
+      id:"G5-004",
+      csNum:4,
+      cs:"CS 4 – Contextualization",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each Progressive Era focus to the urban problem that triggered it.",
+      left:[
+        "Tenement reform",
+        "Food and drug regulation",
+        "City sanitation improvements",
+        "Political machine reform"
+      ],
+      right:[
+        {text:"Unsafe living conditions and overcrowding", matchIndex:0},
+        {text:"Corruption and patronage control of services", matchIndex:3},
+        {text:"Disease spread linked to waste/dirty water", matchIndex:2},
+        {text:"Mislabeling and dangerous consumer products", matchIndex:1}
+      ],
+      hint:"Progressives targeted visible harms created by rapid urban/industrial growth.",
+      explain:"Reform priorities matched major problems citizens could see and experience."
+    },
+
+    {
+      id:"G5-005",
+      csNum:6,
+      cs:"CS 6 – Rise of Corporations & Industrial Growth",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each business development to what it enabled.",
+      left:[
+        "Rail networks",
+        "Telegraph/telephone",
+        "Mass production",
+        "National advertising/branding"
+      ],
+      right:[
+        {text:"Faster coordination across long distances", matchIndex:1},
+        {text:"Lower per-unit costs and more output", matchIndex:2},
+        {text:"Shipping goods to distant markets cheaply", matchIndex:0},
+        {text:"Creating consumer loyalty across regions", matchIndex:3}
+      ],
+      hint:"National corporations require transport + communication + scale + recognition.",
+      explain:"Together these changes built truly national markets and businesses."
+    },
+
+    {
+      id:"G5-006",
+      csNum:7,
+      cs:"CS 7 – Labor Organizations",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each union goal to the workplace condition that motivated it.",
+      left:[
+        "Shorter workday",
+        "Workplace safety rules",
+        "Higher wages",
+        "Collective bargaining recognition"
+      ],
+      right:[
+        {text:"Dangerous machinery and injuries", matchIndex:1},
+        {text:"Excessive hours and fatigue", matchIndex:0},
+        {text:"Employers set terms individually; workers lacked leverage", matchIndex:3},
+        {text:"Low pay despite long hours and high productivity", matchIndex:2}
+      ],
+      hint:"Union goals usually respond to power imbalance and harsh conditions.",
+      explain:"Each goal is a direct response to common industrial-era workplace realities."
+    },
+
+    {
+      id:"G5-007",
+      csNum:8,
+      cs:"CS 8 – Laissez-faire & Big Business",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each outcome to how laissez-faire contributed.",
+      left:[
+        "Trusts/monopolies expand",
+        "Prices set by dominant firms",
+        "Smaller competitors disappear",
+        "Workers face limited protections"
+      ],
+      right:[
+        {text:"Few rules limited consolidation and mergers", matchIndex:0},
+        {text:"Weak regulation allowed firms to control markets", matchIndex:1},
+        {text:"Large firms used size to outcompete rivals", matchIndex:2},
+        {text:"Minimal oversight reduced labor standards enforcement", matchIndex:3}
+      ],
+      hint:"Laissez-faire = limited government intervention.",
+      explain:"Limited oversight increased corporate power and reduced protections."
+    },
+
+    {
+      id:"G5-008",
+      csNum:10,
+      cs:"CS 10 – Immigration, Internal Migration, Urbanization",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each city condition to the most likely public health result (c. 1900).",
+      left:[
+        "Overcrowded tenements",
+        "Poor ventilation in housing",
+        "Contaminated water supply",
+        "Limited garbage removal"
+      ],
+      right:[
+        {text:"Faster spread of contagious illness", matchIndex:0},
+        {text:"Tuberculosis spreads more easily", matchIndex:1},
+        {text:"Cholera outbreaks increase", matchIndex:2},
+        {text:"Rats/insects increase; disease risk rises", matchIndex:3}
+      ],
+      hint:"Housing + sanitation = disease conditions.",
+      explain:"Urban infrastructure often lagged behind population growth, increasing illness."
+    },
+
+    {
+      id:"G5-009",
+      csNum:11,
+      cs:"CS 11 – Progressive Era Reforms",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each reform tool to what it was meant to do.",
+      left:[
+        "Inspection requirements",
+        "Labeling rules",
+        "Antitrust enforcement",
+        "Civil service reform"
+      ],
+      right:[
+        {text:"Reduce spoils system hiring", matchIndex:3},
+        {text:"Identify ingredients and prevent consumer deception", matchIndex:1},
+        {text:"Break up/limit monopolistic practices", matchIndex:2},
+        {text:"Ensure safer conditions through enforcement", matchIndex:0}
+      ],
+      hint:"Progressive tools = regulation + enforcement + clean government.",
+      explain:"Reforms aimed at safer markets, fair competition, and less corruption."
+    },
+
+    {
+      id:"G5-010",
+      csNum:12,
+      cs:"CS 12 – Women’s Suffrage",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each suffrage strategy to its purpose.",
+      left:[
+        "Petitions and lobbying",
+        "Public marches and rallies",
+        "State-by-state voting wins",
+        "Constitutional amendment campaign"
+      ],
+      right:[
+        {text:"Build political pressure on lawmakers", matchIndex:0},
+        {text:"Gain publicity and shape public opinion", matchIndex:1},
+        {text:"Create momentum and prove viability", matchIndex:2},
+        {text:"Guarantee national voting rights", matchIndex:3}
+      ],
+      hint:"Think: pressure, persuasion, momentum, national guarantee.",
+      explain:"Activists used multiple tactics to shift opinion and secure legal change."
+    },
+
+    {
+      id:"G5-011",
+      csNum:13,
+      cs:"CS 13 – U.S. Role in World War I",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each WWI factor to why it mattered to U.S. decision-making.",
+      left:[
+        "Unrestricted submarine warfare",
+        "Economic ties to the Allies",
+        "Zimmermann Telegram (conceptually)",
+        "Neutrality challenged"
+      ],
+      right:[
+        {text:"Threatened ships and American lives", matchIndex:0},
+        {text:"Raised stakes in Allied victory", matchIndex:1},
+        {text:"Increased perceived direct security threat", matchIndex:2},
+        {text:"Made staying out harder politically", matchIndex:3}
+      ],
+      hint:"Entry pressures grow when security and interests feel threatened.",
+      explain:"Multiple pressures combined to shift U.S. policy toward intervention."
+    },
+
+    {
+      id:"G5-012",
+      csNum:14,
+      cs:"CS 14 – Post-WWI Peace Efforts",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each Senate concern to what it was really about.",
+      left:[
+        "League of Nations obligations",
+        "Sovereignty arguments",
+        "Entangling alliances fear",
+        "Treaty ratification conflict"
+      ],
+      right:[
+        {text:"U.S. control over war decisions", matchIndex:0},
+        {text:"Independent foreign policy decision-making", matchIndex:1},
+        {text:"Being pulled into future wars", matchIndex:2},
+        {text:"Separation of powers and Senate authority", matchIndex:3}
+      ],
+      hint:"Most objections focused on independence and future war commitments.",
+      explain:"Opponents feared treaty terms could reduce U.S. control over conflict decisions."
+    },
+
+    {
+      id:"G5-013",
+      csNum:15,
+      cs:"CS 15 – Isolationism in the 1930s",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each policy idea to its isolationist logic.",
+      left:[
+        "Neutrality Acts",
+        "Cash-and-carry rules",
+        "Avoiding loans to belligerents",
+        "Limiting arms sales"
+      ],
+      right:[
+        {text:"Avoid repeating WWI economic entanglements", matchIndex:2},
+        {text:"Reduce risk of being dragged into war", matchIndex:0},
+        {text:"Trade allowed but buyer assumes transport risk", matchIndex:1},
+        {text:"Prevent profit-driven war pressures", matchIndex:3}
+      ],
+      hint:"Isolationism tries to remove the *pathways* that pull a nation into war.",
+      explain:"These policies aimed to limit incentives and triggers for U.S. involvement."
+    },
+
+    {
+      id:"G5-014",
+      csNum:16,
+      cs:"CS 16 – Causes of the Great Depression",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each weakness to how it increased crash/depression risk.",
+      left:[
+        "Buying stocks on margin",
+        "Overproduction",
+        "Consumer debt",
+        "Weak banking practices"
+      ],
+      right:[
+        {text:"Borrowing magnified losses when prices fell", matchIndex:0},
+        {text:"Too many goods; prices/profits drop", matchIndex:1},
+        {text:"Households couldn’t sustain spending", matchIndex:2},
+        {text:"Bank failures reduced savings and credit", matchIndex:3}
+      ],
+      hint:"Depressions deepen when confidence, credit, and demand collapse together.",
+      explain:"Each weakness helped turn a downturn into a broader economic crisis."
+    },
+
+    {
+      id:"G5-015",
+      csNum:18,
+      cs:"CS 18 – The New Deal",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each New Deal goal to what it means.",
+      left:[
+        "Relief",
+        "Recovery",
+        "Reform",
+        "Expanded federal responsibility"
+      ],
+      right:[
+        {text:"Immediate help for suffering Americans", matchIndex:0},
+        {text:"Restarting economic activity and jobs", matchIndex:1},
+        {text:"Rules to prevent future crises", matchIndex:2},
+        {text:"Expectation that national government should respond to crises", matchIndex:3}
+      ],
+      hint:"Relief/Recovery/Reform = now, restart, prevent.",
+      explain:"The New Deal changed both programs and long-term expectations of government."
+    },
+
+    {
+      id:"G5-016",
+      csNum:20,
+      cs:"CS 20 – U.S. Entry into WWII",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each event/policy to what it did to U.S. involvement.",
+      left:[
+        "Lend-Lease",
+        "Atlantic Charter",
+        "Pearl Harbor attack",
+        "War declaration and mobilization"
+      ],
+      right:[
+        {text:"Aid to Allies short of entering war", matchIndex:0},
+        {text:"Public statement of shared war aims", matchIndex:1},
+        {text:"Direct attack ends neutrality debate", matchIndex:2},
+        {text:"Full entry into WWII and wartime production", matchIndex:3}
+      ],
+      hint:"The turning point is the direct attack — before that, aid increased gradually.",
+      explain:"Policy moved from support to full war after Pearl Harbor."
+    },
+
+    {
+      id:"G5-017",
+      csNum:21,
+      cs:"CS 21 – WWII Homefront",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each homefront policy to why it was used.",
+      left:[
+        "Rationing",
+        "War bonds",
+        "Industrial conversion",
+        "Women in wartime industry"
+      ],
+      right:[
+        {text:"Conserve scarce resources for military needs", matchIndex:0},
+        {text:"Fund war effort and manage inflationary pressure", matchIndex:1},
+        {text:"Shift factories to tanks/planes/munitions", matchIndex:2},
+        {text:"Fill labor shortages and increase production", matchIndex:3}
+      ],
+      hint:"Homefront = resources + money + production + labor.",
+      explain:"Mobilization required managing supplies, financing, and workforce changes."
+    },
+
+    {
+      id:"G5-018",
+      csNum:22,
+      cs:"CS 22 – Postwar Boom",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each postwar factor to its impact.",
+      left:[
+        "GI Bill education benefits",
+        "Home loans/suburban growth",
+        "Pent-up consumer demand",
+        "High industrial capacity after WWII"
+      ],
+      right:[
+        {text:"Bigger middle class and higher earning potential", matchIndex:0},
+        {text:"Rapid housing expansion and new communities", matchIndex:1},
+        {text:"Surge in buying cars/appliances/homes", matchIndex:2},
+        {text:"Ability to produce goods at large scale", matchIndex:3}
+      ],
+      hint:"Prosperity followed demand + capacity + opportunity.",
+      explain:"Education, housing, demand, and capacity combined to fuel growth."
+    },
+
+    {
+      id:"G5-019",
+      csNum:23,
+      cs:"CS 23 – Cold War Origins",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each Cold War driver to what it created.",
+      left:[
+        "Competing ideologies",
+        "Mistrust after WWII",
+        "Power vacuum in Europe/Asia",
+        "Arms race"
+      ],
+      right:[
+        {text:"Capitalism vs communism rivalry", matchIndex:0},
+        {text:"Suspicion over intentions and security", matchIndex:1},
+        {text:"Competition for influence in rebuilding regions", matchIndex:2},
+        {text:"Rising military spending and fear of advantage", matchIndex:3}
+      ],
+      hint:"Cold War = ideology + security + influence + weapons.",
+      explain:"These drivers created a long-term rivalry shaping foreign and domestic policy."
+    },
+
+    {
+      id:"G5-020",
+      csNum:24,
+      cs:"CS 24 – Containment",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each containment tool to how it limits communist expansion.",
+      left:[
+        "Economic aid",
+        "Military alliances",
+        "Proxy conflicts support",
+        "Deterrence"
+      ],
+      right:[
+        {text:"Strengthen vulnerable governments/economies", matchIndex:0},
+        {text:"Raise cost of aggression through collective defense", matchIndex:1},
+        {text:"Support anti-communist side without direct war", matchIndex:2},
+        {text:"Discourage attack through threat of response", matchIndex:3}
+      ],
+      hint:"Containment tries to block spread without always fighting directly.",
+      explain:"The U.S. used multiple tools to limit Soviet influence globally."
+    },
+
+    {
+      id:"G5-021",
+      csNum:26,
+      cs:"CS 26 – Civil Rights Movement",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each action to what it achieved in the civil rights era.",
+      left:[
+        "Court challenges (e.g., school cases)",
+        "Nonviolent protest campaigns",
+        "Federal civil rights legislation",
+        "Voting protections enforcement"
+      ],
+      right:[
+        {text:"Legal precedent against segregation policies", matchIndex:0},
+        {text:"National attention and pressure for change", matchIndex:1},
+        {text:"Bans discrimination and strengthens enforcement", matchIndex:2},
+        {text:"Targets barriers that block participation", matchIndex:3}
+      ],
+      hint:"Change came through courts, protest, laws, and enforcement.",
+      explain:"Different strategies attacked discrimination from different angles."
+    },
+
+    {
+      id:"G5-022",
+      csNum:28,
+      cs:"CS 28 – Mass Media & Culture",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each media effect to what it did after WWII.",
+      left:[
+        "Television spreads rapidly",
+        "National advertising grows",
+        "Music and youth culture expand",
+        "Shared national events become common"
+      ],
+      right:[
+        {text:"Creates common cultural references across regions", matchIndex:3},
+        {text:"Promotes consumerism and brand identity", matchIndex:1},
+        {text:"Influences values, trends, and social behaviors", matchIndex:2},
+        {text:"Delivers news/entertainment into most homes", matchIndex:0}
+      ],
+      hint:"Media doesn’t just inform — it shapes culture and behavior.",
+      explain:"Mass media accelerated cultural change by reaching huge audiences quickly."
+    },
+
+    {
+      id:"G5-023",
+      csNum:31,
+      cs:"CS 31 – Globalization & Technological Change",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each globalization feature to its impact on U.S. jobs and markets.",
+      left:[
+        "Outsourcing/relocation of production",
+        "Global supply chains",
+        "Cheaper international shipping/communication",
+        "Increased trade competition"
+      ],
+      right:[
+        {text:"Some manufacturing jobs move abroad", matchIndex:0},
+        {text:"Production depends on parts from multiple countries", matchIndex:1},
+        {text:"Firms coordinate worldwide faster and cheaper", matchIndex:2},
+        {text:"Pressure on wages/industries to adapt", matchIndex:3}
+      ],
+      hint:"Global markets change where goods are made and how workers compete.",
+      explain:"Globalization reshaped production decisions and labor markets."
+    },
+
+    {
+      id:"G5-024",
+      csNum:32,
+      cs:"CS 32 – Interdependence",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each interdependence example to what it means for the U.S. economy.",
+      left:[
+        "Oil price shock abroad",
+        "Foreign demand drops",
+        "Supply chain disruption overseas",
+        "International finance volatility"
+      ],
+      right:[
+        {text:"Higher energy costs at home", matchIndex:0},
+        {text:"U.S. exports and jobs can decline", matchIndex:1},
+        {text:"Delays or shortages in U.S. production", matchIndex:2},
+        {text:"Markets and investments react quickly worldwide", matchIndex:3}
+      ],
+      hint:"Interdependence = foreign events can hit domestic life fast.",
+      explain:"Global trade/finance links mean overseas problems can become U.S. problems."
+    },
+
+    {
+      id:"G5-025",
+      csNum:33,
+      cs:"CS 33 – Equality & Civil Rights Expansion (1945–1994)",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each federal action to what it strengthened.",
+      left:[
+        "Civil Rights Act (concept)",
+        "Voting Rights Act (concept)",
+        "Federal enforcement power",
+        "Equal access principle"
+      ],
+      right:[
+        {text:"Limits discrimination in public accommodations/employment", matchIndex:0},
+        {text:"Targets barriers blocking voting participation", matchIndex:1},
+        {text:"Gives national government tools to enforce rights", matchIndex:2},
+        {text:"Protects participation and fairness in civic life", matchIndex:3}
+      ],
+      hint:"Key idea: stronger enforcement and broader access.",
+      explain:"Federal laws expanded protections and made enforcement more effective."
+    },
+
+    {
+      id:"G5-026",
+      csNum:10,
+      cs:"CS 10 – Urbanization: Infrastructure Strain",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each urban growth result to its most likely city response.",
+      left:[
+        "Overcrowded housing",
+        "Public health outbreaks",
+        "Traffic and commuting growth",
+        "Corruption in city services"
+      ],
+      right:[
+        {text:"Tenement rules and housing codes", matchIndex:0},
+        {text:"Sanitation systems and inspections increase", matchIndex:1},
+        {text:"Streetcars/subways/roads expand", matchIndex:2},
+        {text:"Reform movements target machines/patronage", matchIndex:3}
+      ],
+      hint:"Fast growth forces cities to build systems and clean up governance.",
+      explain:"Cities responded with infrastructure upgrades and political reforms."
+    },
+
+    {
+      id:"G5-027",
+      csNum:16,
+      cs:"CS 16 – Banking & Credit Collapse",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each financial failure to its immediate effect during the Depression.",
+      left:[
+        "Bank runs",
+        "Credit contraction",
+        "Business closures",
+        "Deflationary pressure"
+      ],
+      right:[
+        {text:"Depositors withdraw savings; banks fail faster", matchIndex:0},
+        {text:"Loans become scarce; spending drops", matchIndex:1},
+        {text:"Jobs disappear rapidly", matchIndex:2},
+        {text:"Prices fall; debts become harder to repay", matchIndex:3}
+      ],
+      hint:"Banking failure squeezes credit; credit squeeze kills demand and jobs.",
+      explain:"Financial collapse quickly spread into unemployment and deeper economic decline."
+    },
+
+    {
+      id:"G5-028",
+      csNum:20,
+      cs:"CS 20 – War Mobilization Path",
+      tags:["G5","bullet-match"],
+      type:"bullet-match",
+      stem:"Match each step to its place in the U.S. transition from debate to war action.",
+      left:[
+        "Public debate over involvement",
+        "Support short of war",
+        "Turning point event",
+        "Full mobilization"
+      ],
+      right:[
+        {text:"Aid policies like Lend-Lease", matchIndex:1},
+        {text:"Pearl Harbor attack", matchIndex:2},
+        {text:"War declaration, draft, wartime production", matchIndex:3},
+        {text:"Isolation vs intervention arguments", matchIndex:0}
+      ],
+      hint:"Debate → aid → attack → war.",
+      explain:"The direct attack created immediate political unity and action."
+    }
 ];
 
 // Exports (do not remove)
