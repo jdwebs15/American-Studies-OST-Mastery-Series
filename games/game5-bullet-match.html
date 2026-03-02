@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>American Studies — Game 5: Bullet Match</title>
+
+<script src="../amstud_bank.js"></script>
+
+<style>
+:root{
+  --bg:#0b1220;
+  --panel:#111a2f;
+  --text:#e7eefc;
+  --muted:#a8b4cf;
+  --line:rgba(255,255,255,.12);
+  --accent:#7aa2ff;
+  --good:#2bd576;
+  --bad:#ff5c7a;
+  --warn:#ffd166;
+  --radius:18px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#0b1220,#070b14);
+  color:var(--text);
+  font-family:system-ui;
+}
+.wrap{width:min(1100px,92vw);margin:30px auto;}
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:20px;
+  border-radius:var(--radius);
+  margin-bottom:16px;
+}
+h1{margin:0 0 10px}
+.meta{color:var(--muted);font-size:14px;margin-bottom:10px}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+.item{
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  margin-bottom:10px;
+  cursor:pointer;
+}
+.item:hover{border-color:var(--accent)}
+.selected{border-color:var(--accent);background:rgba(122,162,255,.15)}
+.correct{border-color:var(--good);background:rgba(43,213,118,.12)}
+.incorrect{border-color:var(--bad);background:rgba(255,92,122,.15)}
+button{
+  padding:10px 16px;
+  border:none;
+  border-radius:10px;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+}
+button:hover{opacity:.9}
+.msg{margin-top:10px}
+.good{color:var(--good)}
+.bad{color:var(--bad)}
+.warn{color:var(--warn)}
+input{
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:#0f1730;
+  color:white;
+}
+.ticket{
+  background:#0f1730;
+  padding:16px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  font-family:monospace;
+  white-space:pre-line;
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<div class="panel" id="startPanel">
+  <h1>Game 5 — Bullet Match</h1>
+  <div class="meta">28 Sets • 100% Accuracy Required</div>
+  <input id="nameInput" placeholder="Enter your full name"/>
+  <button onclick="startGame()">Start</button>
+  <div id="errorMsg" class="msg bad"></div>
+</div>
+
+<div id="gamePanel" style="display:none;">
+  <div class="panel">
+    <div class="meta" id="stats"></div>
+    <div class="grid">
+      <div id="leftCol"></div>
+      <div id="rightCol"></div>
+    </div>
+    <div class="msg" id="feedback"></div>
+  </div>
+</div>
+
+<div id="endPanel" style="display:none;">
+  <div class="panel">
+    <h2>Submit Ticket</h2>
+    <div class="ticket" id="ticket"></div>
+    <button onclick="location.reload()">Restart</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+
+const REQUIRED = 28;
+let gameItems = [];
+let currentSet = 0;
+let selectedLeft = null;
+let misses = 0;
+let startTime;
+let playerName;
+
+function startGame(){
+  playerName = document.getElementById("nameInput").value.trim();
+  if(!playerName){
+    document.getElementById("errorMsg").textContent="Name required.";
+    return;
+  }
+
+  if(typeof AMSTUD_BANK === "undefined"){
+    document.getElementById("errorMsg").textContent="AMSTUD_BANK not found.";
+    return;
+  }
+
+  const pool = AMSTUD_BANK.filter(q =>
+    q.type==="bullet-match" && q.tags && q.tags.includes("G5")
+  );
+
+  if(pool.length < REQUIRED){
+    document.getElementById("errorMsg").textContent=
+      "Only "+pool.length+" G5 items found. 28 required.";
+    return;
+  }
+
+  gameItems = shuffle(pool).slice(0,REQUIRED);
+  startTime = new Date();
+  document.getElementById("startPanel").style.display="none";
+  document.getElementById("gamePanel").style.display="block";
+  renderSet();
+}
+
+function renderSet(){
+  if(currentSet>=REQUIRED){
+    endGame();
+    return;
+  }
+
+  const item = gameItems[currentSet];
+  document.getElementById("feedback").textContent="";
+  document.getElementById("feedback").className="msg";
+
+  document.getElementById("stats").textContent=
+    "Set "+(currentSet+1)+" of "+REQUIRED+
+    " | Misses: "+misses+
+    " | Accuracy: "+calcAccuracy()+"%";
+
+  const leftCol = document.getElementById("leftCol");
+  const rightCol = document.getElementById("rightCol");
+  leftCol.innerHTML="";
+  rightCol.innerHTML="";
+  selectedLeft=null;
+
+  item.left.forEach((l,i)=>{
+    const div=document.createElement("div");
+    div.className="item";
+    div.textContent=l;
+    div.onclick=()=>selectLeft(div,i);
+    leftCol.appendChild(div);
+  });
+
+  const shuffledRight=shuffle(item.right.slice());
+
+  shuffledRight.forEach(r=>{
+    const div=document.createElement("div");
+    div.className="item";
+    div.textContent=r.text;
+    div.onclick=()=>selectRight(div,r.matchIndex);
+    rightCol.appendChild(div);
+  });
+}
+
+function selectLeft(el,index){
+  if(el.classList.contains("correct")) return;
+  document.querySelectorAll("#leftCol .item").forEach(x=>x.classList.remove("selected"));
+  el.classList.add("selected");
+  selectedLeft=index;
+}
+
+function selectRight(el,matchIndex){
+  if(selectedLeft===null) return;
+
+  if(matchIndex===selectedLeft){
+    el.classList.add("correct");
+    document.querySelectorAll("#leftCol .item")[selectedLeft].classList.add("correct");
+    document.getElementById("feedback").textContent="Correct.";
+    document.getElementById("feedback").className="msg good";
+    setTimeout(()=>{
+      currentSet++;
+      renderSet();
+    },600);
+  } else {
+    el.classList.add("incorrect");
+    misses++;
+    document.getElementById("feedback").textContent=
+      gameItems[currentSet].hint || "Incorrect.";
+    document.getElementById("feedback").className="msg bad";
+  }
+}
+
+function calcAccuracy(){
+  const totalAttempts=currentSet+misses;
+  if(totalAttempts===0) return 100;
+  return Math.max(0,Math.round((currentSet/totalAttempts)*100));
+}
+
+function endGame(){
+  document.getElementById("gamePanel").style.display="none";
+  document.getElementById("endPanel").style.display="block";
+
+  const endTime=new Date();
+  const accuracy=calcAccuracy();
+  const passed=(accuracy===100);
+
+  document.getElementById("ticket").textContent=
+`Name: ${playerName}
+Start: ${startTime}
+Finish: ${endTime}
+Accuracy: ${accuracy}%
+Misses: ${misses}
+Passed: ${passed ? "YES" : "NO"}`;
+}
+
+function shuffle(arr){
+  return arr.sort(()=>Math.random()-0.5);
+}
+
+</script>
+
+</body>
+</html>
