@@ -9,10 +9,6 @@
 
 "use strict";
 
-/* =========================================================
-   SHARED BANK — ALL GAMES PULL FROM THIS ONE ARRAY
-   ========================================================= */
-
 const AMSTUD_BANK = [
   // =========================================================
   // GAME 1 (Cause & Effect) — tag: "Cause & Effect"
@@ -98,8 +94,6 @@ const AMSTUD_BANK = [
     explain:
       "Different priorities led to different views about what caused workplace conflict and how to solve it."
   },
-
-  // CS6–CS10
   {
     cs: "CS 6 – Rise of Corporations & Industrial Growth",
     tag: "Cause & Effect",
@@ -176,8 +170,6 @@ const AMSTUD_BANK = [
     explain:
       "Overcrowding and poor sanitation contributed to disease and major urban health challenges."
   },
-
-  // CS11–CS20
   {
     cs: "CS 11 – Progressive Reforms",
     tag: "Cause & Effect",
@@ -277,7 +269,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Effects: job loss, bank failures, and pressure on government.",
-    explain: "Mass unemployment and hardship increased calls for federal intervention."
+    explain:
+      "Mass unemployment and hardship increased calls for federal intervention."
   },
   {
     cs: "CS 18 – The New Deal & Expanded Federal Role",
@@ -291,7 +284,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Match the New Deal to the crisis it was designed to address.",
-    explain: "New Deal programs were created to combat Depression hardship and stabilize the economy."
+    explain:
+      "New Deal programs were created to combat Depression hardship and stabilize the economy."
   },
   {
     cs: "CS 19 – Rise of Dictatorships & Global Tensions",
@@ -305,7 +299,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Dictators often rise when people lose faith in unstable systems.",
-    explain: "Economic crises and instability created openings for authoritarian leaders."
+    explain:
+      "Economic crises and instability created openings for authoritarian leaders."
   },
   {
     cs: "CS 20 – U.S. Entry into World War II",
@@ -319,10 +314,9 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "December 7, 1941.",
-    explain: "Pearl Harbor triggered a declaration of war and full U.S. entry into WWII."
+    explain:
+      "Pearl Harbor triggered a declaration of war and full U.S. entry into WWII."
   },
-
-  // CS21–CS33
   {
     cs: "CS 21 – WWII Homefront",
     tag: "Cause & Effect",
@@ -335,7 +329,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Rationing redirects scarce goods to military needs.",
-    explain: "Rationing conserved materials and ensured the military had priority access."
+    explain:
+      "Rationing conserved materials and ensured the military had priority access."
   },
   {
     cs: "CS 22 – Postwar Economic Boom",
@@ -364,7 +359,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Focus on capitalism vs communism and postwar power competition.",
-    explain: "Ideological conflict and competition for influence fueled long-term tension."
+    explain:
+      "Ideological conflict and competition for influence fueled long-term tension."
   },
   {
     cs: "CS 24 – Containment Policy",
@@ -378,7 +374,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Containment = stop spread.",
-    explain: "Containment aimed to block the expansion of communism into additional countries."
+    explain:
+      "Containment aimed to block the expansion of communism into additional countries."
   },
   {
     cs: "CS 25 – Red Scare & Domestic Impact",
@@ -392,7 +389,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Domestic fear increased as international tension increased.",
-    explain: "Cold War rivalry heightened suspicion and fear of communist influence at home."
+    explain:
+      "Cold War rivalry heightened suspicion and fear of communist influence at home."
   },
   {
     cs: "CS 31 – Globalization & Technological Change",
@@ -442,7 +440,7 @@ const AMSTUD_BANK = [
   },
 
   // =========================================================
-  // GAME 2 (Select Two) — tags include "G2", type:"select-two"
+  // GAME 2 (Select Two) — type:"select-two"
   // =========================================================
   {
     id: "CS1-G2-001",
@@ -460,7 +458,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 2],
     hint: "Think: representativeness and sampling.",
-    explain: "A diary is one perspective and may not represent broader public opinion."
+    explain:
+      "A diary is one perspective and may not represent broader public opinion."
   },
   {
     id: "CS2-G2-002",
@@ -478,7 +477,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 2],
     hint: "Primary sources come from the time period being studied.",
-    explain: "Photos and inspection reports created during the era are primary sources."
+    explain:
+      "Photos and inspection reports created during the era are primary sources."
   },
   {
     id: "CS3-G2-003",
@@ -486,7 +486,8 @@ const AMSTUD_BANK = [
     cs: "CS 3 – Cause and Effect",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO factors that helped drive rapid industrial growth in the late 1800s.",
+    stem:
+      "Select TWO factors that helped drive rapid industrial growth in the late 1800s.",
     choices: [
       "Expanded railroad networks and national markets",
       "A sharp reduction in new inventions and patents",
@@ -495,7 +496,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 2],
     hint: "Look for conditions that expand markets and labor.",
-    explain: "Railroads connected markets; labor supply grew through immigration/migration."
+    explain:
+      "Railroads connected markets; labor supply grew through immigration/migration."
   },
   {
     id: "CS4-G2-004",
@@ -503,7 +505,8 @@ const AMSTUD_BANK = [
     cs: "CS 4 – Contextualization",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO reasons reformers focused on city governments during rapid urbanization.",
+    stem:
+      "Select TWO reasons reformers focused on city governments during rapid urbanization.",
     choices: [
       "Corruption and machine politics shaped many city services",
       "Cities had no problems with sanitation or housing",
@@ -512,7 +515,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 2],
     hint: "Urbanization often creates visible problems and pressure for reform.",
-    explain: "Corruption and public health crises became urgent in growing cities."
+    explain:
+      "Corruption and public health crises became urgent in growing cities."
   },
   {
     id: "CS5-G2-005",
@@ -520,7 +524,8 @@ const AMSTUD_BANK = [
     cs: "CS 5 – Multiple Perspectives",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO reasons business owners and workers often disagreed during major strikes.",
+    stem:
+      "Select TWO reasons business owners and workers often disagreed during major strikes.",
     choices: [
       "Owners prioritized profits and uninterrupted production",
       "Workers prioritized better wages and safer working conditions",
@@ -529,7 +534,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 1],
     hint: "Competing interests create different solutions and blame.",
-    explain: "Owners and workers valued different goals: production/profit vs. conditions/pay."
+    explain:
+      "Owners and workers valued different goals: production/profit vs. conditions/pay."
   },
 
   {
@@ -538,7 +544,8 @@ const AMSTUD_BANK = [
     cs: "CS 6 – Rise of Corporations & Industrialization",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO developments that helped corporations expand into national businesses.",
+    stem:
+      "Select TWO developments that helped corporations expand into national businesses.",
     choices: [
       "Railroads and national distribution networks",
       "A complete end to advertising and branding",
@@ -546,8 +553,10 @@ const AMSTUD_BANK = [
       "A ban on interstate trade"
     ],
     correctIndices: [0, 2],
-    hint: "National scale requires national transport + communication.",
-    explain: "Rail networks and communication technology enabled national business growth."
+    hint:
+      "National scale requires national transport + communication.",
+    explain:
+      "Rail networks and communication technology enabled national business growth."
   },
   {
     id: "CS7-G2-007",
@@ -555,7 +564,8 @@ const AMSTUD_BANK = [
     cs: "CS 7 – Labor Organizations",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO common goals of labor unions in the late 1800s and early 1900s.",
+    stem:
+      "Select TWO common goals of labor unions in the late 1800s and early 1900s.",
     choices: [
       "Shorter workdays and safer working conditions",
       "Higher wages or fairer pay practices",
@@ -563,8 +573,10 @@ const AMSTUD_BANK = [
       "Ending all workplace rules and safety standards"
     ],
     correctIndices: [0, 1],
-    hint: "Unions formed to improve labor conditions and bargaining power.",
-    explain: "Unions pushed for safer conditions, shorter hours, and better pay."
+    hint:
+      "Unions formed to improve labor conditions and bargaining power.",
+    explain:
+      "Unions pushed for safer conditions, shorter hours, and better pay."
   },
   {
     id: "CS8-G2-008",
@@ -572,7 +584,8 @@ const AMSTUD_BANK = [
     cs: "CS 8 – Laissez-faire & Big Business",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO outcomes that often resulted from laissez-faire attitudes toward big business.",
+    stem:
+      "Select TWO outcomes that often resulted from laissez-faire attitudes toward big business.",
     choices: [
       "Growth of trusts/monopolies with limited oversight",
       "Increased government regulation of factory safety",
@@ -580,8 +593,10 @@ const AMSTUD_BANK = [
       "The immediate elimination of all corporate profits"
     ],
     correctIndices: [0, 2],
-    hint: "Less oversight can allow consolidation and concentration of power.",
-    explain: "Minimal regulation enabled monopolies and concentrated corporate power."
+    hint:
+      "Less oversight can allow consolidation and concentration of power.",
+    explain:
+      "Minimal regulation enabled monopolies and concentrated corporate power."
   },
   {
     id: "CS9-G2-009",
@@ -589,7 +604,8 @@ const AMSTUD_BANK = [
     cs: "CS 9 – Technology & the Economy/Society",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO ways new technology affected daily life in the early 1900s.",
+    stem:
+      "Select TWO ways new technology affected daily life in the early 1900s.",
     choices: [
       "Improved communication or access to information",
       "Saved time or changed household labor routines",
@@ -597,8 +613,10 @@ const AMSTUD_BANK = [
       "Ended the need for transportation networks"
     ],
     correctIndices: [0, 1],
-    hint: "Think: communication and household/consumer life changes.",
-    explain: "Technology improved communication and reshaped home/work routines."
+    hint:
+      "Think: communication and household/consumer life changes.",
+    explain:
+      "Technology improved communication and reshaped home/work routines."
   },
   {
     id: "CS10-G2-010",
@@ -606,7 +624,8 @@ const AMSTUD_BANK = [
     cs: "CS 10 – Immigration, Internal Migration & Urbanization",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO challenges associated with overcrowded tenement housing around 1900.",
+    stem:
+      "Select TWO challenges associated with overcrowded tenement housing around 1900.",
     choices: [
       "Poor ventilation and the spread of diseases like tuberculosis",
       "Increased access to clean water and sanitation in every building",
@@ -614,8 +633,10 @@ const AMSTUD_BANK = [
       "Guaranteed spacious living areas for large families"
     ],
     correctIndices: [0, 2],
-    hint: "Overcrowding + sanitation problems = public health crises.",
-    explain: "Tenements often had poor ventilation and sanitation, increasing disease spread."
+    hint:
+      "Overcrowding + sanitation problems = public health crises.",
+    explain:
+      "Tenements often had poor ventilation and sanitation, increasing disease spread."
   },
   {
     id: "CS11-G2-011",
@@ -623,7 +644,8 @@ const AMSTUD_BANK = [
     cs: "CS 11 – Progressive Era Reforms",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO reasons Progressive reformers supported stronger regulation of food and medicines.",
+    stem:
+      "Select TWO reasons Progressive reformers supported stronger regulation of food and medicines.",
     choices: [
       "Public exposure of unsafe products and misleading labels",
       "A desire to eliminate all government action permanently",
@@ -631,8 +653,10 @@ const AMSTUD_BANK = [
       "A goal of ending public health inspections"
     ],
     correctIndices: [0, 2],
-    hint: "Progressive reforms often followed publicity about harms.",
-    explain: "Unsafe products and public pressure drove consumer protection reforms."
+    hint:
+      "Progressive reforms often followed publicity about harms.",
+    explain:
+      "Unsafe products and public pressure drove consumer protection reforms."
   },
   {
     id: "CS12-G2-012",
@@ -640,7 +664,8 @@ const AMSTUD_BANK = [
     cs: "CS 12 – Women’s Suffrage",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO strategies suffrage activists used to win voting rights.",
+    stem:
+      "Select TWO strategies suffrage activists used to win voting rights.",
     choices: [
       "Organized petitions, marches, and public campaigns",
       "Direct lobbying of lawmakers and building coalitions",
@@ -648,8 +673,10 @@ const AMSTUD_BANK = [
       "Calling for the abolition of elections"
     ],
     correctIndices: [0, 1],
-    hint: "Think organized activism + political pressure.",
-    explain: "Activists used public organizing and lobbying to build support for an amendment."
+    hint:
+      "Think organized activism + political pressure.",
+    explain:
+      "Activists used public organizing and lobbying to build support for an amendment."
   },
   {
     id: "CS13-G2-013",
@@ -657,7 +684,8 @@ const AMSTUD_BANK = [
     cs: "CS 13 – U.S. Involvement in World War I",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO factors that increased U.S. pressure to enter World War I.",
+    stem:
+      "Select TWO factors that increased U.S. pressure to enter World War I.",
     choices: [
       "Unrestricted submarine warfare threatening ships",
       "U.S. neutrality laws requiring immediate war",
@@ -666,7 +694,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 2],
     hint: "Think threats + interests.",
-    explain: "Submarine warfare and economic ties increased pressure to enter the conflict."
+    explain:
+      "Submarine warfare and economic ties increased pressure to enter the conflict."
   },
   {
     id: "CS14-G2-014",
@@ -674,7 +703,8 @@ const AMSTUD_BANK = [
     cs: "CS 14 – Post-WWI Peace Efforts",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO reasons many U.S. senators opposed joining the League of Nations.",
+    stem:
+      "Select TWO reasons many U.S. senators opposed joining the League of Nations.",
     choices: [
       "Fear the U.S. would be drawn into future wars",
       "Belief it could limit U.S. independence in foreign policy",
@@ -682,8 +712,10 @@ const AMSTUD_BANK = [
       "Belief the League required the U.S. to end all trade"
     ],
     correctIndices: [0, 1],
-    hint: "Opposition centered on entanglement and sovereignty.",
-    explain: "Many feared entangling alliances and limits on independent decision-making."
+    hint:
+      "Opposition centered on entanglement and sovereignty.",
+    explain:
+      "Many feared entangling alliances and limits on independent decision-making."
   },
   {
     id: "CS15-G2-015",
@@ -691,7 +723,8 @@ const AMSTUD_BANK = [
     cs: "CS 15 – Isolationism in the 1930s",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO examples of policies reflecting U.S. isolationist tendencies before WWII.",
+    stem:
+      "Select TWO examples of policies reflecting U.S. isolationist tendencies before WWII.",
     choices: [
       "Neutrality Acts limiting aid or involvement",
       "Cash-and-carry restrictions on trade with belligerents",
@@ -699,8 +732,10 @@ const AMSTUD_BANK = [
       "NATO collective defense agreements"
     ],
     correctIndices: [0, 1],
-    hint: "Isolationism = avoiding commitments that pull the U.S. into war.",
-    explain: "Neutrality Acts and cash-and-carry were designed to avoid involvement."
+    hint:
+      "Isolationism = avoiding commitments that pull the U.S. into war.",
+    explain:
+      "Neutrality Acts and cash-and-carry were designed to avoid involvement."
   },
   {
     id: "CS16-G2-016",
@@ -716,8 +751,10 @@ const AMSTUD_BANK = [
       "The Marshall Plan rebuilding Europe"
     ],
     correctIndices: [0, 1],
-    hint: "Think 1920s weaknesses + collapse mechanisms.",
-    explain: "Speculation and fragile banking helped trigger and deepen the depression."
+    hint:
+      "Think 1920s weaknesses + collapse mechanisms.",
+    explain:
+      "Speculation and fragile banking helped trigger and deepen the depression."
   },
   {
     id: "CS17-G2-017",
@@ -725,7 +762,8 @@ const AMSTUD_BANK = [
     cs: "CS 17 – Effects of the Great Depression",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO major effects of the Great Depression on Americans.",
+    stem:
+      "Select TWO major effects of the Great Depression on Americans.",
     choices: [
       "Widespread unemployment and poverty",
       "Increased demand for government relief programs",
@@ -733,8 +771,10 @@ const AMSTUD_BANK = [
       "A total end to all political debate"
     ],
     correctIndices: [0, 1],
-    hint: "Think hardship + pressure for action.",
-    explain: "Unemployment and suffering increased demand for government response."
+    hint:
+      "Think hardship + pressure for action.",
+    explain:
+      "Unemployment and suffering increased demand for government response."
   },
   {
     id: "CS18-G2-018",
@@ -751,7 +791,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 1],
     hint: "New Deal = relief, recovery, reform.",
-    explain: "Programs aimed to relieve suffering and reform systems like banking/markets."
+    explain:
+      "Programs aimed to relieve suffering and reform systems like banking/markets."
   },
   {
     id: "CS19-G2-019",
@@ -759,7 +800,8 @@ const AMSTUD_BANK = [
     cs: "CS 19 – Rise of Dictatorships & Global Tension",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO conditions that helped dictators gain power between WWI and WWII.",
+    stem:
+      "Select TWO conditions that helped dictators gain power between WWI and WWII.",
     choices: [
       "Economic crisis and mass unemployment",
       "Political instability and weak democratic institutions",
@@ -767,7 +809,8 @@ const AMSTUD_BANK = [
       "An end to nationalism across Europe"
     ],
     correctIndices: [0, 1],
-    hint: "Authoritarian movements grow when systems look like they are failing.",
+    hint:
+      "Authoritarian movements grow when systems look like they are failing.",
     explain:
       "Economic and political instability made extreme leaders more appealing to some citizens."
   },
@@ -777,7 +820,8 @@ const AMSTUD_BANK = [
     cs: "CS 20 – U.S. Entry into WWII",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO actions that moved the U.S. closer to involvement in WWII before Pearl Harbor.",
+    stem:
+      "Select TWO actions that moved the U.S. closer to involvement in WWII before Pearl Harbor.",
     choices: [
       "Lend-Lease aid to Allied nations",
       "Atlantic Charter cooperation with Britain",
@@ -785,8 +829,10 @@ const AMSTUD_BANK = [
       "A law banning all U.S. trade worldwide"
     ],
     correctIndices: [0, 1],
-    hint: "Look for policies supporting Allies short of declaring war.",
-    explain: "Lend-Lease and Atlantic Charter increased cooperation and support for Allies."
+    hint:
+      "Look for policies supporting Allies short of declaring war.",
+    explain:
+      "Lend-Lease and Atlantic Charter increased cooperation and support for Allies."
   },
   {
     id: "CS21-G2-021",
@@ -802,8 +848,10 @@ const AMSTUD_BANK = [
       "The collapse of all factories"
     ],
     correctIndices: [0, 1],
-    hint: "Think: mobilization changes labor and resources.",
-    explain: "War mobilization brought rationing and expanded workforce roles for women."
+    hint:
+      "Think: mobilization changes labor and resources.",
+    explain:
+      "War mobilization brought rationing and expanded workforce roles for women."
   },
   {
     id: "CS22-G2-022",
@@ -811,7 +859,8 @@ const AMSTUD_BANK = [
     cs: "CS 22 – Postwar Boom",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO factors that contributed to U.S. economic growth after WWII.",
+    stem:
+      "Select TWO factors that contributed to U.S. economic growth after WWII.",
     choices: [
       "Rising consumer demand and suburban expansion",
       "Expanded access to education and home loans",
@@ -819,8 +868,10 @@ const AMSTUD_BANK = [
       "The elimination of manufacturing"
     ],
     correctIndices: [0, 1],
-    hint: "Pent-up demand + housing + education access.",
-    explain: "Spending, suburbanization, and expanded access to loans/education fueled growth."
+    hint:
+      "Pent-up demand + housing + education access.",
+    explain:
+      "Spending, suburbanization, and expanded access to loans/education fueled growth."
   },
   {
     id: "CS23-G2-023",
@@ -845,7 +896,8 @@ const AMSTUD_BANK = [
     cs: "CS 24 – Containment",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO examples of U.S. actions consistent with containment.",
+    stem:
+      "Select TWO examples of U.S. actions consistent with containment.",
     choices: [
       "Providing economic or military aid to resist communist expansion",
       "Forming alliances to deter Soviet influence",
@@ -854,7 +906,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 1],
     hint: "Containment = block expansion.",
-    explain: "Aid and alliances were tools used to limit Soviet/communist expansion."
+    explain:
+      "Aid and alliances were tools used to limit Soviet/communist expansion."
   },
   {
     id: "CS25-G2-025",
@@ -862,7 +915,8 @@ const AMSTUD_BANK = [
     cs: "CS 25 – Red Scare",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO factors that fueled anti-communist fear in the U.S. during the early Cold War.",
+    stem:
+      "Select TWO factors that fueled anti-communist fear in the U.S. during the early Cold War.",
     choices: [
       "International rivalry and conflicts with the Soviet bloc",
       "Espionage cases and fears of internal subversion",
@@ -871,7 +925,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 1],
     hint: "Think external conflict + internal suspicion.",
-    explain: "Global tensions and espionage fears heightened domestic suspicion."
+    explain:
+      "Global tensions and espionage fears heightened domestic suspicion."
   },
   {
     id: "CS26-G2-026",
@@ -879,7 +934,8 @@ const AMSTUD_BANK = [
     cs: "CS 26 – Civil Rights Movement",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO outcomes of civil rights activism in the 1950s–60s.",
+    stem:
+      "Select TWO outcomes of civil rights activism in the 1950s–60s.",
     choices: [
       "Legal challenges and court rulings against segregation",
       "Federal legislation strengthening equal access and voting rights",
@@ -888,7 +944,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 1],
     hint: "Look for legal and legislative changes that expanded rights.",
-    explain: "Court rulings and federal laws expanded protections and enforcement."
+    explain:
+      "Court rulings and federal laws expanded protections and enforcement."
   },
   {
     id: "CS27-G2-027",
@@ -896,7 +953,8 @@ const AMSTUD_BANK = [
     cs: "CS 27 – Rights Movements for Other Groups",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO reasons rights movements expanded after WWII beyond African American civil rights.",
+    stem:
+      "Select TWO reasons rights movements expanded after WWII beyond African American civil rights.",
     choices: [
       "Activists used democratic ideals to argue for broader equality",
       "Media coverage helped spread awareness of unequal treatment",
@@ -905,7 +963,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 1],
     hint: "Think activism + visibility + ideals.",
-    explain: "Democratic ideals and media attention helped broaden demands for equality."
+    explain:
+      "Democratic ideals and media attention helped broaden demands for equality."
   },
   {
     id: "CS28-G2-028",
@@ -913,7 +972,8 @@ const AMSTUD_BANK = [
     cs: "CS 28 – Social/Cultural Change (1945–1994)",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO ways mass media influenced American culture after WWII.",
+    stem:
+      "Select TWO ways mass media influenced American culture after WWII.",
     choices: [
       "Created shared national experiences through TV/radio",
       "Helped spread new music, trends, and youth culture",
@@ -922,7 +982,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 1],
     hint: "Media spreads shared culture and trends.",
-    explain: "TV/radio helped standardize and spread popular culture nationwide."
+    explain:
+      "TV/radio helped standardize and spread popular culture nationwide."
   },
   {
     id: "CS29-G2-029",
@@ -930,7 +991,8 @@ const AMSTUD_BANK = [
     cs: "CS 29 – Immigration Patterns (post-1965)",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO effects of changes in U.S. immigration policy after the mid-1960s.",
+    stem:
+      "Select TWO effects of changes in U.S. immigration policy after the mid-1960s.",
     choices: [
       "Changed the regions many immigrants came from",
       "Increased cultural and demographic diversity in many communities",
@@ -939,7 +1001,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 1],
     hint: "Policy changes can reshape origin patterns and diversity.",
-    explain: "Post-1960s reforms reshaped immigration origins and increased diversity."
+    explain:
+      "Post-1960s reforms reshaped immigration origins and increased diversity."
   },
   {
     id: "CS30-G2-030",
@@ -947,7 +1010,8 @@ const AMSTUD_BANK = [
     cs: "CS 30 – End of the Cold War",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO factors that contributed to the collapse of communist governments by 1991.",
+    stem:
+      "Select TWO factors that contributed to the collapse of communist governments by 1991.",
     choices: [
       "Economic stagnation and declining living standards",
       "Reform movements challenging one-party control",
@@ -956,7 +1020,8 @@ const AMSTUD_BANK = [
     ],
     correctIndices: [0, 1],
     hint: "Think internal weaknesses + pressure for reform.",
-    explain: "Economic stagnation and reform movements undermined communist control."
+    explain:
+      "Economic stagnation and reform movements undermined communist control."
   },
   {
     id: "CS33-G2-031",
@@ -964,7 +1029,8 @@ const AMSTUD_BANK = [
     cs: "CS 33 – Equality & Civil Rights Expansion (1945–1994)",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO reasons civil rights activism intensified after World War II.",
+    stem:
+      "Select TWO reasons civil rights activism intensified after World War II.",
     choices: [
       "The contradiction between democratic ideals and discrimination became harder to defend",
       "Returning veterans and activists demanded fuller rights and protections",
@@ -972,8 +1038,10 @@ const AMSTUD_BANK = [
       "Segregation ended everywhere by 1946"
     ],
     correctIndices: [0, 1],
-    hint: "Look for pressure points: ideals vs reality + organized demands for change.",
-    explain: "Postwar contradictions and increased activism fueled stronger movements."
+    hint:
+      "Look for pressure points: ideals vs reality + organized demands for change.",
+    explain:
+      "Postwar contradictions and increased activism fueled stronger movements."
   },
   {
     id: "CS33-G2-032",
@@ -981,7 +1049,8 @@ const AMSTUD_BANK = [
     cs: "CS 33 – Equality & Civil Rights Expansion (1945–1994)",
     tags: ["G2", "select-two"],
     type: "select-two",
-    stem: "Select TWO ways federal actions in the 1960s strengthened civil rights protections.",
+    stem:
+      "Select TWO ways federal actions in the 1960s strengthened civil rights protections.",
     choices: [
       "Created enforcement tools against discrimination in public accommodations and employment",
       "Protected voting rights by targeting barriers like discriminatory practices",
@@ -995,7 +1064,7 @@ const AMSTUD_BANK = [
   },
 
   // =========================================================
-  // GAME 3 (Best Explains) — tags include "G3", type:"best-explains"
+  // GAME 3 (Best Explains) — type:"best-explains"
   // =========================================================
   {
     id: "G3-001",
@@ -1003,7 +1072,8 @@ const AMSTUD_BANK = [
     cs: "CS 6 – Rise of Corporations & Industrial Growth",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains why railroads were a turning point for late-1800s industrial growth?",
+    stem:
+      "Which statement best explains why railroads were a turning point for late-1800s industrial growth?",
     choices: [
       "They reduced the need for factories by encouraging home production",
       "They connected raw materials, factories, and consumers into a national market",
@@ -1012,7 +1082,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Think: national markets depend on moving goods cheaply and quickly.",
-    explain: "Railroads linked regions and lowered shipping costs, allowing firms to sell nationwide."
+    explain:
+      "Railroads linked regions and lowered shipping costs, allowing firms to sell nationwide."
   },
   {
     id: "G3-002",
@@ -1020,7 +1091,8 @@ const AMSTUD_BANK = [
     cs: "CS 7 – Labor Organizations",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why strikes often became violent in the late 1800s?",
+    stem:
+      "Which option best explains why strikes often became violent in the late 1800s?",
     choices: [
       "Workers usually wanted to eliminate all wages immediately",
       "Employers and governments sometimes used police or private guards to break strikes",
@@ -1029,7 +1101,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Think: force used to maintain production and control labor.",
-    explain: "Companies and officials sometimes used force to end strikes, escalating conflict."
+    explain:
+      "Companies and officials sometimes used force to end strikes, escalating conflict."
   },
   {
     id: "G3-003",
@@ -1037,7 +1110,8 @@ const AMSTUD_BANK = [
     cs: "CS 8 – Laissez-faire & Big Business",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains how laissez-faire ideas helped trusts grow?",
+    stem:
+      "Which statement best explains how laissez-faire ideas helped trusts grow?",
     choices: [
       "Government avoided regulating consolidation, allowing firms to merge and dominate markets",
       "Government required every business to keep the same prices",
@@ -1046,7 +1120,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 0,
     hint: "Less oversight = easier consolidation.",
-    explain: "Limited regulation allowed large firms to combine power and reduce competition."
+    explain:
+      "Limited regulation allowed large firms to combine power and reduce competition."
   },
   {
     id: "G3-004",
@@ -1054,7 +1129,8 @@ const AMSTUD_BANK = [
     cs: "CS 10 – Immigration, Internal Migration, Urbanization",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which choice best explains why disease spread quickly in many tenements around 1900?",
+    stem:
+      "Which choice best explains why disease spread quickly in many tenements around 1900?",
     choices: [
       "Overcrowding and poor sanitation created ideal conditions for contagious illness",
       "Tenements required all residents to receive free medical care",
@@ -1063,7 +1139,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 0,
     hint: "Crowding + sanitation problems = outbreaks.",
-    explain: "Tight quarters, limited ventilation, and poor sanitation increased transmission."
+    explain:
+      "Tight quarters, limited ventilation, and poor sanitation increased transmission."
   },
   {
     id: "G3-005",
@@ -1071,7 +1148,8 @@ const AMSTUD_BANK = [
     cs: "CS 11 – Progressive Era Reforms",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why muckraker journalism mattered to Progressive reform?",
+    stem:
+      "Which option best explains why muckraker journalism mattered to Progressive reform?",
     choices: [
       "It reduced public attention to social problems",
       "It exposed corruption and unsafe conditions, increasing pressure for laws",
@@ -1080,7 +1158,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Exposure → public pressure → reform.",
-    explain: "Investigative reporting raised awareness and built support for regulation and reform."
+    explain:
+      "Investigative reporting raised awareness and built support for regulation and reform."
   },
   {
     id: "G3-006",
@@ -1088,7 +1167,8 @@ const AMSTUD_BANK = [
     cs: "CS 14 – Post-WWI Peace Efforts",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains why many senators opposed the League of Nations?",
+    stem:
+      "Which statement best explains why many senators opposed the League of Nations?",
     choices: [
       "They feared it would reduce U.S. control over decisions to enter future conflicts",
       "They believed it required the U.S. to end all trade permanently",
@@ -1097,7 +1177,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 0,
     hint: "Key issue: sovereignty and entangling commitments.",
-    explain: "Many worried collective security obligations could limit independent U.S. foreign policy."
+    explain:
+      "Many worried collective security obligations could limit independent U.S. foreign policy."
   },
   {
     id: "G3-007",
@@ -1105,7 +1186,8 @@ const AMSTUD_BANK = [
     cs: "CS 16 – Causes of the Great Depression",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains how stock speculation increased economic risk in the 1920s?",
+    stem:
+      "Which option best explains how stock speculation increased economic risk in the 1920s?",
     choices: [
       "Investors borrowed heavily to buy stocks, magnifying losses when prices fell",
       "Banks required all customers to stop buying stocks",
@@ -1114,15 +1196,17 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 0,
     hint: "Borrowing to invest = bigger crash impact.",
-    explain: "Buying on margin amplified risk and worsened the crash when prices dropped."
+    explain:
+      "Buying on margin amplified risk and worsened the crash when prices dropped."
   },
   {
     id: "G3-008",
     csNum: 18,
-    cs: "CS 18 – New Deal & Federal Role",
+    cs: "CS 18 – New Deal & Expanded Federal Role",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains why the New Deal expanded federal power?",
+    stem:
+      "Which statement best explains why the New Deal expanded federal power?",
     choices: [
       "It sought to eliminate state governments entirely",
       "It responded to economic collapse with national relief, recovery, and reform programs",
@@ -1131,7 +1215,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Crisis required national-scale action.",
-    explain: "The severity of the Depression led to federal programs to stabilize the economy and society."
+    explain:
+      "The severity of the Depression led to federal programs to stabilize the economy and society."
   },
   {
     id: "G3-009",
@@ -1139,7 +1224,8 @@ const AMSTUD_BANK = [
     cs: "CS 23 – Early Cold War Tensions",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why the U.S. and USSR became rivals after WWII?",
+    stem:
+      "Which option best explains why the U.S. and USSR became rivals after WWII?",
     choices: [
       "They shared identical political and economic systems",
       "They competed for influence and had conflicting ideologies",
@@ -1148,7 +1234,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Ideology + power competition.",
-    explain: "Capitalism vs. communism and security concerns drove the rivalry."
+    explain:
+      "Capitalism vs. communism and security concerns drove the rivalry."
   },
   {
     id: "G3-010",
@@ -1156,7 +1243,8 @@ const AMSTUD_BANK = [
     cs: "CS 33 – Equality & Civil Rights Expansion (1945–1994)",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains why civil rights activism expanded after WWII?",
+    stem:
+      "Which statement best explains why civil rights activism expanded after WWII?",
     choices: [
       "Discrimination ended nationwide, so activism became unnecessary",
       "The gap between democratic ideals and unequal treatment became harder to ignore",
@@ -1165,17 +1253,17 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Contradiction between ideals and reality fuels movements.",
-    explain: "Postwar democracy rhetoric highlighted the injustice of continued discrimination."
+    explain:
+      "Postwar democracy rhetoric highlighted the injustice of continued discrimination."
   },
-
-  // Added 18 more (G3-011 ... G3-028)
   {
     id: "G3-011",
     csNum: 1,
     cs: "CS 1 – Source Credibility",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains why historians compare multiple sources when studying the same event?",
+    stem:
+      "Which statement best explains why historians compare multiple sources when studying the same event?",
     choices: [
       "Because one source always tells the full truth without bias",
       "Because corroboration helps reduce bias and strengthens conclusions",
@@ -1184,7 +1272,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Multiple sources = stronger claims.",
-    explain: "Comparing sources helps confirm details and identify bias or missing perspectives."
+    explain:
+      "Comparing sources helps confirm details and identify bias or missing perspectives."
   },
   {
     id: "G3-012",
@@ -1192,7 +1281,8 @@ const AMSTUD_BANK = [
     cs: "CS 2 – Primary vs Secondary",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why a newspaper editorial from 1910 must be used carefully as evidence?",
+    stem:
+      "Which option best explains why a newspaper editorial from 1910 must be used carefully as evidence?",
     choices: [
       "It is written too close to the events to be meaningful",
       "It reflects opinion and may emphasize persuasion over balanced reporting",
@@ -1201,7 +1291,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Editorials = viewpoint evidence.",
-    explain: "Editorials show attitudes and arguments, but may be biased or selective in facts."
+    explain:
+      "Editorials show attitudes and arguments, but may be biased or selective in facts."
   },
   {
     id: "G3-013",
@@ -1209,7 +1300,8 @@ const AMSTUD_BANK = [
     cs: "CS 9 – Technology & Society",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains how mass production changed consumer life in the early 1900s?",
+    stem:
+      "Which statement best explains how mass production changed consumer life in the early 1900s?",
     choices: [
       "It reduced the supply of goods and raised prices",
       "It lowered costs and made more goods affordable to more people",
@@ -1218,7 +1310,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Mass production usually lowers unit cost.",
-    explain: "Assembly lines and standardization increased output and often reduced prices."
+    explain:
+      "Assembly lines and standardization increased output and often reduced prices."
   },
   {
     id: "G3-014",
@@ -1226,7 +1319,8 @@ const AMSTUD_BANK = [
     cs: "CS 12 – Women’s Suffrage",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why the 19th Amendment is considered a major democratic expansion?",
+    stem:
+      "Which option best explains why the 19th Amendment is considered a major democratic expansion?",
     choices: [
       "It limited voting to property owners",
       "It expanded political participation to include most women nationwide",
@@ -1235,7 +1329,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Democratic expansion = more eligible voters.",
-    explain: "The amendment broadened who could participate in elections."
+    explain:
+      "The amendment broadened who could participate in elections."
   },
   {
     id: "G3-015",
@@ -1243,7 +1338,8 @@ const AMSTUD_BANK = [
     cs: "CS 13 – WWI",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains why unrestricted submarine warfare mattered to U.S. public opinion?",
+    stem:
+      "Which statement best explains why unrestricted submarine warfare mattered to U.S. public opinion?",
     choices: [
       "It threatened neutral trade and American lives, increasing calls for intervention",
       "It ended all shipping in the Atlantic immediately",
@@ -1252,7 +1348,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 0,
     hint: "Threats to Americans shift neutrality.",
-    explain: "Attacks on ships raised the perceived cost of staying neutral."
+    explain:
+      "Attacks on ships raised the perceived cost of staying neutral."
   },
   {
     id: "G3-016",
@@ -1260,7 +1357,8 @@ const AMSTUD_BANK = [
     cs: "CS 15 – Isolationism",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why many Americans supported the Neutrality Acts in the 1930s?",
+    stem:
+      "Which option best explains why many Americans supported the Neutrality Acts in the 1930s?",
     choices: [
       "They believed war always benefits the U.S. economy",
       "They wanted to avoid repeating the costs of WWI and being drawn into another war",
@@ -1269,7 +1367,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Memory of WWI shaped policy.",
-    explain: "Many voters favored avoiding entanglements after WWI losses and disappointment."
+    explain:
+      "Many voters favored avoiding entanglements after WWI losses and disappointment."
   },
   {
     id: "G3-017",
@@ -1277,7 +1376,8 @@ const AMSTUD_BANK = [
     cs: "CS 17 – Depression Effects",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains why the Great Depression increased pressure for federal action?",
+    stem:
+      "Which statement best explains why the Great Depression increased pressure for federal action?",
     choices: [
       "Because the economy quickly fixed itself without hardship",
       "Because widespread unemployment and bank failures overwhelmed local resources",
@@ -1286,7 +1386,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Scale of crisis exceeded local capacity.",
-    explain: "The severity of hardship increased demand for national relief and reform."
+    explain:
+      "The severity of hardship increased demand for national relief and reform."
   },
   {
     id: "G3-018",
@@ -1294,7 +1395,8 @@ const AMSTUD_BANK = [
     cs: "CS 19 – Dictatorships",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why economic crisis can strengthen extremist political movements?",
+    stem:
+      "Which option best explains why economic crisis can strengthen extremist political movements?",
     choices: [
       "Because people become more satisfied with existing systems",
       "Because desperation can increase support for leaders promising simple solutions and order",
@@ -1303,7 +1405,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Hard times increase openness to radical promises.",
-    explain: "Instability can make authoritarian promises more appealing to some voters."
+    explain:
+      "Instability can make authoritarian promises more appealing to some voters."
   },
   {
     id: "G3-019",
@@ -1311,7 +1414,8 @@ const AMSTUD_BANK = [
     cs: "CS 20 – WWII Entry",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains why Pearl Harbor changed U.S. policy immediately?",
+    stem:
+      "Which statement best explains why Pearl Harbor changed U.S. policy immediately?",
     choices: [
       "It was viewed as a direct attack, making neutrality politically impossible",
       "It ended all fighting in Europe",
@@ -1320,7 +1424,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 0,
     hint: "Direct attack → war declaration.",
-    explain: "A direct attack created urgency and public support for entering the war."
+    explain:
+      "A direct attack created urgency and public support for entering the war."
   },
   {
     id: "G3-020",
@@ -1328,7 +1433,8 @@ const AMSTUD_BANK = [
     cs: "CS 21 – WWII Homefront",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why wartime production affected civil rights and labor patterns?",
+    stem:
+      "Which option best explains why wartime production affected civil rights and labor patterns?",
     choices: [
       "It reduced the need for workers nationwide",
       "It increased demand for workers, opening opportunities and increasing migration to industrial centers",
@@ -1337,7 +1443,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "War mobilization expands production.",
-    explain: "Labor demand rose sharply, reshaping jobs and migration."
+    explain:
+      "Labor demand rose sharply, reshaping jobs and migration."
   },
   {
     id: "G3-021",
@@ -1345,7 +1452,8 @@ const AMSTUD_BANK = [
     cs: "CS 22 – Postwar Boom",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains how the GI Bill contributed to postwar prosperity?",
+    stem:
+      "Which statement best explains how the GI Bill contributed to postwar prosperity?",
     choices: [
       "It reduced education access and limited home buying",
       "It expanded education and home ownership, strengthening the middle class",
@@ -1354,7 +1462,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Education + housing access fuels growth.",
-    explain: "Broader access to college and mortgages supported upward mobility and spending."
+    explain:
+      "Broader access to college and mortgages supported upward mobility and spending."
   },
   {
     id: "G3-022",
@@ -1362,7 +1471,8 @@ const AMSTUD_BANK = [
     cs: "CS 24 – Containment",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why the U.S. formed alliances during the Cold War?",
+    stem:
+      "Which option best explains why the U.S. formed alliances during the Cold War?",
     choices: [
       "To expand communism into new regions",
       "To deter Soviet influence and strengthen collective security",
@@ -1371,7 +1481,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Alliances = deterrence.",
-    explain: "Alliances were meant to prevent expansion by raising the cost of aggression."
+    explain:
+      "Alliances were meant to prevent expansion by raising the cost of aggression."
   },
   {
     id: "G3-023",
@@ -1379,7 +1490,8 @@ const AMSTUD_BANK = [
     cs: "CS 25 – Red Scare",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains why anti-communist investigations gained support in the early Cold War?",
+    stem:
+      "Which statement best explains why anti-communist investigations gained support in the early Cold War?",
     choices: [
       "Because the U.S. and USSR were close allies with no tensions",
       "Because fear of espionage and global rivalry increased suspicion at home",
@@ -1388,7 +1500,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "International tension spills into domestic fear.",
-    explain: "Rivalry and espionage cases increased concern about internal subversion."
+    explain:
+      "Rivalry and espionage cases increased concern about internal subversion."
   },
   {
     id: "G3-024",
@@ -1396,7 +1509,8 @@ const AMSTUD_BANK = [
     cs: "CS 26 – Civil Rights",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why Brown v. Board of Education is considered a turning point?",
+    stem:
+      "Which option best explains why Brown v. Board of Education is considered a turning point?",
     choices: [
       "It strengthened legal segregation in schools",
       "It declared segregated public schools unconstitutional, energizing further challenges",
@@ -1405,7 +1519,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Turning point = legal shift + momentum.",
-    explain: "It overturned the legal basis for school segregation and accelerated activism."
+    explain:
+      "It overturned the legal basis for school segregation and accelerated activism."
   },
   {
     id: "G3-025",
@@ -1413,7 +1528,8 @@ const AMSTUD_BANK = [
     cs: "CS 27 – Expanding Rights",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains why later rights movements borrowed strategies from the civil rights movement?",
+    stem:
+      "Which statement best explains why later rights movements borrowed strategies from the civil rights movement?",
     choices: [
       "Because the civil rights movement failed to achieve any legal changes",
       "Because organizing, litigation, and nonviolent protest proved effective at gaining attention and policy change",
@@ -1422,7 +1538,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Effective strategies get reused.",
-    explain: "Successful tactics often become models for later movements seeking equality."
+    explain:
+      "Successful tactics often become models for later movements seeking equality."
   },
   {
     id: "G3-026",
@@ -1430,7 +1547,8 @@ const AMSTUD_BANK = [
     cs: "CS 28 – Social/Cultural Change",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why television accelerated cultural change after WWII?",
+    stem:
+      "Which option best explains why television accelerated cultural change after WWII?",
     choices: [
       "It isolated Americans from national information",
       "It spread shared images, music, and ideas rapidly to mass audiences",
@@ -1439,7 +1557,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Mass media scales culture.",
-    explain: "TV broadcast the same messages nationwide, shaping shared culture and trends."
+    explain:
+      "TV broadcast the same messages nationwide, shaping shared culture and trends."
   },
   {
     id: "G3-027",
@@ -1447,7 +1566,8 @@ const AMSTUD_BANK = [
     cs: "CS 29 – Immigration (post-1965)",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which statement best explains why post-1965 immigration changed U.S. demographics?",
+    stem:
+      "Which statement best explains why post-1965 immigration changed U.S. demographics?",
     choices: [
       "Because U.S. law ended immigration completely",
       "Because policy changes altered who could immigrate, increasing diversity of origins",
@@ -1456,7 +1576,8 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Policy shapes patterns.",
-    explain: "Legal reforms reshaped immigration flows and broadened origin regions."
+    explain:
+      "Legal reforms reshaped immigration flows and broadened origin regions."
   },
   {
     id: "G3-028",
@@ -1464,7 +1585,8 @@ const AMSTUD_BANK = [
     cs: "CS 30 – End of Cold War",
     tags: ["G3"],
     type: "best-explains",
-    stem: "Which option best explains why the Soviet Union faced increasing instability by the late 1980s?",
+    stem:
+      "Which option best explains why the Soviet Union faced increasing instability by the late 1980s?",
     choices: [
       "Because its economy grew rapidly and politics stabilized",
       "Because economic stagnation and reform pressures weakened one-party control",
@@ -1473,12 +1595,16 @@ const AMSTUD_BANK = [
     ],
     answerIndex: 1,
     hint: "Long-term weakness + pressure to change.",
-    explain: "Economic strain and reform movements undermined centralized control."
+    explain:
+      "Economic strain and reform movements undermined centralized control."
   },
 
   // =========================================================
-  // GAME 4 (Sequence / Turning Point) — tags include "G4", type:"sequence-turning-point"
+  // GAME 4 (Sequence / Turning Point) — NEEDS 28 ITEMS
+  // tags include "G4", type:"sequence-turning-point"
   // =========================================================
+
+  // Existing 12
   {
     id: "G4-001",
     csNum: 6,
@@ -1635,7 +1761,8 @@ const AMSTUD_BANK = [
     correctOrder: [0, 1, 2, 3],
     turningPoint: 1,
     hint: "The crash converts risk into collapse.",
-    explain: "Speculation is a condition; the crash is the turning point that triggers cascading failures."
+    explain:
+      "Speculation is a condition; the crash is the turning point that triggers cascading failures."
   },
   {
     id: "G4-009",
@@ -1643,7 +1770,8 @@ const AMSTUD_BANK = [
     cs: "CS 18 – New Deal & Expanded Federal Role",
     tags: ["G4"],
     type: "sequence-turning-point",
-    stem: "Sequence why the federal government expanded its role in the 1930s. Then identify the turning point.",
+    stem:
+      "Sequence why the federal government expanded its role in the 1930s. Then identify the turning point.",
     events: [
       "Economic collapse creates widespread hardship",
       "Government launches relief/recovery/reform programs",
@@ -1653,7 +1781,8 @@ const AMSTUD_BANK = [
     correctOrder: [0, 1, 2, 3],
     turningPoint: 1,
     hint: "The turning point is the policy response to crisis.",
-    explain: "The New Deal program launch is the turning point where federal action becomes systematic and large-scale."
+    explain:
+      "The New Deal program launch is the turning point where federal action becomes systematic and large-scale."
   },
   {
     id: "G4-010",
@@ -1661,7 +1790,8 @@ const AMSTUD_BANK = [
     cs: "CS 20 – U.S. Entry into WWII",
     tags: ["G4"],
     type: "sequence-turning-point",
-    stem: "Sequence the road from tension to U.S. entry into WWII. Then identify the turning point.",
+    stem:
+      "Sequence the road from tension to U.S. entry into WWII. Then identify the turning point.",
     events: [
       "War expands in Europe and Asia; U.S. debates involvement",
       "U.S. increases aid to Allies (e.g., Lend-Lease)",
@@ -1671,7 +1801,8 @@ const AMSTUD_BANK = [
     correctOrder: [0, 1, 2, 3],
     turningPoint: 2,
     hint: "The turning point is the direct attack.",
-    explain: "Pearl Harbor is the turning point that ends debate and triggers formal entry."
+    explain:
+      "Pearl Harbor is the turning point that ends debate and triggers formal entry."
   },
   {
     id: "G4-011",
@@ -1679,7 +1810,8 @@ const AMSTUD_BANK = [
     cs: "CS 23 – Early Cold War Tensions",
     tags: ["G4"],
     type: "sequence-turning-point",
-    stem: "Sequence how Cold War rivalry formed. Then identify the turning point.",
+    stem:
+      "Sequence how Cold War rivalry formed. Then identify the turning point.",
     events: [
       "WWII ends with the U.S. and USSR as major powers",
       "Ideological conflict grows over postwar influence and security",
@@ -1689,7 +1821,8 @@ const AMSTUD_BANK = [
     correctOrder: [0, 1, 2, 3],
     turningPoint: 1,
     hint: "The turning point is when cooperation turns into rivalry.",
-    explain: "Ideological conflict and mistrust is the pivot that turns wartime alliance into Cold War competition."
+    explain:
+      "Ideological conflict and mistrust is the pivot that turns wartime alliance into Cold War competition."
   },
   {
     id: "G4-012",
@@ -1697,7 +1830,8 @@ const AMSTUD_BANK = [
     cs: "CS 26 – Civil Rights Movement",
     tags: ["G4"],
     type: "sequence-turning-point",
-    stem: "Sequence the path from segregation to federal enforcement. Then identify the turning point.",
+    stem:
+      "Sequence the path from segregation to federal enforcement. Then identify the turning point.",
     events: [
       "Segregation and discrimination continue after WWII",
       "Activists challenge policies through protest and court cases",
@@ -1707,12 +1841,333 @@ const AMSTUD_BANK = [
     correctOrder: [0, 1, 2, 3],
     turningPoint: 2,
     hint: "The turning point is when enforcement becomes national policy.",
-    explain: "Federal legislation/enforcement is the turning point that changes civil rights from local battles to national standards."
+    explain:
+      "Federal legislation/enforcement is the turning point that changes civil rights from local battles to national standards."
+  },
+
+  // NEW 16 (to reach 28 total)
+  {
+    id: "G4-013",
+    csNum: 1,
+    cs: "CS 1 – Source Credibility",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how historians strengthen a claim using sources. Then identify the turning point.",
+    events: [
+      "A historian makes an initial claim about an event",
+      "The historian gathers multiple relevant sources",
+      "The historian corroborates details and checks for bias/limits",
+      "The historian revises or strengthens the claim based on evidence"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 2,
+    hint: "The turning point is when the claim is tested against corroboration and bias checks.",
+    explain:
+      "Collecting sources matters, but corroboration/bias-checking is the pivot that separates opinion from evidence-based conclusions."
+  },
+  {
+    id: "G4-014",
+    csNum: 2,
+    cs: "CS 2 – Primary vs Secondary Sources",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how an author’s interpretation becomes a secondary source. Then identify the turning point.",
+    events: [
+      "People in the past create primary evidence (letters, photos, laws)",
+      "Historians analyze and compare the primary evidence",
+      "A historian writes an interpretation for a later audience",
+      "Students use that interpretation to understand the era"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 2,
+    hint: "Secondary sources begin when interpretation is written for later readers.",
+    explain:
+      "Primary evidence exists first. The turning point is when a historian synthesizes it into an interpretation (secondary source)."
+  },
+  {
+    id: "G4-015",
+    csNum: 3,
+    cs: "CS 3 – Cause, Effect, and Sequence",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence a typical cause-and-effect analysis. Then identify the turning point.",
+    events: [
+      "Identify an outcome/event to explain",
+      "Gather evidence about conditions before and during the event",
+      "Evaluate which factors most directly caused the outcome",
+      "Explain short- and long-term effects that followed"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 2,
+    hint: "The turning point is deciding which causes are direct and supported by evidence.",
+    explain:
+      "Collecting facts is not enough; evaluating direct causes is the pivot that creates a defensible explanation."
+  },
+  {
+    id: "G4-016",
+    csNum: 4,
+    cs: "CS 4 – Contextualization",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how context helps explain why people acted as they did. Then identify the turning point.",
+    events: [
+      "Identify a decision or reform to explain",
+      "Describe the social/economic conditions of the time",
+      "Connect those conditions to motives and constraints",
+      "Explain why the decision made sense in that context"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 2,
+    hint: "The turning point is connecting conditions to motives/constraints.",
+    explain:
+      "Context is most powerful when it is explicitly tied to why people acted, not just listed."
+  },
+  {
+    id: "G4-017",
+    csNum: 5,
+    cs: "CS 5 – Multiple Perspectives",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how different groups can interpret the same event differently. Then identify the turning point.",
+    events: [
+      "An event affects multiple groups",
+      "Each group evaluates the event based on its interests and experiences",
+      "Groups form competing interpretations and arguments",
+      "Those competing perspectives shape policy debate and outcomes"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 1,
+    hint: "The turning point is when interests/experiences shape interpretation.",
+    explain:
+      "The same event can look ‘good’ or ‘bad’ depending on who is affected and what they value."
+  },
+  {
+    id: "G4-018",
+    csNum: 9,
+    cs: "CS 9 – Technology & Standard of Living",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how a new consumer technology can change daily life. Then identify the turning point.",
+    events: [
+      "Inventors/businesses develop a new technology",
+      "Mass production lowers costs and increases availability",
+      "More households adopt the technology",
+      "Daily routines and expectations shift over time"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 1,
+    hint: "The turning point is when production makes adoption widespread.",
+    explain:
+      "Inventions matter, but mass production (cost + access) is the pivot that makes change widespread."
+  },
+  {
+    id: "G4-019",
+    csNum: 12,
+    cs: "CS 12 – Women’s Suffrage",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence the path to a constitutional amendment like women’s suffrage. Then identify the turning point.",
+    events: [
+      "Activists organize petitions, marches, and campaigns",
+      "Public pressure grows and lawmakers face political costs",
+      "Amendment is proposed and gains enough support for ratification",
+      "Voting rights expand nationwide"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 2,
+    hint: "The turning point is when activism becomes constitutional change.",
+    explain:
+      "Activism builds pressure, but the decisive pivot is passage/ratification of the amendment."
+  },
+  {
+    id: "G4-020",
+    csNum: 13,
+    cs: "CS 13 – U.S. Role in WWI",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how neutrality shifted toward U.S. entry into WWI. Then identify the turning point.",
+    events: [
+      "War begins in Europe and the U.S. declares neutrality",
+      "Trade and tensions increase as the war intensifies",
+      "Unrestricted submarine warfare increases threats to ships and lives",
+      "U.S. enters the war"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 2,
+    hint: "The turning point is the escalation that threatens U.S. interests and lives.",
+    explain:
+      "Submarine warfare dramatically raised the cost of neutrality and pushed policy toward intervention."
+  },
+  {
+    id: "G4-021",
+    csNum: 17,
+    cs: "CS 17 – Effects of the Great Depression",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how an economic collapse creates pressure for government action. Then identify the turning point.",
+    events: [
+      "Businesses fail or cut production",
+      "Unemployment rises and families lose income",
+      "Local charities and state resources are overwhelmed",
+      "Federal government faces pressure to intervene with national programs"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 2,
+    hint: "The turning point is when the crisis exceeds local capacity.",
+    explain:
+      "The scale of hardship overwhelms local solutions, shifting expectations toward federal action."
+  },
+  {
+    id: "G4-022",
+    csNum: 19,
+    cs: "CS 19 – Global Tensions & Dictatorships",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence a common path by which authoritarian leaders gain support. Then identify the turning point.",
+    events: [
+      "Economic hardship and social instability spread",
+      "Citizens lose confidence in existing institutions",
+      "A leader promises order and simple solutions, gaining support",
+      "Power is consolidated and opposition is weakened"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 1,
+    hint: "The pivot is when trust in institutions collapses.",
+    explain:
+      "Hardship matters, but the major turning point is when people stop trusting existing systems and seek alternatives."
+  },
+  {
+    id: "G4-023",
+    csNum: 21,
+    cs: "CS 21 – WWII Homefront",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how a nation mobilizes its homefront for total war. Then identify the turning point.",
+    events: [
+      "Government redirects industry to military production",
+      "Labor demand increases and new workers enter factories",
+      "Rationing and resource management expand",
+      "War production peaks and supports military operations"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 0,
+    hint: "The pivot is converting industry to war production.",
+    explain:
+      "Once industry shifts, labor patterns and rationing follow to support massive output."
+  },
+  {
+    id: "G4-024",
+    csNum: 22,
+    cs: "CS 22 – Postwar Economic Boom",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how postwar conditions fueled economic growth. Then identify the turning point.",
+    events: [
+      "War ends and pent-up consumer demand returns",
+      "Loans/benefits expand access to education and home ownership",
+      "Suburbs grow and consumer spending increases",
+      "A larger middle class emerges with higher living standards"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 1,
+    hint: "The pivot is expanding access to loans/education/housing.",
+    explain:
+      "Demand mattered, but expanded access (GI Bill/loans) is the turning point that broadens growth."
+  },
+  {
+    id: "G4-025",
+    csNum: 24,
+    cs: "CS 24 – Containment Policy",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how containment shaped U.S. foreign policy. Then identify the turning point.",
+    events: [
+      "Postwar tension grows with the Soviet bloc",
+      "U.S. adopts a strategy to prevent communist expansion",
+      "Aid/alliance systems are built to deter spread",
+      "Cold War competition influences conflicts and policy decisions"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 1,
+    hint: "The pivot is adopting a guiding strategy.",
+    explain:
+      "Containment becomes the turning point because it becomes the organizing idea for later actions."
+  },
+  {
+    id: "G4-026",
+    csNum: 25,
+    cs: "CS 25 – Red Scare",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how foreign rivalry can produce domestic fear. Then identify the turning point.",
+    events: [
+      "International rivalry increases with the Soviet bloc",
+      "Espionage fears and propaganda heighten suspicion",
+      "Government investigations expand",
+      "Civil liberties debates intensify over security vs freedom"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 1,
+    hint: "The pivot is when fear becomes widespread suspicion.",
+    explain:
+      "Rivalry exists, but the turning point is when espionage fears and propaganda trigger public suspicion."
+  },
+  {
+    id: "G4-027",
+    csNum: 28,
+    cs: "CS 28 – Social/Cultural Change (1945–1994)",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how mass media can reshape national culture. Then identify the turning point.",
+    events: [
+      "New media technology spreads (television, radio, mass magazines)",
+      "Shared content reaches large audiences quickly",
+      "Trends, music, and ideas spread nationally",
+      "Cultural norms and youth identity shift over time"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 1,
+    hint: "The pivot is mass reach—when audiences become national.",
+    explain:
+      "Media reshapes culture most when it reaches mass audiences quickly and repeatedly."
+  },
+  {
+    id: "G4-028",
+    csNum: 30,
+    cs: "CS 30 – End of the Cold War",
+    tags: ["G4"],
+    type: "sequence-turning-point",
+    stem:
+      "Sequence how long-term weakness contributed to the collapse of communist governments by 1991. Then identify the turning point.",
+    events: [
+      "Economic stagnation and inefficiency worsen over time",
+      "Reform movements challenge one-party control",
+      "Political control weakens and satellite states push change",
+      "Communist governments collapse and the Soviet Union dissolves"
+    ],
+    correctOrder: [0, 1, 2, 3],
+    turningPoint: 1,
+    hint: "The pivot is organized reform pressure against one-party control.",
+    explain:
+      "Economic weakness is a condition; reform movements are the turning point that transforms weakness into political change."
   }
 ];
 
-/* =========================================================
-   EXPORTS (do not remove)
-   ========================================================= */
+// Exports (do not remove)
 window.AMSTUD_BANK = AMSTUD_BANK;
-window.AMSTUD_BANK_VERSION = "2026-03-02";
+window.AMSTUD_BANK_VERSION = "2026-03-02-G4-28";
