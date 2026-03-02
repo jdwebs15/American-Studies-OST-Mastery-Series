@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AmStud Game 6 — Cause & Effect Chain (Mastery)</title>
+  <link rel="stylesheet" href="../styles.css"/>
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111a2f;
+      --text:#e7eefc;
+      --muted:#a8b4cf;
+      --line:rgba(255,255,255,.12);
+      --good:#2bd576;
+      --bad:#ff5c7a;
+      --warn:#ffd166;
+      --accent:#7aa2ff;
+      --chip:rgba(122,162,255,.14);
+      --chipLine:rgba(122,162,255,.28);
+      --radius:18px;
+      --shadow:0 18px 55px rgba(0,0,0,.40);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,#0b1220,#070b14);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    }
+    .wrap{width:min(1100px,92vw);margin:28px auto 60px;}
+    .panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .topbar{
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+      margin-bottom:14px;
+    }
+    .title{display:flex;flex-direction:column;gap:4px;}
+    .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+    h1{margin:0;font-size:20px}
+    .fine{color:var(--muted);font-size:13px;line-height:1.35}
+
+    .meta{
+      display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;
+    }
+    .pill{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:8px 10px;border-radius:999px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      font-size:12px;color:var(--muted);
+    }
+    .pill b{color:var(--text);font-weight:650}
+    .pill .dot{width:8px;height:8px;border-radius:99px;background:var(--accent);display:inline-block}
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:14px;
+      margin-top:12px;
+    }
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+
+    .box{
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+    .boxtitle{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:10px;
+    }
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      background:var(--chip);
+      border:1px solid var(--chipLine);
+      color:var(--text);
+      font-size:12px;
+    }
+    .tag small{color:var(--muted)}
+
+    .prompt{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+      background:rgba(0,0,0,.16);
+      margin-bottom:12px;
+      line-height:1.35;
+    }
+
+    .list{display:flex;flex-direction:column;gap:10px}
+    .item{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      user-select:none;
+      transition:transform .06s ease, border-color .12s ease, background .12s ease;
+    }
+    .item:hover{border-color:rgba(122,162,255,.55)}
+    .item:active{transform:scale(.995)}
+    .item.lock{cursor:not-allowed;opacity:.72}
+    .item.sel{
+      border-color:rgba(122,162,255,.75);
+      box-shadow:0 0 0 2px rgba(122,162,255,.18) inset;
+      background:rgba(122,162,255,.08);
+    }
+    .item.good{
+      border-color:rgba(43,213,118,.75);
+      background:rgba(43,213,118,.10);
+    }
+    .item.bad{
+      border-color:rgba(255,92,122,.75);
+      background:rgba(255,92,122,.10);
+    }
+
+    .slots{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    .slot{
+      border:1px dashed rgba(255,255,255,.22);
+      background:rgba(0,0,0,.14);
+      border-radius:14px;
+      padding:10px 12px;
+      min-height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      cursor:pointer;
+    }
+    .slot .label{color:var(--muted);font-size:12px}
+    .slot .value{color:var(--text);font-weight:650}
+    .slot.filled{
+      border-style:solid;
+      border-color:rgba(122,162,255,.35);
+      background:rgba(122,162,255,.06);
+    }
+
+    .msg{
+      margin-top:12px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      display:none;
+    }
+    .msg.show{display:block}
+    .msg .hint{color:var(--warn);font-weight:800}
+
+    .footerbar{
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+      margin-top:14px;
+    }
+    .btn{
+      appearance:none;border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px;border-radius:14px;
+      cursor:pointer;font-weight:650;
+    }
+    .btn:hover{border-color:rgba(122,162,255,.55)}
+    .btn.danger:hover{border-color:rgba(255,92,122,.55)}
+
+    .gate{display:block;padding:20px;}
+    .gate .inner{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+    .input{
+      width:100%;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-size:16px;
+      outline:none;
+    }
+
+    .finish{display:none;margin-top:14px;}
+    .ticket{
+      margin-top:12px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.22);
+      background:rgba(0,0,0,.18);
+      font-family:var(--mono);
+      font-size:12px;
+      white-space:pre-wrap;
+    }
+  </style>
+
+  <script src="../amstud_bank.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <div class="topbar">
+        <div class="title">
+          <div class="kicker">LEGEND MASTERY SERIES</div>
+          <h1>AmStud Game 6 — Cause & Effect Chain</h1>
+          <div class="fine">
+            Build the chain from earliest cause → later effects. Mastery = <b>0 misses</b>.
+            Click options to fill the next slot. Click a filled slot to “rewind” from there.
+          </div>
+        </div>
+
+        <div class="meta">
+          <div class="pill"><span class="dot"></span> Player: <b id="playerName">—</b></div>
+          <div class="pill">Date: <b id="dateStamp">—</b></div>
+          <div class="pill">Start: <b id="startStamp">—</b></div>
+          <div class="pill">End: <b id="endStamp">—</b></div>
+          <div class="pill">Elapsed: <b id="elapsed">—</b></div>
+          <div class="pill">Progress: <b id="prog">—</b></div>
+          <div class="pill">Accuracy: <b id="acc">—</b></div>
+          <div class="pill">Misses: <b id="misses">0</b></div>
+        </div>
+      </div>
+
+      <div id="gate" class="gate">
+        <div class="inner">
+          <div class="fine"><b>Name required</b> to start and generate the submit ticket.</div>
+          <input id="nameInput" class="input" placeholder="Type your name (first + last)..." autocomplete="name"/>
+          <button id="startBtn" class="btn" type="button">Start Game</button>
+          <div class="fine">If a student closes the laptop, progress restores from local storage (including name).</div>
+        </div>
+      </div>
+
+      <div id="game" style="display:none;">
+        <div class="grid">
+          <div class="box">
+            <div class="boxtitle">
+              <div class="tag">Options <small>(click to add)</small></div>
+              <div class="tag"><span id="csTag">CS —</span></div>
+            </div>
+
+            <div id="prompt" class="prompt">—</div>
+            <div id="options" class="list"></div>
+          </div>
+
+          <div class="box">
+            <div class="boxtitle">
+              <div class="tag">Chain <small>(earliest → latest)</small></div>
+              <div class="tag">Set: <b id="setId">—</b></div>
+            </div>
+
+            <div class="slots" id="slots"></div>
+          </div>
+        </div>
+
+        <div id="msg" class="msg"></div>
+
+        <div class="footerbar">
+          <button id="restartBtn" class="btn danger" type="button">Restart Game</button>
+        </div>
+
+        <div id="finish" class="finish">
+          <div class="msg show" id="finishLine"></div>
+          <div class="ticket" id="ticket"></div>
+          <div class="footerbar">
+            <button id="copyTicket" class="btn" type="button">Copy Ticket</button>
+            <button id="printTicket" class="btn" type="button">Print Ticket</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   CONFIG
+========================= */
+const GAME_ID = "amstud-g6-cause-effect-chain";
+const SESSION_KEY = GAME_ID + "::session";
+const ADVANCE_MS = 700; // delay after correct chain
+
+/* =========================
+   UTIL
+========================= */
+function pad(n){ return String(n).padStart(2,"0"); }
+function dateOnly(ts=Date.now()){
+  const d = new Date(ts);
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function timeOnly(ts=Date.now()){
+  const d = new Date(ts);
+  let h = d.getHours();
+  const m = pad(d.getMinutes());
+  const s = pad(d.getSeconds());
+  const ap = h >= 12 ? "PM" : "AM";
+  h = h % 12; if(h===0) h=12;
+  return `${h}:${m}:${s} ${ap}`;
+}
+function fmtElapsed(ms){
+  const sec = Math.max(0, Math.floor(ms/1000));
+  const h = Math.floor(sec/3600);
+  const m = Math.floor((sec%3600)/60);
+  const s = sec%60;
+  if(h>0) return `${h}:${pad(m)}:${pad(s)}`;
+  return `${m}:${pad(s)}`;
+}
+function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function safeText(s){ return String(s ?? "").replace(/[<>]/g, ""); }
+function itemText(x){
+  if (typeof x === "string") return x;
+  if (x && typeof x === "object"){
+    return x.text ?? x.term ?? x.label ?? x.answer ?? x.value ?? x.name ?? "";
+  }
+  return String(x ?? "");
+}
+
+/* =========================
+   LOAD BANK
+========================= */
+function getDeck(){
+  const bank = (window.AMSTUD_BANK || []);
+  return bank.filter(x =>
+    x && (x.type === "cause-effect-chain") &&
+    Array.isArray(x.tags) && x.tags.includes("G6")
+  );
+}
+
+/* =========================
+   STATE
+========================= */
+let deck = [];
+let idx = 0;
+
+let state = {
+  name: "",
+  date: "",
+  startAt: null,
+  endAt: null,
+  correct: 0,
+  wrong: 0,
+  finished: false
+};
+
+let timer = null;
+
+/* =========================
+   UI
+========================= */
+const elPlayerName = document.getElementById('playerName');
+const elDateStamp = document.getElementById('dateStamp');
+const elStartStamp = document.getElementById('startStamp');
+const elEndStamp = document.getElementById('endStamp');
+const elElapsed = document.getElementById('elapsed');
+const elProg = document.getElementById('prog');
+const elAcc = document.getElementById('acc');
+const elMisses = document.getElementById('misses');
+
+const gate = document.getElementById('gate');
+const game = document.getElementById('game');
+const nameInput = document.getElementById('nameInput');
+const startBtn = document.getElementById('startBtn');
+
+const csTag = document.getElementById('csTag');
+const setIdEl = document.getElementById('setId');
+const promptEl = document.getElementById('prompt');
+const optionsEl = document.getElementById('options');
+const slotsEl = document.getElementById('slots');
+const msgEl = document.getElementById('msg');
+
+const restartBtn = document.getElementById('restartBtn');
+const finishBox = document.getElementById('finish');
+const finishLine = document.getElementById('finishLine');
+const ticketEl = document.getElementById('ticket');
+const copyTicket = document.getElementById('copyTicket');
+const printTicket = document.getElementById('printTicket');
+
+/* =========================
+   SESSION SAVE/LOAD
+========================= */
+function saveSession(){
+  localStorage.setItem(SESSION_KEY, JSON.stringify({state, idx, deck, play}));
+}
+function loadSession(){
+  try{
+    const raw = localStorage.getItem(SESSION_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch(_){ return null; }
+}
+function clearSession(){ localStorage.removeItem(SESSION_KEY); }
+
+/* =========================
+   TOP RENDER
+========================= */
+function renderTop(){
+  elPlayerName.textContent = state.name || "—";
+  elDateStamp.textContent = state.date || dateOnly();
+  elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
+  elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
+  elMisses.textContent = String(state.wrong);
+
+  const totalAttempts = state.correct + state.wrong;
+  const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
+  elAcc.textContent = totalAttempts ? `${acc}%` : "—";
+
+  elProg.textContent = `${clamp(idx,0,deck.length)}/${deck.length || 0}`;
+}
+
+/* =========================
+   MESSAGES
+========================= */
+function showMsg(html){
+  msgEl.className = "msg show";
+  msgEl.innerHTML = html;
+}
+function clearMsg(){
+  msgEl.className = "msg";
+  msgEl.innerHTML = "";
+}
+
+/* =========================
+   TIMER
+========================= */
+function startTimer(){
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=>{
+    if(!state.startAt) return;
+    elElapsed.textContent = fmtElapsed(Date.now() - state.startAt);
+  }, 250);
+}
+
+/* =========================
+   PLAY STATE FOR CURRENT SET
+========================= */
+let working = null;
+let optionOrder = [];
+let play = {
+  steps: [],        // display strings length 4
+  correct: [0,1,2,3], // correct order referencing original indices
+  picks: [],        // picked original indices in chosen order
+  used: new Set()   // used original indices
+};
+
+function normalizeSet(x){
+  // Accept several possible keys so your bank can be flexible:
+  const stepsRaw =
+    x.chain ?? x.steps ?? x.events ?? x.items ?? x.effects ?? x.causes ?? [];
+
+  const steps = Array.isArray(stepsRaw) ? stepsRaw.slice(0,4).map(itemText) : [];
+  const correct = Array.isArray(x.correctOrder) ? x.correctOrder.slice(0,4)
+                : Array.isArray(x.order) ? x.order.slice(0,4)
+                : [0,1,2,3];
+
+  const prompt =
+    x.stem ?? x.prompt ?? x.question ??
+    "Build the cause → effect chain in the correct order.";
+
+  return { steps, correct, prompt };
+}
+
+function renderSet(){
+  clearMsg();
+  finishBox.style.display = "none";
+
+  working = deck[idx];
+  if(!working){ finish(); return; }
+
+  const norm = normalizeSet(working);
+  if(norm.steps.length < 4){
+    showMsg(`<b>Bank error:</b> This set does not contain 4 chain steps.`);
+    return;
+  }
+
+  play.steps = norm.steps;
+  play.correct = norm.correct;
+  play.picks = [];
+  play.used = new Set();
+
+  optionOrder = shuffle([0,1,2,3]);
+
+  csTag.textContent = working.cs || "CS —";
+  setIdEl.textContent = safeText(working.id || `G6-${idx+1}`);
+  promptEl.innerHTML = safeText(norm.prompt);
+
+  optionsEl.innerHTML = "";
+  slotsEl.innerHTML = "";
+
+  // Slots
+  for(let i=0;i<4;i++){
+    const s = document.createElement('div');
+    s.className = "slot";
+    s.dataset.slot = String(i);
+    s.innerHTML = `<div class="label">Step ${i+1}</div><div class="value">—</div>`;
+
+    // Click slot to rewind from there
+    s.addEventListener('click', ()=>{
+      if(state.finished) return;
+      const slotIndex = Number(s.dataset.slot);
+      if(play.picks.length === 0) return;
+      if(slotIndex >= play.picks.length) return;
+
+      // remove picks from slotIndex onward
+      const removed = play.picks.splice(slotIndex);
+      removed.forEach(ix => play.used.delete(ix));
+      renderChainOnly();
+      renderOptionsOnly();
+      clearMsg();
+      saveSession();
+    });
+
+    slotsEl.appendChild(s);
+  }
+
+  // Options
+  optionOrder.forEach((origIndex)=>{
+    const d = document.createElement('div');
+    d.className = "item";
+    d.dataset.orig = String(origIndex);
+    d.textContent = play.steps[origIndex];
+
+    d.addEventListener('click', ()=>{
+      if(state.finished) return;
+      if(play.used.has(origIndex)) return;
+
+      const nextSlot = play.picks.length;
+      if(nextSlot >= 4) return;
+
+      // Check if this is the correct next step
+      const expectedOrigIndex = play.correct[nextSlot];
+
+      if(origIndex === expectedOrigIndex){
+        play.picks.push(origIndex);
+        play.used.add(origIndex);
+
+        renderChainOnly();
+        renderOptionsOnly();
+        clearMsg();
+        saveSession();
+
+        // Completed chain
+        if(play.picks.length === 4){
+          state.correct++;
+          renderTop();
+          saveSession();
+
+          setTimeout(()=>{
+            idx++;
+            if(idx >= deck.length) finish();
+            else renderSet();
+          }, ADVANCE_MS);
+        }
+      }else{
+        state.wrong++;
+        renderTop();
+        saveSession();
+
+        d.classList.add('bad');
+        setTimeout(()=>d.classList.remove('bad'), 350);
+
+        const hint = working.hint ? `<div class="hint">Hint:</div> <b>${safeText(working.hint)}</b>` : "";
+        const explain = working.explain ? `<div style="color:var(--muted);margin-top:6px;">${safeText(working.explain)}</div>` : "";
+        showMsg(`<b>Not the next step.</b> ${hint}${explain}<div style="margin-top:6px;"><b>Try again:</b> pick the correct next cause/effect in the chain.</div>`);
+      }
+    });
+
+    optionsEl.appendChild(d);
+  });
+
+  renderTop();
+  saveSession();
+}
+
+function renderChainOnly(){
+  const slots = Array.from(slotsEl.querySelectorAll('.slot'));
+  for(let i=0;i<4;i++){
+    const s = slots[i];
+    const v = s.querySelector('.value');
+    if(i < play.picks.length){
+      const orig = play.picks[i];
+      s.classList.add('filled');
+      v.textContent = play.steps[orig];
+    }else{
+      s.classList.remove('filled');
+      v.textContent = "—";
+    }
+  }
+}
+
+function renderOptionsOnly(){
+  const items = Array.from(optionsEl.querySelectorAll('.item'));
+  items.forEach(el=>{
+    const orig = Number(el.dataset.orig);
+    if(play.used.has(orig)){
+      el.classList.add('lock','good');
+    }else{
+      el.classList.remove('lock','good');
+    }
+  });
+}
+
+/* =========================
+   FINISH / TICKET
+========================= */
+function buildTicket(passed, acc, elapsedMs){
+  const lines = [];
+  lines.push("LEGEND MASTERY — SUBMIT TICKET");
+  lines.push("--------------------------------");
+  lines.push(`Game: ${GAME_ID}`);
+  lines.push(`Name: ${state.name || "—"}`);
+  lines.push(`Date: ${state.date || "—"}`);
+  lines.push(`Start: ${state.startAt ? timeOnly(state.startAt) : "—"}`);
+  lines.push(`End: ${state.endAt ? timeOnly(state.endAt) : "—"}`);
+  lines.push(`Elapsed: ${fmtElapsed(elapsedMs)}`);
+  lines.push("--------------------------------");
+  lines.push(`Sets Completed: ${state.correct}/${deck.length}`);
+  lines.push(`Misses: ${state.wrong}`);
+  lines.push(`Accuracy: ${acc}%`);
+  lines.push(`Passed: ${passed ? "YES ✅" : "NO ❌"}`);
+  lines.push("--------------------------------");
+  lines.push(`Bank Version: ${window.AMSTUD_BANK_VERSION || "unknown"}`);
+  return lines.join("\n");
+}
+
+function finish(){
+  state.finished = true;
+  state.endAt = Date.now();
+  if(timer) clearInterval(timer);
+  timer = null;
+
+  const totalAttempts = state.correct + state.wrong;
+  const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
+  const elapsedMs = (state.startAt && state.endAt) ? (state.endAt - state.startAt) : 0;
+  const passed = (state.wrong === 0) && (state.correct === deck.length);
+
+  renderTop();
+  elElapsed.textContent = fmtElapsed(elapsedMs);
+
+  finishBox.style.display = "block";
+  finishLine.innerHTML =
+    `Result: <b>${passed ? "MASTERED ✅" : "NOT MASTERED ❌"}</b> · ` +
+    `Accuracy: <b>${acc}%</b> · Misses: <b>${state.wrong}</b> · ` +
+    `Elapsed: <b>${fmtElapsed(elapsedMs)}</b>`;
+
+  ticketEl.textContent = buildTicket(passed, acc, elapsedMs);
+  saveSession();
+}
+
+/* =========================
+   START / RESTART
+========================= */
+function startNew(name){
+  deck = getDeck().slice();
+
+  if(deck.length < 28){
+    alert(`Bank does not have 28 cause-effect-chain (G6) sets.\nFound: ${deck.length}\nFix amstud_bank.js first.`);
+    return;
+  }
+
+  deck = deck.slice(0, 28);
+
+  idx = 0;
+  state = {
+    name,
+    date: dateOnly(),
+    startAt: Date.now(),
+    endAt: null,
+    correct: 0,
+    wrong: 0,
+    finished: false
+  };
+
+  gate.style.display = "none";
+  game.style.display = "block";
+
+  renderTop();
+  startTimer();
+  renderSet();
+}
+
+function hardRestart(){
+  if(!confirm("Restart the entire game? This clears progress and the submit ticket.")) return;
+  clearSession();
+  if(timer) clearInterval(timer);
+  timer = null;
+
+  deck = [];
+  idx = 0;
+  state = {name:"",date:"",startAt:null,endAt:null,correct:0,wrong:0,finished:false};
+  play = {steps:[],correct:[0,1,2,3],picks:[],used:new Set()};
+
+  elElapsed.textContent = "—";
+  finishBox.style.display = "none";
+  clearMsg();
+
+  gate.style.display = "block";
+  game.style.display = "none";
+
+  nameInput.value = "";
+  renderTop();
+}
+
+/* =========================
+   EVENTS
+========================= */
+startBtn.addEventListener('click', ()=>{
+  const name = (nameInput.value || "").trim();
+  if(!name){ alert("Name is required."); nameInput.focus(); return; }
+  startNew(name);
+});
+nameInput.addEventListener('keydown', (e)=>{ if(e.key === "Enter") startBtn.click(); });
+
+restartBtn.addEventListener('click', hardRestart);
+
+copyTicket.addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText(ticketEl.textContent || "");
+    showMsg("<b>Ticket copied.</b>");
+    setTimeout(clearMsg, 900);
+  }catch(_){
+    showMsg("<b>Copy failed.</b> Manually select and copy the ticket text.");
+  }
+});
+printTicket.addEventListener('click', ()=>window.print());
+
+/* =========================
+   RESUME IF POSSIBLE
+========================= */
+(function boot(){
+  const saved = loadSession();
+  if(saved && saved.state && saved.deck && Array.isArray(saved.deck) && saved.deck.length){
+    state = saved.state;
+    deck = saved.deck;
+    idx = saved.idx ?? 0;
+
+    // restore play if present
+    if(saved.play){
+      play.steps = saved.play.steps || [];
+      play.correct = saved.play.correct || [0,1,2,3];
+      play.picks = saved.play.picks || [];
+      play.used = new Set(saved.play.used || []);
+    }
+
+    if(!state.name){
+      clearSession();
+      renderTop();
+      return;
+    }
+
+    gate.style.display = "none";
+    game.style.display = "block";
+    renderTop();
+
+    if(state.startAt && !state.finished){
+      startTimer();
+      renderSet();
+
+      // After renderSet() resets play, re-apply saved picks if we’re on same set
+      // (This keeps things simple/consistent; you can remove this if you prefer fresh-on-resume.)
+      // We'll only apply if saved play has picks and steps match.
+      if(saved.play && Array.isArray(saved.play.steps) && saved.play.steps.length === 4){
+        // Attempt to restore picks for current set if same steps
+        const currentNorm = normalizeSet(deck[idx] || {});
+        const currentSteps = currentNorm.steps.join("||");
+        const savedSteps = saved.play.steps.join("||");
+        if(currentSteps === savedSteps){
+          play.steps = saved.play.steps;
+          play.correct = saved.play.correct || play.correct;
+          play.picks = saved.play.picks || [];
+          play.used = new Set(saved.play.used || []);
+          renderChainOnly();
+          renderOptionsOnly();
+        }
+      }
+    }else if(state.finished){
+      const elapsedMs = (state.startAt && state.endAt) ? (state.endAt - state.startAt) : 0;
+      elElapsed.textContent = fmtElapsed(elapsedMs);
+      finishBox.style.display = "block";
+      const totalAttempts = state.correct + state.wrong;
+      const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
+      ticketEl.textContent = buildTicket((state.wrong===0 && state.correct===deck.length), acc, elapsedMs);
+    }
+  }else{
+    renderTop();
+  }
+})();
+</script>
+</body>
+</html>
