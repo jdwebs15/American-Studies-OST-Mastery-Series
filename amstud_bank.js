@@ -1288,9 +1288,8 @@ window.AMSTUD_BANK = [
     ],
     correctOrder:[0,1,2,3],
     hint:"Succession rules prevent leadership gaps."
-  },
+   }
+]; // ✅ closes the bank array
 
-// Exports (do not remove)
-window.AMSTUD_BANK = AMSTUD_BANK;
 window.AMSTUD_BANK_VERSION = "2026-03-02-REBUILT-G1toG6";
 console.log("✅ AMSTUD_BANK loaded:", window.AMSTUD_BANK.length, window.AMSTUD_BANK_VERSION);
