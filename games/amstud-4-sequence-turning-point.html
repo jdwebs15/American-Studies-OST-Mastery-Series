@@ -1,761 +1,786 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AmStud Game 4 — Sequence / Turning Point (Mastery)</title>
-  <link rel="stylesheet" href="../styles.css" />
-  <meta name="description" content="American Studies OST Mastery — Sequence / Turning Point (0 misses required)" />
-
-  <!-- Load the shared bank (repo root) -->
-  <script src="../amstud_bank.js?v=1"></script>
-
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AmStud Game 4 — Sequence & Turning Point (Mastery)</title>
   <style>
-    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    :root{
+      --bg:#0b1220;
+      --panel:#111a2f;
+      --text:#e7eefc;
+      --muted:#a8b4cf;
+      --line:rgba(255,255,255,.12);
+      --shadow:0 18px 55px rgba(0,0,0,.40);
+      --radius:18px;
+      --good:#2bd576;
+      --bad:#ff5c7a;
+      --warn:#ffd166;
+      --accent:#7aa2ff;
+      --chip:rgba(122,162,255,.14);
+      --chipLine:rgba(122,162,255,.28);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:radial-gradient(1200px 700px at 20% -10%, rgba(122,162,255,.22), transparent 55%),
+                 radial-gradient(900px 600px at 90% 0%, rgba(43,213,118,.10), transparent 55%),
+                 linear-gradient(180deg,#0b1220,#070b14);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    .wrap{width:min(1020px,92vw);margin:28px auto 40px;}
+    .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+    h1{font-size:22px;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:13px;line-height:1.35}
     .panel{
-      background:rgba(0,0,0,.18);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .chip{
+      border:1px solid var(--chipLine);
+      background:var(--chip);
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;color:var(--text);white-space:nowrap
+    }
+    .chip strong{font-weight:800}
+    .row{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;align-items:stretch}
+    @media (max-width:880px){.row{grid-template-columns:1fr}}
+    .stats{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+    .stat{
+      background:rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .stat .k{color:var(--muted);font-size:12px;margin-bottom:4px}
+    .stat .v{font-family:var(--mono);font-size:13px}
+    .bar{
+      height:10px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;border:1px solid var(--line);
+    }
+    .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),rgba(43,213,118,.9))}
+    .qbox{padding:16px}
+    .qhead{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}
+    .qnum{font-family:var(--mono);font-size:13px;color:var(--muted)}
+    .skill{font-size:12px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.18)}
+    .prompt{font-size:16px;line-height:1.35;margin:10px 0 8px}
+    .rule{
+      font-size:12px;color:var(--muted);
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:14px;padding:8px 10px;background:rgba(0,0,0,.14);
+      margin-bottom:10px;
+    }
+    .choices{display:grid;gap:10px;margin-top:10px}
+    .choice{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.16);
+      border-radius:14px;
+      padding:12px 12px;
+      cursor:pointer;
+      transition:transform .05s ease, border-color .15s ease, background .15s ease;
+      user-select:none;
+      display:flex;gap:10px;align-items:flex-start;
+    }
+    .choice:hover{border-color:rgba(122,162,255,.6);transform:translateY(-1px)}
+    .badge{
+      width:24px;height:24px;border-radius:8px;
+      border:1px solid var(--line);
+      display:grid;place-items:center;
+      font-family:var(--mono);font-size:12px;color:var(--muted);
+      flex:0 0 auto;
+      background:rgba(0,0,0,.18);
+    }
+    .choice.locked{cursor:not-allowed;opacity:.92}
+    .choice.correct{border-color:rgba(43,213,118,.75);background:rgba(43,213,118,.10)}
+    .choice.wrong{border-color:rgba(255,92,122,.75);background:rgba(255,92,122,.10)}
+    .msg{
+      margin-top:12px;border-radius:14px;border:1px solid var(--line);
+      padding:10px 12px;display:none;
+    }
+    .msg.bad{display:block;background:rgba(255,92,122,.10)}
+    .msg.good{display:block;background:rgba(43,213,118,.10)}
+    .msg .t{font-weight:800;margin-bottom:4px}
+    .footer{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:14px}
+    .btn{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:800;
+    }
+    .btn:hover{border-color:rgba(122,162,255,.6)}
+    .btn.primary{border-color:rgba(122,162,255,.65);background:rgba(122,162,255,.16)}
+    .ticket{
+      margin-top:14px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;display:none;
+    }
+    pre{
+      margin:10px 0 0;
+      white-space:pre-wrap;
+      background:rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px;
+      font-family:var(--mono);
+      font-size:12px;
+      line-height:1.35;
+    }
+    /* Name gate */
+    .gate{position:fixed;inset:0;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:20px}
+    .gateCard{
+      width:min(560px,94vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
       padding:18px;
     }
-    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
-    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
-    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
-    .pill2{
-      font-size:12px; color:var(--text);
-      background:rgba(255,255,255,.06);
+    .gateCard h2{margin:0 0 8px;font-size:18px}
+    .gateCard p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.35}
+    .inrow{display:flex;gap:10px;flex-wrap:wrap}
+    input{
+      flex:1;min-width:240px;
       border:1px solid var(--line);
-      border-radius:999px;
-      padding:8px 10px;
-      white-space:nowrap;
-    }
-    h1{ margin:6px 0 6px; font-size:26px; line-height:1.15; }
-    .sub{ margin:0; color:var(--muted); max-width:90ch; line-height:1.35; }
-
-    .err{
-      display:none;
-      margin:12px 0;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,92,122,.45);
-      background:rgba(255,92,122,.10);
+      background:rgba(0,0,0,.22);
       color:var(--text);
-      white-space:pre-wrap;
-      text-align:left;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      font-size:12px;
-    }
-
-    .gate{ margin-top:12px; display:block; }
-    .gateRow{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    input[type="text"]{
-      flex:1;
-      min-width:220px;
+      border-radius:14px;
       padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.22);
-      color:var(--text);
-      outline:none;
+      outline:none;font-size:14px;
     }
-    .btn{
-      appearance:none;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .12s ease, border-color .12s ease, background .12s ease;
-    }
-    .btn:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.10); }
-    .btn.danger:hover{ border-color:rgba(255,92,122,.35); background:rgba(255,92,122,.10); }
-
-    .game{ display:none; margin-top:12px; }
-
-    .qbox{
-      margin-top:12px;
-      padding:14px;
-      border:1px solid var(--line);
-      border-radius:16px;
-      background:rgba(0,0,0,.18);
-    }
-    .qmeta{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:8px; }
-    .tag{
-      font-size:12px; color:var(--text);
-      background:rgba(0,0,0,.22);
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:6px 10px;
-      white-space:nowrap;
-    }
-    .stem{ font-size:16px; font-weight:800; line-height:1.35; margin:8px 0 10px; color:var(--text); }
-
-    .grid4{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:10px;
-      margin-top:10px;
-    }
-    @media (max-width:860px){ .grid4{ grid-template-columns:1fr; } }
-
-    /* IMPORTANT: ensure readable text */
-    button.choice{
-      width:100%;
-      text-align:left;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.03);
-      color:var(--text);          /* <- fix black text issue */
-      cursor:pointer;
-      transition:transform .08s ease, border-color .12s ease, background .12s ease;
-      font-size:14px;
-      line-height:1.35;
-    }
-    button.choice:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.08); }
-    button.choice.lock{ cursor:not-allowed; opacity:.9; }
-    button.choice.good{ border-color:rgba(43,213,118,.55); background:rgba(43,213,118,.10); }
-    button.choice.bad{ border-color:rgba(255,92,122,.55); background:rgba(255,92,122,.10); }
-
-    .selectedRow{
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px dashed rgba(255,255,255,.18);
-      background:rgba(0,0,0,.14);
-      color:var(--muted);
-      line-height:1.35;
-    }
-
-    .msg{
-      display:none;
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.18);
-      color:var(--muted);
-      text-align:left;
-      line-height:1.35;
-    }
-    .msg.show{ display:block; }
-    .msg b{ color:var(--text); }
-
-    .finish{
-      display:none;
-      margin-top:12px;
-      padding:14px;
-      border:1px solid var(--line);
-      border-radius:16px;
-      background:rgba(0,0,0,.18);
-    }
-    textarea{
-      width:100%;
-      min-height:160px;
-      resize:vertical;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.22);
-      color:var(--text);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      font-size:12px;
-      margin-top:10px;
-    }
-    .rowBtns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .tiny{ font-size:12px; color:var(--muted); margin-top:8px; }
+    input:focus{border-color:rgba(122,162,255,.7)}
   </style>
 </head>
-
 <body>
-  <div class="gameWrap">
-    <div class="panel">
-      <div class="topbar">
-        <div>
-          <div class="k">LEGEND MASTERY SERIES</div>
-          <h1>AmStud Game 4 — Sequence / Turning Point (Mastery)</h1>
-          <p class="sub">Mastery = 0 misses. Wrong selection = hint → must correct to proceed (miss recorded). Correct sequences auto-advance after <b>2500ms</b>.</p>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>AmStud Game 4 — Sequence & Turning Point (Mastery)</h1>
+        <div class="sub">
+          Identify correct sequence <em>or</em> the turning point that changed outcomes.
+          Auto-submit on click. Mastery requires <strong>0 misses</strong>.
         </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><strong>LIVE</strong></div>
+        <div class="chip">Sequence</div>
+        <div class="chip">Turning point</div>
+        <div class="chip">Auto-submit</div>
+        <div class="chip">Ticket: Name/Times/Accuracy</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="panel qbox">
+        <div class="qhead">
+          <div class="qnum" id="qnum">Question —</div>
+          <div class="skill" id="skill">—</div>
+        </div>
+
+        <div class="bar" aria-label="progress"><div id="pbar"></div></div>
+
+        <div class="prompt" id="prompt">—</div>
+        <div class="rule" id="rule">—</div>
+
+        <div class="choices" id="choices"></div>
+
+        <div class="msg bad" id="badMsg">
+          <div class="t">Not yet.</div>
+          <div id="hint">—</div>
+        </div>
+        <div class="msg good" id="goodMsg">
+          <div class="t">Correct.</div>
+          <div id="goodText">Auto-advancing…</div>
+        </div>
+
+        <div class="footer">
+          <button class="btn" id="restartBtn" type="button">Restart</button>
+          <div class="qnum" id="note">Tip: one miss breaks Mastery. Restart and go again for 100%.</div>
+        </div>
+
+        <div class="ticket" id="ticket">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+            <div><strong>Submit Ticket</strong> (screenshot this)</div>
+            <button class="btn primary" id="copyBtn" type="button">Copy Ticket</button>
+          </div>
+          <pre id="ticketText"></pre>
+        </div>
+      </div>
+
+      <div class="panel">
         <div class="stats">
-          <div class="pill2">Player: <b id="playerName">—</b></div>
-          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
-          <div class="pill2">Accuracy: <b id="acc">—</b></div>
-          <div class="pill2">Misses: <b id="misses">0</b></div>
-          <div class="pill2"><b id="prog">0/0</b></div>
-          <button class="btn danger" id="hardRestart">Hard Restart</button>
-        </div>
-      </div>
-
-      <div class="tiny">Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b></div>
-
-      <div id="errBox" class="err"></div>
-
-      <div id="gate" class="gate">
-        <div class="qbox">
-          <div class="stem" style="margin:0 0 10px;">Enter your name to begin:</div>
-          <div class="gateRow">
-            <input id="nameInput" type="text" placeholder="e.g., dave" autocomplete="off" />
-            <button class="btn" id="startBtn">Start</button>
-          </div>
-          <div class="tiny">Tip: You must finish with 0 misses to unlock a mastery ticket.</div>
-        </div>
-      </div>
-
-      <div id="game" class="game">
-        <div class="qbox">
-          <div class="qmeta">
-            <div class="tag" id="csTag">CS —</div>
-            <div class="tag" id="typeTag">Sequence / Turning Point</div>
-          </div>
-
-          <div class="stem" id="stem">—</div>
-
-          <div class="selectedRow" id="selectedRow">Select events in order: <b id="selText">—</b></div>
-
-          <div class="grid4" id="eventChoices"></div>
-
-          <div class="qbox" style="margin-top:12px; display:none;" id="tpBox">
-            <div class="stem" style="margin:0 0 10px;">Which event was the turning point?</div>
-            <div class="grid4" id="tpChoices"></div>
-          </div>
-
-          <div id="msg" class="msg"></div>
+          <div class="stat"><div class="k">Student</div><div class="v" id="student">—</div></div>
+          <div class="stat"><div class="k">Accuracy</div><div class="v" id="acc">100.0%</div></div>
+          <div class="stat"><div class="k">Start</div><div class="v" id="start">—</div></div>
+          <div class="stat"><div class="k">Now</div><div class="v" id="now">—</div></div>
+          <div class="stat"><div class="k">Correct</div><div class="v" id="correct">0</div></div>
+          <div class="stat"><div class="k">Misses</div><div class="v" id="misses">0</div></div>
         </div>
 
-        <div id="finish" class="finish">
-          <div class="stem" style="margin:0;">Finish</div>
-          <div class="tiny" id="finishLine"></div>
-          <textarea id="ticket" readonly></textarea>
-          <div class="rowBtns">
-            <button class="btn" id="copyTicket">Copy Ticket</button>
-            <button class="btn" id="printTicket">Print</button>
-          </div>
-          <div class="tiny">If you didn’t earn mastery, use <b>Hard Restart</b> to reset and try again.</div>
+        <div style="margin-top:12px;color:var(--muted);font-size:12px;line-height:1.35">
+          <strong>Mastery:</strong> finish with <strong>0 misses</strong>.
+          Any incorrect click counts as a miss.
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="tiny" style="margin-top:10px;">
-        If the page ever “white screens,” the error box above will show where/why.
+  <!-- Name Gate -->
+  <div class="gate" id="gate" role="dialog" aria-modal="true">
+    <div class="gateCard">
+      <h2>Enter your name to begin</h2>
+      <p>Your name + timestamps + accuracy will appear on the final submit ticket.</p>
+      <div class="inrow">
+        <input id="nameInput" type="text" placeholder="First and last name" autocomplete="name"/>
+        <button class="btn primary" id="beginBtn" type="button">Begin</button>
       </div>
+      <p style="margin-top:10px;color:var(--muted);font-size:12px">
+        (If you close your device, refresh to restart clean.)
+      </p>
     </div>
   </div>
 
 <script>
 /* =========================
-   HARDENED SHELL + SAFETY
-========================= */
-(function(){
-  const errBox = document.getElementById('errBox');
-  window.addEventListener('error', (e)=>{
-    errBox.style.display='block';
-    errBox.textContent = "Runtime Error:\n" + (e?.message || e) + "\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
-  });
-  window.addEventListener('unhandledrejection', (e)=>{
-    errBox.style.display='block';
-    errBox.textContent = "Unhandled Promise Rejection:\n" + (e?.reason?.message || e?.reason || e);
-  });
-})();
+   QUESTIONS (Embedded) — Sequence & Turning Point
+   30 items (full-year spiral)
+   type: "sequence" or "turning"
+   ========================= */
+const QUESTIONS = [
+  // REVOLUTION / FOUNDING
+  {id:1, type:"sequence", skill:"Sequence — Revolution",
+   prompt:"Which event occurred LAST in the chain that led to open fighting in the American Revolution?",
+   rule:"Choose the event that happened last.",
+   choices:["Stamp Act (1765)","Boston Tea Party (1773)","French and Indian War ends (1763)","Battles of Lexington and Concord (1775)"],
+   answer:"Battles of Lexington and Concord (1775)",
+   hint:"Lexington & Concord are the first major battles—after protests like the Tea Party."
+  },
+  {id:2, type:"turning", skill:"Turning Point — Revolution",
+   prompt:"Which event was the turning point that shifted the colonies from protest to armed conflict?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["Signing of the Mayflower Compact","Battles of Lexington and Concord","Purchase of Louisiana Territory","Completion of the Erie Canal"],
+   answer:"Battles of Lexington and Concord",
+   hint:"The first shots transformed resistance into war."
+  },
+  {id:3, type:"sequence", skill:"Sequence — Constitutional Government",
+   prompt:"Which sequence correctly shows how a constitutional amendment is adopted?",
+   rule:"Choose the correct order.",
+   choices:[
+     "Congress proposes → States ratify → Amendment added",
+     "States propose → President signs → Courts approve",
+     "Supreme Court proposes → Congress ratifies → States sign",
+     "President proposes → Congress vetoes → States override"
+   ],
+   answer:"Congress proposes → States ratify → Amendment added",
+   hint:"Proposal comes from Congress (or convention), then states ratify."
+  },
 
-window.addEventListener('pageshow', (event) => {
-  if (event.persisted) window.location.reload();
-});
+  // WESTWARD EXPANSION / CIVIL WAR
+  {id:4, type:"sequence", skill:"Sequence — Westward Expansion",
+   prompt:"Which event occurred FIRST?",
+   rule:"Choose the earliest event.",
+   choices:["Dawes Act (1887)","Louisiana Purchase (1803)","Wounded Knee Massacre (1890)","Homestead Act (1862)"],
+   answer:"Louisiana Purchase (1803)",
+   hint:"1803 comes before 1862 and the late-1800s events."
+  },
+  {id:5, type:"turning", skill:"Turning Point — Civil War",
+   prompt:"Which event is often considered a turning point because it gave the Union greater control of the Mississippi River?",
+   rule:"Choose the turning point that changed the direction of the war.",
+   choices:["Battle of Vicksburg","Battle of Gettysburg","Attack on Fort Sumter","Surrender at Appomattox"],
+   answer:"Battle of Vicksburg",
+   hint:"Vicksburg helped the Union control the Mississippi and split the Confederacy."
+  },
+  {id:6, type:"sequence", skill:"Sequence — Civil War",
+   prompt:"Which sequence correctly orders these events?",
+   rule:"Choose the correct order.",
+   choices:[
+     "Fort Sumter → Emancipation Proclamation → Appomattox",
+     "Emancipation Proclamation → Fort Sumter → Appomattox",
+     "Appomattox → Fort Sumter → Emancipation Proclamation",
+     "Fort Sumter → Appomattox → Emancipation Proclamation"
+   ],
+   answer:"Fort Sumter → Emancipation Proclamation → Appomattox",
+   hint:"War begins (Fort Sumter), then Emancipation, then surrender."
+  },
 
-(function(){
-  try{
-    history.replaceState({guard:1}, document.title, location.href);
-    window.addEventListener('popstate', ()=>{
-      history.pushState({guard:1}, document.title, location.href);
-    });
-  }catch(_){}
-})();
+  // RECONSTRUCTION / JIM CROW
+  {id:7, type:"sequence", skill:"Sequence — Reconstruction",
+   prompt:"Which sequence best explains the legal progression related to civil rights after the Civil War?",
+   rule:"Choose the correct order.",
+   choices:[
+     "13th Amendment → 14th Amendment → 15th Amendment",
+     "15th Amendment → 13th Amendment → 14th Amendment",
+     "14th Amendment → 15th Amendment → 13th Amendment",
+     "13th Amendment → 15th Amendment → 14th Amendment"
+   ],
+   answer:"13th Amendment → 14th Amendment → 15th Amendment",
+   hint:"Abolish slavery, define citizenship/protection, then voting rights."
+  },
+  {id:8, type:"turning", skill:"Turning Point — Post-Reconstruction",
+   prompt:"Which development marked a turning point that allowed Southern states to expand Jim Crow segregation with less federal resistance?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["Removal of federal troops from the South (1877)","Passage of the 19th Amendment","Creation of Social Security","Start of the Cold War"],
+   answer:"Removal of federal troops from the South (1877)",
+   hint:"When enforcement ended, segregation and disenfranchisement expanded."
+  },
+  {id:9, type:"turning", skill:"Turning Point — Segregation",
+   prompt:"Which Supreme Court decision is a turning point because it upheld segregation under the idea of 'separate but equal'?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["Plessy v. Ferguson (1896)","Brown v. Board (1954)","Marbury v. Madison (1803)","Miranda v. Arizona (1966)"],
+   answer:"Plessy v. Ferguson (1896)",
+   hint:"Plessy upheld segregation; Brown later challenged it in schools."
+  },
+
+  // INDUSTRIALIZATION / PROGRESSIVISM
+  {id:10, type:"sequence", skill:"Sequence — Industrial Era",
+   prompt:"Which sequence best represents the pattern of industrial urban growth?",
+   rule:"Choose the best sequence.",
+   choices:[
+     "Factory jobs expand → people move to cities → overcrowded housing/sanitation problems",
+     "Cities become empty → farms expand → factories close",
+     "Child labor ends → monopolies disappear → wages fall",
+     "Immigration stops → cities grow → factories shrink"
+   ],
+   answer:"Factory jobs expand → people move to cities → overcrowded housing/sanitation problems",
+   hint:"Jobs pull people in; infrastructure struggles to keep up."
+  },
+  {id:11, type:"turning", skill:"Turning Point — Progressive Reform",
+   prompt:"Which event is a turning point because it increased federal regulation to address unsafe food and consumer products?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["Pure Food and Drug Act (1906)","Homestead Act (1862)","Missouri Compromise (1820)","Kellogg-Briand Pact (1928)"],
+   answer:"Pure Food and Drug Act (1906)",
+   hint:"It expanded consumer protection and regulation."
+  },
+  {id:12, type:"sequence", skill:"Sequence — Reform",
+   prompt:"Which sequence best explains how muckrakers influenced Progressive Era reforms?",
+   rule:"Choose the correct order.",
+   choices:[
+     "Investigative reporting → public outrage → reform laws passed",
+     "Reform laws passed → public outrage → investigative reporting",
+     "Public outrage → reform laws passed → investigative reporting",
+     "Investigative reporting → reform laws passed → public outrage"
+   ],
+   answer:"Investigative reporting → public outrage → reform laws passed",
+   hint:"Exposure first, then public pressure, then legislation."
+  },
+
+  // WWI / INTERWAR
+  {id:13, type:"sequence", skill:"Sequence — WWI to Interwar",
+   prompt:"Which sequence correctly orders these events from earliest to latest?",
+   rule:"Choose the correct order.",
+   choices:[
+     "U.S. enters WWI → Treaty of Versailles → Senate rejects League of Nations",
+     "Treaty of Versailles → U.S. enters WWI → Senate rejects League of Nations",
+     "Senate rejects League → Treaty of Versailles → U.S. enters WWI",
+     "U.S. enters WWI → Senate rejects League → Treaty of Versailles"
+   ],
+   answer:"U.S. enters WWI → Treaty of Versailles → Senate rejects League of Nations",
+   hint:"U.S. entry (1917), treaty (1919), then Senate rejection debate."
+  },
+  {id:14, type:"turning", skill:"Turning Point — U.S. Isolationism",
+   prompt:"Which outcome represents a turning point toward U.S. isolationism after WWI?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["Senate failure to ratify the Treaty of Versailles","Passage of the Marshall Plan","Attack on Pearl Harbor","Brown v. Board decision"],
+   answer:"Senate failure to ratify the Treaty of Versailles",
+   hint:"Rejection signaled reluctance to join collective-security commitments."
+  },
+
+  // GREAT DEPRESSION / NEW DEAL
+  {id:15, type:"sequence", skill:"Sequence — Great Depression",
+   prompt:"Which event occurred FIRST in the chain leading into the Great Depression?",
+   rule:"Choose the earliest development.",
+   choices:[
+     "Overproduction and weak demand reduce profits",
+     "New Deal relief programs expand in the 1930s",
+     "U.S. enters WWII in 1941",
+     "Civil Rights Act passes in 1964"
+   ],
+   answer:"Overproduction and weak demand reduce profits",
+   hint:"Underlying economic weakness comes before the policy responses of the 1930s."
+  },
+  {id:16, type:"turning", skill:"Turning Point — New Deal",
+   prompt:"Which development is a turning point because it expanded the federal government’s role in the economy during the 1930s?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["New Deal programs (relief/recovery/reform)","Homestead Act","Louisiana Purchase","Monroe Doctrine"],
+   answer:"New Deal programs (relief/recovery/reform)",
+   hint:"New Deal widened federal involvement through regulation and relief."
+  },
+
+  // WWII
+  {id:17, type:"sequence", skill:"Sequence — WWII",
+   prompt:"Which sequence correctly describes the U.S. path from neutrality to entering WWII?",
+   rule:"Choose the best sequence.",
+   choices:[
+     "Neutrality Acts → Lend-Lease → Pearl Harbor → U.S. declares war",
+     "Pearl Harbor → Neutrality Acts → Lend-Lease → U.S. declares war",
+     "Lend-Lease → Neutrality Acts → U.S. declares war → Pearl Harbor",
+     "U.S. declares war → Neutrality Acts → Pearl Harbor → Lend-Lease"
+   ],
+   answer:"Neutrality Acts → Lend-Lease → Pearl Harbor → U.S. declares war",
+   hint:"1930s neutrality, then aid, then the attack, then war declaration."
+  },
+  {id:18, type:"turning", skill:"Turning Point — WWII",
+   prompt:"Which event is the turning point that directly caused U.S. entry into WWII?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["Attack on Pearl Harbor","Treaty of Versailles signed","Stock Market Crash of 1929","Plessy v. Ferguson"],
+   answer:"Attack on Pearl Harbor",
+   hint:"Pearl Harbor was the immediate trigger for U.S. entry in 1941."
+  },
+  {id:19, type:"turning", skill:"Turning Point — WWII in Europe",
+   prompt:"Which event is widely viewed as a turning point in the European theater because it halted German expansion and shifted momentum?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["Battle of Stalingrad","Boston Tea Party","Korean War begins","Construction of the Erie Canal"],
+   answer:"Battle of Stalingrad",
+   hint:"Stalingrad marked a major reversal for Germany on the Eastern Front."
+  },
+
+  // COLD WAR
+  {id:20, type:"sequence", skill:"Sequence — Early Cold War",
+   prompt:"Which sequence best reflects early Cold War developments?",
+   rule:"Choose the best sequence.",
+   choices:[
+     "Post-WWII tension → containment policies → alliances/aid to resist communism",
+     "Containment ends → WWII begins → tension disappears",
+     "Alliances end → communism spreads → U.S. isolationism forever",
+     "Civil War begins → containment policies → Cold War ends"
+   ],
+   answer:"Post-WWII tension → containment policies → alliances/aid to resist communism",
+   hint:"Tensions lead to strategy; strategy leads to actions like aid and alliances."
+  },
+  {id:21, type:"turning", skill:"Turning Point — Cold War",
+   prompt:"Which event is a turning point because it brought the U.S. and the USSR close to nuclear war and increased urgency for diplomacy?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["Cuban Missile Crisis","Signing of the Mayflower Compact","Purchase of Alaska","Passage of the 13th Amendment"],
+   answer:"Cuban Missile Crisis",
+   hint:"It was a major nuclear standoff that changed Cold War behavior."
+  },
+
+  // CIVIL RIGHTS
+  {id:22, type:"sequence", skill:"Sequence — Civil Rights",
+   prompt:"Which sequence best orders these civil rights developments?",
+   rule:"Choose the correct order.",
+   choices:[
+     "Brown v. Board (1954) → Civil Rights Act (1964) → Voting Rights Act (1965)",
+     "Civil Rights Act (1964) → Brown v. Board (1954) → Voting Rights Act (1965)",
+     "Voting Rights Act (1965) → Brown v. Board (1954) → Civil Rights Act (1964)",
+     "Brown v. Board (1954) → Voting Rights Act (1965) → Civil Rights Act (1964)"
+   ],
+   answer:"Brown v. Board (1954) → Civil Rights Act (1964) → Voting Rights Act (1965)",
+   hint:"Court desegregation decision first, then major laws in mid-1960s."
+  },
+  {id:23, type:"turning", skill:"Turning Point — Civil Rights",
+   prompt:"Which Supreme Court decision was a turning point because it declared school segregation unconstitutional?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["Brown v. Board of Education","Plessy v. Ferguson","Marbury v. Madison","McCulloch v. Maryland"],
+   answer:"Brown v. Board of Education",
+   hint:"Brown targeted segregation in public education."
+  },
+
+  // SOCIAL / CULTURAL CHANGE
+  {id:24, type:"sequence", skill:"Sequence — 1920s to 1930s",
+   prompt:"Which sequence correctly orders these eras/events from earliest to latest?",
+   rule:"Choose the correct order.",
+   choices:[
+     "Harlem Renaissance → Stock Market Crash → New Deal expansion",
+     "New Deal expansion → Harlem Renaissance → Stock Market Crash",
+     "Stock Market Crash → Harlem Renaissance → New Deal expansion",
+     "Harlem Renaissance → New Deal expansion → Stock Market Crash"
+   ],
+   answer:"Harlem Renaissance → Stock Market Crash → New Deal expansion",
+   hint:"1920s cultural movement, then 1929 crash, then 1930s New Deal."
+  },
+  {id:25, type:"turning", skill:"Turning Point — Women’s Political Participation",
+   prompt:"Which event is a turning point because it dramatically expanded women’s participation in elections?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["19th Amendment ratified (1920)","14th Amendment ratified","Dred Scott decision","Kellogg-Briand Pact"],
+   answer:"19th Amendment ratified (1920)",
+   hint:"It guaranteed women the right to vote."
+  },
+
+  // GOVERNMENT STRUCTURE / POLICY
+  {id:26, type:"sequence", skill:"Sequence — How a bill becomes law (simplified)",
+   prompt:"Which sequence best describes the path of a bill becoming a federal law?",
+   rule:"Choose the best sequence.",
+   choices:[
+     "Bill passes Congress → President signs or vetoes → (if signed) becomes law",
+     "President signs → Supreme Court proposes → Congress votes",
+     "Courts pass bill → President votes → States approve",
+     "States pass bill → President signs → Congress reviews"
+   ],
+   answer:"Bill passes Congress → President signs or vetoes → (if signed) becomes law",
+   hint:"Legislative approval first, then executive action."
+  },
+  {id:27, type:"turning", skill:"Turning Point — Expanding Federal Power",
+   prompt:"Which decision is a turning point because it strengthened federal authority by supporting implied powers?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["McCulloch v. Maryland","Plessy v. Ferguson","Brown v. Board","Dred Scott v. Sandford"],
+   answer:"McCulloch v. Maryland",
+   hint:"It upheld implied powers and limited state interference with federal institutions."
+  },
+
+  // MORE SEQUENCE / TURNING POINT MIX (full-year spiral)
+  {id:28, type:"sequence", skill:"Sequence — U.S. as world power",
+   prompt:"Which sequence correctly orders these events from earliest to latest?",
+   rule:"Choose the correct order.",
+   choices:[
+     "Spanish-American War → WWI → WWII",
+     "WWII → WWI → Spanish-American War",
+     "WWI → Spanish-American War → WWII",
+     "Spanish-American War → WWII → WWI"
+   ],
+   answer:"Spanish-American War → WWI → WWII",
+   hint:"1898 → 1917 → 1941 (U.S. entry)."
+  },
+  {id:29, type:"turning", skill:"Turning Point — End of the Cold War",
+   prompt:"Which development is a turning point because it signaled weakening Soviet control in Eastern Europe and contributed to the Cold War’s end?",
+   rule:"Choose the turning point that changed outcomes.",
+   choices:["Fall of the Berlin Wall","Passage of the Stamp Act","Signing of the Emancipation Proclamation","Start of the Dust Bowl"],
+   answer:"Fall of the Berlin Wall",
+   hint:"The Berlin Wall’s fall symbolized major political change in Europe."
+  },
+  {id:30, type:"sequence", skill:"Sequence — Policy response chain",
+   prompt:"Which sequence best describes how a national crisis often produces policy change?",
+   rule:"Choose the best sequence.",
+   choices:[
+     "Crisis occurs → public pressure grows → government responds with new laws/policies",
+     "Government makes laws → crisis occurs → public pressure disappears",
+     "Public pressure grows → crisis never happens → laws are repealed",
+     "Crisis occurs → government ends elections → no policy changes"
+   ],
+   answer:"Crisis occurs → public pressure grows → government responds with new laws/policies",
+   hint:"Crisis can trigger demand for action, leading to policy response."
+  }
+];
 
 /* =========================
-   CONFIG
-========================= */
-const GAME_ID = "AMSTUD_G4";
-const SESSION_KEY = "LEGEND_AMSTUD_G4_V1";
-const SEEN_KEY = "LEGEND_AMSTUD_G4_SEEN_V1";
-const QUESTION_COUNT = 28;
-const ADVANCE_MS = 2500;
+   ENGINE — Auto-submit MCQ
+   ========================= */
+const $ = (id)=>document.getElementById(id);
 
-function dateOnly(){
-  const d = new Date();
-  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+let studentName = "";
+let startedAt = null;
+let endedAt = null;
+let timer = null;
+
+let idx = 0;
+let correct = 0;
+let misses = 0;
+let lock = false;
+
+let order = [];
+let rendered = []; // [{text, isCorrect}]
+
+function fmt(d){
+  if(!d) return "—";
+  const pad = (n)=>String(n).padStart(2,"0");
+  const mm = pad(d.getMonth()+1);
+  const dd = pad(d.getDate());
+  const yy = d.getFullYear();
+  let h = d.getHours(); const ampm = h>=12 ? "PM":"AM";
+  h = h%12; if(h===0) h=12;
+  const mi = pad(d.getMinutes());
+  const se = pad(d.getSeconds());
+  return `${mm}/${dd}/${yy} ${h}:${mi}:${se} ${ampm}`;
 }
-function timeOnly(dt){
-  const d = dt ? new Date(dt) : new Date();
-  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
-}
-function fmtElapsed(ms){
+function durMS(a,b){
+  const ms = Math.max(0, b-a);
   const s = Math.floor(ms/1000);
-  const m = Math.floor(s/60);
-  const r = s%60;
-  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+  const hh = Math.floor(s/3600);
+  const mm = Math.floor((s%3600)/60);
+  const ss = s%60;
+  const pad = (n)=>String(n).padStart(2,"0");
+  return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
 }
 function shuffle(arr){
   const a = arr.slice();
   for(let i=a.length-1;i>0;i--){
     const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
+    [a[i],a[j]]=[a[j],a[i]];
   }
   return a;
 }
-function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
-
-function loadSeen(){
-  try{ return JSON.parse(localStorage.getItem(SEEN_KEY) || "[]"); }catch(_){ return []; }
+function computeAcc(){
+  const totalClicks = correct + misses;
+  if(totalClicks === 0) return 100;
+  return (correct / totalClicks) * 100;
 }
-function saveSeen(list){
-  localStorage.setItem(SEEN_KEY, JSON.stringify(list.slice(-800)));
+function setAccUI(){
+  $("acc").textContent = `${computeAcc().toFixed(1)}%`;
+  $("correct").textContent = String(correct);
+  $("misses").textContent = String(misses);
 }
-function resetAll(){
-  localStorage.removeItem(SESSION_KEY);
-  location.reload();
-}
+function tickNow(){ $("now").textContent = fmt(new Date()); }
 
-/* =========================
-   BANK FILTER (Game 4)
-========================= */
-function isG4(q){
-  const type = String(q.type || "").toLowerCase();
-  const tags = Array.isArray(q.tags) ? q.tags.map(x=>String(x).toLowerCase()) : [];
-  const tag = String(q.tag || "").toLowerCase();
-  return type === "sequence-turning-point"
-    || tags.includes("g4")
-    || tags.includes("sequence")
-    || tags.includes("turning point")
-    || tag === "sequence / turning point"
-    || tag === "sequence";
-}
+function startGame(){
+  order = shuffle(QUESTIONS.map((_,i)=>i));
+  idx = 0; correct = 0; misses = 0; lock = false;
+  startedAt = new Date(); endedAt = null;
 
-function normalizeG4(q){
-  if(!q.stem || !Array.isArray(q.events) || q.events.length !== 4) return null;
-  if(!Array.isArray(q.correctOrder) || q.correctOrder.length !== 4) return null;
-  if(!Number.isInteger(q.turningPoint) || q.turningPoint < 0 || q.turningPoint > 3) return null;
+  $("student").textContent = studentName;
+  $("start").textContent = fmt(startedAt);
+  $("ticket").style.display = "none";
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
 
-  const okOrder = q.correctOrder.every(n => Number.isInteger(n) && n>=0 && n<=3);
-  if(!okOrder) return null;
-
-  return {
-    id: q.id || (q.cs || q.stem).slice(0,60),
-    cs: q.cs || `CS ${q.csNum || "?"}`,
-    csNum: q.csNum || null,
-    stem: q.stem,
-    events: q.events.slice(),
-    correctOrder: q.correctOrder.slice(),
-    turningPoint: q.turningPoint,
-    hint: q.hint || "Re-check sequence logic and identify the pivot event.",
-    explain: q.explain || ""
-  };
+  setAccUI();
+  render();
+  tickNow();
+  if(timer) clearInterval(timer);
+  timer = setInterval(tickNow, 500);
 }
 
-function buildDeck(){
-  if(!window.AMSTUD_BANK) throw new Error("AMSTUD_BANK is not defined. Ensure ../amstud_bank.js is loaded before this script.");
-  if(!Array.isArray(window.AMSTUD_BANK)) throw new Error("AMSTUD_BANK is not an array.");
-
-  const seen = new Set(loadSeen());
-  const pool = window.AMSTUD_BANK.filter(isG4).map(normalizeG4).filter(Boolean);
-
-  const unseen = pool.filter(q => !seen.has(q.id));
-  const fallback = pool.filter(q => seen.has(q.id));
-  const ordered = shuffle(unseen).concat(shuffle(fallback));
-
-  if(ordered.length < QUESTION_COUNT){
-    throw new Error(`Not enough usable questions for Game 4. Need ${QUESTION_COUNT}, found ${ordered.length}. Add more G4 items to amstud_bank.js (must include events[4], correctOrder[4], turningPoint 0–3).`);
-  }
-
-  const deck = ordered.slice(0, QUESTION_COUNT);
-  deck.forEach(q => seen.add(q.id));
-  saveSeen(Array.from(seen));
-  return deck;
-}
-
-/* =========================
-   STATE
-========================= */
-let timer = null;
-let deck = [];
-let idx = 0;
-
-const state = {
-  name:"",
-  date:"",
-  startAt:null,
-  endAt:null,
-  correct:0,
-  wrong:0,
-  finished:false
-};
-
-function saveSession(){
-  localStorage.setItem(SESSION_KEY, JSON.stringify({state, idx, deck}));
-}
-function loadSession(){
-  try{
-    const raw = localStorage.getItem(SESSION_KEY);
-    if(!raw) return null;
-    return JSON.parse(raw);
-  }catch(_){ return null; }
-}
-
-/* =========================
-   UI HOOKS
-========================= */
-const elPlayerName = document.getElementById('playerName');
-const elElapsed = document.getElementById('elapsed');
-const elAcc = document.getElementById('acc');
-const elMisses = document.getElementById('misses');
-const elProg = document.getElementById('prog');
-const elStartStamp = document.getElementById('startStamp');
-const elEndStamp = document.getElementById('endStamp');
-const elDateStamp = document.getElementById('dateStamp');
-
-const gate = document.getElementById('gate');
-const game = document.getElementById('game');
-const nameInput = document.getElementById('nameInput');
-const startBtn = document.getElementById('startBtn');
-const hardRestart = document.getElementById('hardRestart');
-
-const csTag = document.getElementById('csTag');
-const stemEl = document.getElementById('stem');
-const msgEl = document.getElementById('msg');
-
-const selectedRow = document.getElementById('selectedRow');
-const selText = document.getElementById('selText');
-const eventChoices = document.getElementById('eventChoices');
-
-const tpBox = document.getElementById('tpBox');
-const tpChoices = document.getElementById('tpChoices');
-
-const finishBox = document.getElementById('finish');
-const finishLine = document.getElementById('finishLine');
-const ticketEl = document.getElementById('ticket');
-const copyTicket = document.getElementById('copyTicket');
-const printTicket = document.getElementById('printTicket');
-
-/* =========================
-   RENDER HELPERS
-========================= */
-function renderTop(){
-  elPlayerName.textContent = state.name || "—";
-  elDateStamp.textContent = state.date || dateOnly();
-  elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
-  elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
-  elMisses.textContent = String(state.wrong);
-
-  const total = state.correct + state.wrong;
-  const acc = total ? Math.round((state.correct/total)*100) : 0;
-  elAcc.textContent = total ? `${acc}%` : "—";
-
-  elProg.textContent = `${clamp(idx,0,deck.length)}/${deck.length || 0}`;
-}
-
-function showMsg(html){
-  msgEl.style.display = "block";
-  msgEl.className = "msg show";
-  msgEl.innerHTML = html;
-}
-function clearMsg(){
-  msgEl.style.display = "none";
-  msgEl.className = "msg";
-  msgEl.innerHTML = "";
-}
-
-function makeBtn(text, onClick){
-  const b = document.createElement('button');
-  b.className = "choice";
-  b.type = "button";
-  b.textContent = text;
-  b.addEventListener('click', onClick);
-  return b;
-}
-function lockAll(container, lock=true){
-  container.querySelectorAll('button.choice').forEach(b=>{
-    b.disabled = !!lock;
-    if(lock) b.classList.add('lock');
-    else b.classList.remove('lock');
+function setChoicesLocked(locked){
+  [...$("choices").children].forEach(el=>{
+    if(locked) el.classList.add("locked");
+    else el.classList.remove("locked");
   });
 }
 
-/* =========================
-   QUESTION LOGIC
-========================= */
-let working = null;        // current q
-let orderMap = null;       // mapping from displayed event index -> original event index
-let picked = [];           // picked displayed indices in order
-let phase = "sequence";    // "sequence" or "turning"
+function render(){
+  lock = false;
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
 
-function renderPicked(){
-  if(picked.length === 0){
-    selText.textContent = "—";
-    return;
-  }
-  const labels = picked.map((dispIdx, n)=>{
-    const origIdx = orderMap[dispIdx];
-    return `${n+1}) ${working.events[origIdx]}`;
+  const qIndex = order[idx];
+  const q = QUESTIONS[qIndex];
+
+  $("qnum").textContent = `Question ${idx+1} / ${QUESTIONS.length}`;
+  $("skill").textContent = q.skill || (q.type === "turning" ? "Turning Point" : "Sequence");
+  $("prompt").textContent = q.prompt;
+  $("rule").textContent = q.rule || (q.type === "turning" ? "Choose the turning point that changed outcomes." : "Choose the correct sequence.");
+
+  $("pbar").style.width = `${(idx / QUESTIONS.length) * 100}%`;
+
+  rendered = shuffle(q.choices).map(t => ({ text:t, isCorrect: t === q.answer }));
+
+  const letters = ["A","B","C","D","E"];
+  const box = $("choices");
+  box.innerHTML = "";
+
+  rendered.forEach((c, pos)=>{
+    const div = document.createElement("div");
+    div.className = "choice";
+    const b = document.createElement("div");
+    b.className = "badge";
+    b.textContent = letters[pos] || "";
+    const t = document.createElement("div");
+    t.textContent = c.text;
+    div.appendChild(b);
+    div.appendChild(t);
+    div.addEventListener("click", ()=>onPick(div, c, q));
+    box.appendChild(div);
   });
-  selText.textContent = labels.join("  |  ");
 }
 
-function renderQuestion(){
-  clearMsg();
-  tpBox.style.display = "none";
-  tpChoices.innerHTML = "";
-  phase = "sequence";
-  picked = [];
+function onPick(el, c, q){
+  if(lock) return;
 
-  working = deck[idx];
+  if(c.isCorrect){
+    lock = true;
+    setChoicesLocked(true);
+    el.classList.add("correct");
+    correct++;
+    setAccUI();
 
-  // shuffle event display order
-  const disp = shuffle([0,1,2,3]);
-  orderMap = disp; // displayed index -> original index
-
-  csTag.textContent = working.cs || "CS —";
-  stemEl.textContent = working.stem;
-
-  eventChoices.innerHTML = "";
-  disp.forEach((origIdx, dispIdx)=>{
-    const btn = makeBtn(working.events[origIdx], ()=>pickEvent(dispIdx));
-    eventChoices.appendChild(btn);
-  });
-
-  renderPicked();
-  renderTop();
-  saveSession();
-}
-
-function pickEvent(dispIdx){
-  if(state.finished) return;
-  if(phase !== "sequence") return;
-
-  picked.push(dispIdx);
-  renderPicked();
-
-  // visually mark selected
-  const btns = eventChoices.querySelectorAll('button.choice');
-  btns[dispIdx].classList.add('good');
-  btns[dispIdx].disabled = true;
-
-  if(picked.length < 4) return;
-
-  // Evaluate sequence
-  lockAll(eventChoices, true);
-
-  const pickedOrig = picked.map(d => orderMap[d]);
-  const isCorrect = pickedOrig.every((orig, i)=> orig === working.correctOrder[i]);
-
-  if(!isCorrect){
-    state.wrong++;
-    showMsg(`<b>Wrong sequence.</b> Hint: <b>${working.hint}</b><br><span style="color:var(--muted)">${working.explain || ""}</span><br><b>Try the same question again.</b>`);
-    renderTop();
-    saveSession();
-
-    setTimeout(()=>{
-      lockAll(eventChoices, false);
-      renderQuestion(); // reset same question (miss recorded)
-    }, 400);
-    return;
-  }
-
-  // sequence correct -> move to turning point phase
-  showMsg(`<b>Sequence correct.</b> Now identify the turning point. ${working.explain ? ("<br><span style='color:var(--muted)'>"+working.explain+"</span>") : ""}`);
-  tpBox.style.display = "block";
-  tpChoices.innerHTML = "";
-
-  phase = "turning";
-
-  // Turning point choices should match the SAME displayed set/order for cognition
-  orderMap.forEach((origIdx)=>{
-    const b = makeBtn(working.events[origIdx], ()=>pickTurning(origIdx, b));
-    tpChoices.appendChild(b);
-  });
-
-  lockAll(eventChoices, true);
-  lockAll(tpChoices, false);
-
-  renderTop();
-  saveSession();
-}
-
-function pickTurning(origIdx, btn){
-  if(state.finished) return;
-  if(phase !== "turning") return;
-
-  lockAll(tpChoices, true);
-
-  const correctOrig = working.turningPoint;
-  if(origIdx === correctOrig){
-    state.correct++;
-    btn.classList.add('good');
-    showMsg(`<b>Correct.</b> Turning point identified. ${working.explain ? ("<br><span style='color:var(--muted)'>"+working.explain+"</span>") : ""}`);
-
-    renderTop();
-    saveSession();
+    $("goodMsg").style.display = "block";
+    $("badMsg").style.display = "none";
 
     setTimeout(()=>{
       idx++;
-      if(idx >= deck.length){
-        finish();
-      }else{
-        renderQuestion();
-      }
-    }, ADVANCE_MS);
+      if(idx >= QUESTIONS.length) finish();
+      else render();
+    }, 650);
 
   }else{
-    state.wrong++;
-    btn.classList.add('bad');
-
-    // mark correct
-    tpChoices.querySelectorAll('button.choice').forEach(b=>{
-      if(b.textContent === working.events[correctOrig]) b.classList.add('good');
-    });
-
-    showMsg(`<b>Wrong turning point.</b> Hint: <b>${working.hint}</b><br><span style="color:var(--muted)">${working.explain || ""}</span><br><b>Pick the turning point to proceed.</b>`);
-    renderTop();
-    saveSession();
-
-    setTimeout(()=>{
-      lockAll(tpChoices, false);
-    }, 300);
+    misses++;
+    setAccUI();
+    el.classList.add("wrong");
+    $("hint").textContent = q.hint || "Use dates and cause/effect logic. Identify which event most changed outcomes or which order makes sense historically.";
+    $("badMsg").style.display = "block";
   }
 }
 
-/* =========================
-   FINISH / TICKET
-========================= */
 function finish(){
-  state.finished = true;
-  state.endAt = Date.now();
-  clearInterval(timer);
-  timer = null;
+  lock = true;
+  setChoicesLocked(true);
+  endedAt = new Date();
+  if(timer) clearInterval(timer);
 
-  const total = state.correct + state.wrong;
-  const acc = total ? Math.round((state.correct/total)*100) : 0;
-  const elapsedMs = state.endAt - state.startAt;
-  const passed = (state.wrong === 0);
+  $("pbar").style.width = "100%";
 
-  finishBox.style.display = "block";
-  finishLine.innerHTML = `Result: <b>${passed ? "MASTERED ✅" : "NOT MASTERED ❌"}</b> · Accuracy: <b>${acc}%</b> · Misses: <b>${state.wrong}</b> · Elapsed: <b>${fmtElapsed(elapsedMs)}</b>`;
+  const acc = computeAcc();
+  const passed = (misses === 0);
 
   const ticket =
-`LEGEND MASTERY TICKET
-Game: AmStud Game 4 — Sequence / Turning Point (Mastery)
-Name: ${state.name}
-Date: ${state.date}
-Start: ${timeOnly(state.startAt)}
-End: ${timeOnly(state.endAt)}
-Elapsed: ${fmtElapsed(elapsedMs)}
-Passed: ${passed ? "YES" : "NO"}
-Accuracy: ${acc}%
-Misses: ${state.wrong}
-Questions: ${deck.length}
+`AMERICAN STUDIES — OST MASTERY HUB
+Game: AmStud 4 — Sequence & Turning Point (Mastery)
 
-Teacher Notes:
-- Mastery requires 0 misses.
-- Wrong sequence or turning-point selection is recorded as a miss.
-- Student must correct the item to proceed.
-`;
-  ticketEl.value = ticket;
+Student: ${studentName}
+Passed: ${passed ? "YES (Mastery)" : "NO"}
+Accuracy: ${acc.toFixed(1)}%
+Correct: ${correct}
+Misses: ${misses}
 
-  renderTop();
-  saveSession();
+Start: ${fmt(startedAt)}
+End:   ${fmt(endedAt)}
+Duration: ${durMS(startedAt, endedAt)}
+
+Reminder: Mastery requires 0 misses.`;
+
+  $("ticketText").textContent = ticket;
+  $("ticket").style.display = "block";
+
+  $("goodMsg").style.display = "block";
+  $("goodText").textContent = passed
+    ? "Mastery earned. Screenshot your ticket."
+    : "Not mastery. Hit Restart and go again for 100%.";
 }
 
-function startGame(name){
-  state.name = (name || "").trim();
-  if(!state.name) throw new Error("Please enter a name.");
+function restart(){ startGame(); }
 
-  state.date = dateOnly();
-  state.startAt = Date.now();
-  state.endAt = null;
-  state.correct = 0;
-  state.wrong = 0;
-  state.finished = false;
+$("restartBtn").addEventListener("click", restart);
 
-  deck = buildDeck();
-  idx = 0;
+$("copyBtn").addEventListener("click", async ()=>{
+  try{
+    await navigator.clipboard.writeText($("ticketText").textContent);
+    $("copyBtn").textContent = "Copied!";
+    setTimeout(()=>$("copyBtn").textContent="Copy Ticket", 900);
+  }catch(e){
+    alert("Copy blocked by browser. Please screenshot instead.");
+  }
+});
 
+// Name gate
+const gate = $("gate");
+const nameInput = $("nameInput");
+const beginBtn = $("beginBtn");
+
+function begin(){
+  const v = (nameInput.value || "").trim();
+  if(!v){ nameInput.focus(); return; }
+  studentName = v;
+  localStorage.setItem("legend_amstud_student_name", studentName);
   gate.style.display = "none";
-  game.style.display = "block";
-  finishBox.style.display = "none";
-
-  renderTop();
-  renderQuestion();
-
-  if(timer) clearInterval(timer);
-  timer = setInterval(()=>{
-    elElapsed.textContent = fmtElapsed(Date.now() - state.startAt);
-  }, 250);
-
-  saveSession();
+  startGame();
 }
+beginBtn.addEventListener("click", begin);
+nameInput.addEventListener("keydown", (e)=>{ if(e.key === "Enter") begin(); });
 
-/* =========================
-   EVENTS
-========================= */
-startBtn.addEventListener('click', ()=> startGame(nameInput.value));
-nameInput.addEventListener('keydown', (e)=>{ if(e.key === "Enter") startGame(nameInput.value); });
-
-hardRestart.addEventListener('click', ()=>{
-  if(confirm("Hard Restart will reset this game attempt. Continue?")) resetAll();
-});
-
-copyTicket.addEventListener('click', async ()=>{
-  try{
-    await navigator.clipboard.writeText(ticketEl.value);
-    alert("Ticket copied.");
-  }catch(_){
-    ticketEl.select();
-    document.execCommand("copy");
-    alert("Ticket copied.");
-  }
-});
-printTicket.addEventListener('click', ()=>{
-  const w = window.open("", "_blank");
-  w.document.write(`<pre style="font-family: ui-monospace, Menlo, Consolas, monospace; white-space:pre-wrap;">${ticketEl.value.replace(/</g,"&lt;")}</pre>`);
-  w.document.close();
-  w.focus();
-  w.print();
-});
-
-/* =========================
-   RESUME
-========================= */
-(function resume(){
-  const saved = loadSession();
-  if(!saved) return;
-
-  try{
-    if(saved?.state?.name && saved?.deck?.length){
-      Object.assign(state, saved.state);
-      deck = saved.deck;
-      idx = saved.idx || 0;
-
-      gate.style.display = "none";
-      game.style.display = "block";
-
-      renderTop();
-
-      if(state.finished){
-        elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
-        finishBox.style.display = "block";
-        finish();
-      }else{
-        finishBox.style.display = "none";
-        renderQuestion();
-        if(timer) clearInterval(timer);
-        timer = setInterval(()=>{
-          elElapsed.textContent = fmtElapsed(Date.now() - state.startAt);
-        }, 250);
-      }
-    }
-  }catch(_){
-    localStorage.removeItem(SESSION_KEY);
-  }
-})();
+const saved = localStorage.getItem("legend_amstud_student_name");
+if(saved){
+  nameInput.value = saved;
+  nameInput.select();
+}
 </script>
 </body>
 </html>
