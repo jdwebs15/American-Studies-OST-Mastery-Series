@@ -392,8 +392,28 @@ const printTicket = document.getElementById('printTicket');
 /* =========================
    SESSION SAVE/LOAD
 ========================= */
+// ✅ FIX: JSON cannot serialize Set. Pack/unpack play safely.
+function packPlay(){
+  return {
+    steps: play.steps,
+    correct: play.correct,
+    picks: play.picks,
+    used: Array.from(play.used) // serialize Set -> Array
+  };
+}
+function unpackPlay(p){
+  return {
+    steps: p?.steps || [],
+    correct: p?.correct || [0,1,2,3],
+    picks: p?.picks || [],
+    used: new Set(Array.isArray(p?.used) ? p.used : []) // Array -> Set
+  };
+}
+
 function saveSession(){
-  localStorage.setItem(SESSION_KEY, JSON.stringify({state, idx, deck, play}));
+  try{
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ state, idx, deck, play: packPlay() })); // ✅ FIX
+  }catch(_){}
 }
 function loadSession(){
   try{
@@ -450,14 +470,13 @@ function startTimer(){
 let working = null;
 let optionOrder = [];
 let play = {
-  steps: [],        // display strings length 4
-  correct: [0,1,2,3], // correct order referencing original indices
-  picks: [],        // picked original indices in chosen order
-  used: new Set()   // used original indices
+  steps: [],
+  correct: [0,1,2,3],
+  picks: [],
+  used: new Set()
 };
 
 function normalizeSet(x){
-  // Accept several possible keys so your bank can be flexible:
   const stepsRaw =
     x.chain ?? x.steps ?? x.events ?? x.items ?? x.effects ?? x.causes ?? [];
 
@@ -500,21 +519,18 @@ function renderSet(){
   optionsEl.innerHTML = "";
   slotsEl.innerHTML = "";
 
-  // Slots
   for(let i=0;i<4;i++){
     const s = document.createElement('div');
     s.className = "slot";
     s.dataset.slot = String(i);
     s.innerHTML = `<div class="label">Step ${i+1}</div><div class="value">—</div>`;
 
-    // Click slot to rewind from there
     s.addEventListener('click', ()=>{
       if(state.finished) return;
       const slotIndex = Number(s.dataset.slot);
       if(play.picks.length === 0) return;
       if(slotIndex >= play.picks.length) return;
 
-      // remove picks from slotIndex onward
       const removed = play.picks.splice(slotIndex);
       removed.forEach(ix => play.used.delete(ix));
       renderChainOnly();
@@ -526,7 +542,6 @@ function renderSet(){
     slotsEl.appendChild(s);
   }
 
-  // Options
   optionOrder.forEach((origIndex)=>{
     const d = document.createElement('div');
     d.className = "item";
@@ -540,7 +555,6 @@ function renderSet(){
       const nextSlot = play.picks.length;
       if(nextSlot >= 4) return;
 
-      // Check if this is the correct next step
       const expectedOrigIndex = play.correct[nextSlot];
 
       if(origIndex === expectedOrigIndex){
@@ -552,7 +566,6 @@ function renderSet(){
         clearMsg();
         saveSession();
 
-        // Completed chain
         if(play.picks.length === 4){
           state.correct++;
           renderTop();
@@ -747,13 +760,8 @@ printTicket.addEventListener('click', ()=>window.print());
     deck = saved.deck;
     idx = saved.idx ?? 0;
 
-    // restore play if present
-    if(saved.play){
-      play.steps = saved.play.steps || [];
-      play.correct = saved.play.correct || [0,1,2,3];
-      play.picks = saved.play.picks || [];
-      play.used = new Set(saved.play.used || []);
-    }
+    // ✅ FIX: restore play via unpacker (rebuild Set)
+    play = unpackPlay(saved.play);
 
     if(!state.name){
       clearSession();
@@ -769,19 +777,13 @@ printTicket.addEventListener('click', ()=>window.print());
       startTimer();
       renderSet();
 
-      // After renderSet() resets play, re-apply saved picks if we’re on same set
-      // (This keeps things simple/consistent; you can remove this if you prefer fresh-on-resume.)
-      // We'll only apply if saved play has picks and steps match.
+      // Restore picks if same steps
       if(saved.play && Array.isArray(saved.play.steps) && saved.play.steps.length === 4){
-        // Attempt to restore picks for current set if same steps
         const currentNorm = normalizeSet(deck[idx] || {});
         const currentSteps = currentNorm.steps.join("||");
         const savedSteps = saved.play.steps.join("||");
         if(currentSteps === savedSteps){
-          play.steps = saved.play.steps;
-          play.correct = saved.play.correct || play.correct;
-          play.picks = saved.play.picks || [];
-          play.used = new Set(saved.play.used || []);
+          play = unpackPlay(saved.play); // ✅ FIX: rebuild Set again from saved snapshot
           renderChainOnly();
           renderOptionsOnly();
         }
