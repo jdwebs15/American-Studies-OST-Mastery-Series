@@ -15,8 +15,8 @@
    - Only edit by adding NEW objects BEFORE the final closing ];
    ============================================================ */
 
-const AMSTUD_BANK = [
-  /* =========================================================
+window.AMSTUD_BANK = [
+   /* =========================================================
      GAME 1 (G1) — Cause & Effect MCQ
      filter idea: item.tag === "Cause & Effect" OR tags includes "G1"
      required: stem, choices[4], answerIndex, hint
