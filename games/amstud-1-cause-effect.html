@@ -1,304 +1,707 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AmStud Game 1 — Cause &amp; Effect (Mastery)</title>
-  <link rel="stylesheet" href="../styles.css" />
-  <meta name="description" content="American Studies OST Mastery — Cause & Effect (0 misses required)" />
-
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AmStud Game 1 — Cause & Effect (Mastery)</title>
   <style>
-    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    :root{
+      --bg:#0b1220;
+      --panel:#111a2f;
+      --panel2:#0f1730;
+      --text:#e7eefc;
+      --muted:#a8b4cf;
+      --line:rgba(255,255,255,.12);
+      --shadow:0 18px 55px rgba(0,0,0,.40);
+      --radius:18px;
+      --good:#2bd576;
+      --bad:#ff5c7a;
+      --warn:#ffd166;
+      --accent:#7aa2ff;
+      --chip:rgba(122,162,255,.14);
+      --chipLine:rgba(122,162,255,.28);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:radial-gradient(1200px 700px at 20% -10%, rgba(122,162,255,.22), transparent 55%),
+                 radial-gradient(900px 600px at 90% 0%, rgba(43,213,118,.10), transparent 55%),
+                 linear-gradient(180deg,#0b1220,#070b14);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    .wrap{width:min(1020px,92vw);margin:28px auto 40px;}
+    .top{
+      display:flex; gap:14px; flex-wrap:wrap;
+      align-items:flex-start; justify-content:space-between;
+      margin-bottom:14px;
+    }
+    h1{font-size:22px;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:13px;line-height:1.35}
     .panel{
-      background:rgba(0,0,0,.18);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:18px;
+      padding:16px;
     }
-    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
-    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
-    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
-    .pill2{
-      font-size:12px; color:var(--text);
-      background:rgba(255,255,255,.06);
-      border:1px solid var(--line);
+    .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .chip{
+      border:1px solid var(--chipLine);
+      background:var(--chip);
+      padding:6px 10px;
       border-radius:999px;
-      padding:8px 10px;
+      font-size:12px;
+      color:var(--text);
       white-space:nowrap;
     }
-    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
-    .btn{
-      appearance:none; border:1px solid var(--line);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+    .chip strong{font-weight:700}
+    .row{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;align-items:stretch}
+    @media (max-width:880px){.row{grid-template-columns:1fr}}
+    .stats{
+      display:grid;gap:10px;
+      grid-template-columns:1fr 1fr;
     }
-    .btn:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.10); }
-    .btn.danger:hover{ border-color:rgba(255,92,122,.45); background:rgba(255,92,122,.10); }
-    .btn.good:hover{ border-color:rgba(43,213,118,.40); background:rgba(43,213,118,.10); }
-    .divider{ height:1px; background:rgba(255,255,255,.10); margin:14px 0; }
-    .qbox{ background:rgba(17,26,47,.55); border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px; }
-    .qmeta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
-    .qnum{ font-weight:900; }
-    .small{ color:var(--muted); font-size:13px; }
-    .stem{ margin:10px 0 0; line-height:1.35; font-size:16px; }
-    .choices{ margin-top:12px; display:grid; gap:10px; }
-    .choice{
-      text-align:left;
-      border:1px solid rgba(255,255,255,.12);
+    .stat{
       background:rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .stat .k{color:var(--muted);font-size:12px;margin-bottom:4px}
+    .stat .v{font-family:var(--mono);font-size:13px}
+    .bar{
+      height:10px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;border:1px solid var(--line);
+    }
+    .bar > div{height:100%;width:0%;background:linear-gradient(90deg, var(--accent), rgba(43,213,118,.9))}
+    .qbox{padding:16px}
+    .qhead{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}
+    .qnum{font-family:var(--mono);font-size:13px;color:var(--muted)}
+    .skill{font-size:12px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.18)}
+    .prompt{font-size:16px;line-height:1.35;margin:10px 0 12px}
+    .choices{display:grid;gap:10px;margin-top:10px}
+    .choice{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.16);
       border-radius:14px;
       padding:12px 12px;
       cursor:pointer;
-      color:var(--text);
-      font-weight:700;
-      transition:transform .12s ease, border-color .12s ease, background .12s ease;
+      transition:transform .05s ease, border-color .15s ease, background .15s ease;
+      user-select:none;
     }
-    .choice:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.08); }
-    .choice[disabled]{ opacity:.65; cursor:not-allowed; transform:none; }
+    .choice:hover{border-color:rgba(122,162,255,.6);transform:translateY(-1px)}
+    .choice.locked{cursor:not-allowed;opacity:.9}
+    .choice.correct{
+      border-color:rgba(43,213,118,.75);
+      background:rgba(43,213,118,.10);
+    }
+    .choice.wrong{
+      border-color:rgba(255,92,122,.75);
+      background:rgba(255,92,122,.10);
+    }
     .msg{
       margin-top:12px;
       border-radius:14px;
-      padding:12px;
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid var(--line);
+      padding:10px 12px;
       display:none;
     }
-    .msg.good{ display:block; background:rgba(43,213,118,.10); border-color:rgba(43,213,118,.35); }
-    .msg.bad{ display:block; background:rgba(255,92,122,.10); border-color:rgba(255,92,122,.35); }
-    .msg.warn{ display:block; background:rgba(255,209,102,.10); border-color:rgba(255,209,102,.35); }
-    .finish{
-      display:none;
+    .msg.bad{display:block;background:rgba(255,92,122,.10)}
+    .msg.good{display:block;background:rgba(43,213,118,.10)}
+    .msg .t{font-weight:700;margin-bottom:4px}
+    .footer{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
       margin-top:14px;
-      background:rgba(17,26,47,.65);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:16px;
-      padding:16px;
     }
-    .finish h2{ margin:0 0 8px; }
-    .finish .grid2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
-    @media (max-width:860px){ .finish .grid2{ grid-template-columns:1fr; } }
-    .kv{ padding:10px 12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.10); border-radius:14px; }
-    .kv b{ display:block; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
-
-    #errBox{
-      display:none; margin-top:12px;
-      padding:12px; border-radius:14px;
-      background:rgba(255,92,122,.10);
-      border:1px solid rgba(255,92,122,.35);
-      color:var(--text);
-      white-space:pre-wrap;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:12px;
-    }
-    #gate{
-      display:block;
-      margin-top:12px;
-      background:rgba(17,26,47,.55);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:16px;
-      padding:16px;
-    }
-    .fieldRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    input[type="text"]{
-      width:min(460px,100%);
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(0,0,0,.20);
-      color:var(--text);
-      outline:none;
-      font-weight:800;
-    }
-    input[type="text"]:focus{ border-color:rgba(122,162,255,.45); }
-    .ghost{ color:var(--muted); font-size:13px; margin-top:10px; }
-
-    .ticketBox{
-      margin-top:12px;
-      padding:12px;
-      border-radius:14px;
+    .btn{
+      border:1px solid var(--line);
       background:rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    .btn:hover{border-color:rgba(122,162,255,.6)}
+    .btn.primary{border-color:rgba(122,162,255,.65);background:rgba(122,162,255,.16)}
+    .ticket{
+      margin-top:14px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
       display:none;
     }
-    textarea{
-      width:100%;
-      min-height:160px;
-      resize:vertical;
+    pre{
+      margin:10px 0 0;
+      white-space:pre-wrap;
+      background:rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      border-radius:14px;
       padding:10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.18);
+      font-family:var(--mono);
+      font-size:12px;
+      line-height:1.35;
+    }
+    /* Name gate */
+    .gate{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.58);
+      display:flex; align-items:center; justify-content:center;
+      padding:20px;
+    }
+    .gateCard{
+      width:min(560px, 94vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .gateCard h2{margin:0 0 8px;font-size:18px}
+    .gateCard p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.35}
+    .inrow{display:flex;gap:10px;flex-wrap:wrap}
+    input{
+      flex:1;
+      min-width:240px;
+      border:1px solid var(--line);
       background:rgba(0,0,0,.22);
       color:var(--text);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      font-size:12px;
+      border-radius:14px;
+      padding:12px 12px;
       outline:none;
+      font-size:14px;
     }
+    input:focus{border-color:rgba(122,162,255,.7)}
   </style>
-
-  <!-- Load the prioritized question bank -->
-  <script src="../amstud_bank.js"></script>
 </head>
-
 <body>
-  <div class="gameWrap">
-    <div class="panel">
-      <div class="topbar">
-        <div>
-          <div class="k">LEGEND MASTERY SERIES</div>
-          <h1 style="margin:6px 0 4px; font-size:26px;">AmStud Game 1 — Cause &amp; Effect (Mastery)</h1>
-          <div class="small">Mastery = <b>0 misses</b>. Wrong answer → hint → must correct to move on (miss recorded).</div>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>AmStud Game 1 — Cause & Effect (Mastery)</h1>
+        <div class="sub">
+          Skill focus: <strong>cause • effect • sequence • correlation</strong> (CS 3).
+          Mastery requires <strong>100% accuracy</strong>.
+          Hints appear only after an incorrect answer.
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><strong>LIVE</strong></div>
+        <div class="chip">Auto-submit</div>
+        <div class="chip">Auto-advance</div>
+        <div class="chip">Ticket: Name/Times/Accuracy</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="panel qbox">
+        <div class="qhead">
+          <div class="qnum" id="qnum">Question —</div>
+          <div class="skill" id="skill">—</div>
         </div>
 
+        <div class="bar" aria-label="progress"><div id="pbar"></div></div>
+
+        <div class="prompt" id="prompt">—</div>
+        <div class="choices" id="choices"></div>
+
+        <div class="msg bad" id="badMsg">
+          <div class="t">Not yet.</div>
+          <div id="hint">—</div>
+        </div>
+        <div class="msg good" id="goodMsg">
+          <div class="t">Correct.</div>
+          <div id="goodText">Auto-advancing…</div>
+        </div>
+
+        <div class="footer">
+          <button class="btn" id="restartBtn" type="button">Restart</button>
+          <div class="qnum" id="note">Tip: if you miss even once, restart to earn Mastery.</div>
+        </div>
+
+        <div class="ticket" id="ticket">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+            <div><strong>Submit Ticket</strong> (screenshot this)</div>
+            <button class="btn primary" id="copyBtn" type="button">Copy Ticket</button>
+          </div>
+          <pre id="ticketText"></pre>
+        </div>
+      </div>
+
+      <div class="panel">
         <div class="stats">
-          <div class="pill2">Player: <b id="playerName">—</b></div>
-          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
-          <div class="pill2">Accuracy: <b id="acc">—</b></div>
-          <div class="pill2">Misses: <b id="misses">0</b></div>
-          <div class="pill2">Q: <b id="qpos">0/0</b></div>
+          <div class="stat">
+            <div class="k">Student</div>
+            <div class="v" id="student">—</div>
+          </div>
+          <div class="stat">
+            <div class="k">Accuracy</div>
+            <div class="v" id="acc">100.0%</div>
+          </div>
+          <div class="stat">
+            <div class="k">Start</div>
+            <div class="v" id="start">—</div>
+          </div>
+          <div class="stat">
+            <div class="k">Now</div>
+            <div class="v" id="now">—</div>
+          </div>
+          <div class="stat">
+            <div class="k">Correct</div>
+            <div class="v" id="correct">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Misses</div>
+            <div class="v" id="misses">0</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;color:var(--muted);font-size:12px;line-height:1.35">
+          <strong>How mastery works:</strong><br/>
+          • Any incorrect click counts as a miss.<br/>
+          • Finish with <strong>0 misses</strong> to pass.<br/>
+          • Restart any time to try for mastery again.
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="row2">
-        <div class="small">
-          Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b>
-        </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn danger" id="restartBtn" title="Hard restart: clears this game session">Hard Restart</button>
-        </div>
+  <!-- Name Gate -->
+  <div class="gate" id="gate" role="dialog" aria-modal="true">
+    <div class="gateCard">
+      <h2>Enter your name to begin</h2>
+      <p>Your name + timestamps + accuracy will appear on the final submit ticket.</p>
+      <div class="inrow">
+        <input id="nameInput" type="text" placeholder="First and last name" autocomplete="name"/>
+        <button class="btn primary" id="beginBtn" type="button">Begin</button>
       </div>
-
-      <div id="errBox"></div>
-      <div class="divider"></div>
-
-      <!-- START GATE -->
-      <section id="gate">
-        <div style="font-weight:900; font-size:16px;">Enter your name to begin:</div>
-        <div class="fieldRow" style="margin-top:10px;">
-          <input id="nameInput" type="text" autocomplete="off" placeholder="Student name (required)" />
-          <button class="btn" id="startBtn">Start</button>
-        </div>
-        <div class="ghost">
-          Tip: Mastery requires finishing the full set with <b>0 misses</b>.
-          If you miss one, you can still finish, but you must hard restart to earn mastery + unlock the ticket.
-        </div>
-      </section>
-
-      <!-- GAME -->
-      <section id="game" style="display:none;">
-        <div class="qbox">
-          <div class="qmeta">
-            <div class="qnum" id="qnum">Question</div>
-            <div class="small" id="tag">OST-style • CS aligned</div>
-          </div>
-          <div class="stem" id="stem">—</div>
-          <div class="choices" id="choices"></div>
-
-          <div class="msg good" id="goodMsg"></div>
-          <div class="msg bad" id="badMsg"></div>
-          <div class="msg warn" id="hintMsg"></div>
-        </div>
-
-        <div class="finish" id="finish">
-          <h2>Finish Screen</h2>
-          <div class="small" style="margin-bottom:10px;">
-            Ticket unlock requires <b>0 misses</b>. Your session summary is stamped below.
-          </div>
-
-          <div class="grid2">
-            <div class="kv"><b>Student</b><div id="finName">—</div></div>
-            <div class="kv"><b>Date</b><div id="finDate">—</div></div>
-            <div class="kv"><b>Start Time</b><div id="finStart">—</div></div>
-            <div class="kv"><b>End Time</b><div id="finEnd">—</div></div>
-            <div class="kv"><b>Elapsed</b><div id="finElapsed">—</div></div>
-            <div class="kv"><b>Accuracy</b><div id="finAcc">—</div></div>
-            <div class="kv"><b>Misses</b><div id="finMiss">—</div></div>
-            <div class="kv"><b>Result</b><div id="finResult">—</div></div>
-          </div>
-
-          <div class="ticketBox" id="ticketBox">
-            <div class="small" style="margin-bottom:8px;">
-              <b>Submit Ticket</b> (copy + screenshot). This includes all required identifiers.
-            </div>
-            <textarea id="ticketText" readonly></textarea>
-            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn good" id="copyTicketBtn">Copy Ticket</button>
-              <button class="btn" id="downloadTicketBtn">Download Ticket (.txt)</button>
-            </div>
-          </div>
-
-          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn danger" id="restartBtn2">Hard Restart (Try for Mastery)</button>
-          </div>
-        </div>
-      </section>
-
-      <div class="divider"></div>
-      <div class="small" style="color:var(--muted);">
-        If the page ever “white screens,” the error box above will show where/why.
-      </div>
+      <p style="margin-top:10px;color:var(--muted);font-size:12px">
+        (If you close your device, refresh to restart clean.)
+      </p>
     </div>
   </div>
 
 <script>
 /* =========================
-   HARDENED SHELL + SAFETY
-========================= */
-(function(){
-  const errBox = document.getElementById('errBox');
-  window.addEventListener('error', (e)=>{
-    errBox.style.display='block';
-    errBox.textContent =
-      "Runtime Error:\n" + (e?.message || e) + "\n" +
-      (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
-  });
-  window.addEventListener('unhandledrejection', (e)=>{
-    errBox.style.display='block';
-    errBox.textContent = "Unhandled Promise Rejection:\n" + (e?.reason?.message || e?.reason || e);
-  });
-})();
+   QUESTIONS (Embedded)
+   Game 1: Cause/Effect/Sequence/Correlation (CS3)
+   First 4 are based on stems from your practice-question packet, cleaned/corrected.
+   ========================= */
 
-window.addEventListener('pageshow', (event) => { if (event.persisted) window.location.reload(); });
+const QUESTIONS = [
+  // Practice-stem based (cleaned/corrected)
+  {
+    id: 1,
+    skill: "Cause (multiple causation)",
+    prompt: "Which factor was a major cause of the U.S. Civil War?",
+    choices: [
+      "Disputes over the expansion of slavery into western territories",
+      "Conflict over joining World War I",
+      "Arguments about building the Panama Canal",
+      "Debates about U.S. membership in NATO"
+    ],
+    answer: "Disputes over the expansion of slavery into western territories",
+    hint: "Think: sectional conflict and slavery’s expansion (not 20th-century foreign policy)."
+  },
+  {
+    id: 2,
+    skill: "Sequence",
+    prompt: "Which event occurred LAST in the sequence leading to open fighting in the American Revolution?",
+    choices: [
+      "French and Indian War ends (1763)",
+      "Stamp Act (1765)",
+      "Boston Tea Party (1773)",
+      "Battles of Lexington and Concord (1775)"
+    ],
+    answer: "Battles of Lexington and Concord (1775)",
+    hint: "Last = first shots of war (after protests like the Tea Party)."
+  },
+  {
+    id: 3,
+    skill: "Cause (multiple causation)",
+    prompt: "Which factor was a major cause of the Great Depression?",
+    choices: [
+      "Widespread stock market speculation and risky buying on margin",
+      "The Marshall Plan’s spending after World War II",
+      "The creation of the Federal Reserve in 1913",
+      "The Kansas-Nebraska Act"
+    ],
+    answer: "Widespread stock market speculation and risky buying on margin",
+    hint: "Look for late-1920s economic instability—especially speculation and risky credit."
+  },
+  {
+    id: 4,
+    skill: "Sequence",
+    prompt: "Which event occurred FIRST in the chain that led into the Great Depression?",
+    choices: [
+      "Overproduction in industry and agriculture created falling prices and profits",
+      "The New Deal programs expanded federal regulation in the 1930s",
+      "The U.S. entered World War II in 1941",
+      "The Supreme Court decided Brown v. Board of Education"
+    ],
+    answer: "Overproduction in industry and agriculture created falling prices and profits",
+    hint: "First = underlying weakness before the crash and bank failures."
+  },
 
-(function(){
-  try{
-    history.replaceState({guard:1}, document.title, location.href);
-    window.addEventListener('popstate', ()=> history.pushState({guard:1}, document.title, location.href));
-  }catch(_){}
-})();
+  // Created (CS3-aligned) — broad American History coverage
+  {
+    id: 5,
+    skill: "Cause (short-term vs long-term)",
+    prompt: "Which was a LONG-TERM cause of the Great Migration of African Americans out of the South?",
+    choices: [
+      "Jim Crow laws and entrenched racial discrimination in the South",
+      "Immediate wartime factory hiring in northern cities (WWI)",
+      "The invention of the airplane",
+      "The passage of the 19th Amendment"
+    ],
+    answer: "Jim Crow laws and entrenched racial discrimination in the South",
+    hint: "Long-term = ongoing conditions over years; short-term = immediate job demand spikes."
+  },
+  {
+    id: 6,
+    skill: "Cause (short-term)",
+    prompt: "Which was a SHORT-TERM cause that accelerated the Great Migration during World War I?",
+    choices: [
+      "Northern factories needed more workers as war production expanded",
+      "The Dust Bowl’s drought in the 1930s",
+      "The closing of the western frontier in 1890",
+      "The passage of the Homestead Act"
+    ],
+    answer: "Northern factories needed more workers as war production expanded",
+    hint: "Short-term = immediate job demand created by wartime production."
+  },
+  {
+    id: 7,
+    skill: "Effect",
+    prompt: "A major EFFECT of rapid urbanization in the late 1800s was:",
+    choices: [
+      "Overcrowded tenements and increased public health challenges",
+      "A sharp decline in immigration to cities",
+      "A return to rural farming for most Americans",
+      "The elimination of ethnic neighborhoods"
+    ],
+    answer: "Overcrowded tenements and increased public health challenges",
+    hint: "Urban growth often outpaced housing/sanitation infrastructure."
+  },
+  {
+    id: 8,
+    skill: "Cause",
+    prompt: "Which development MOST directly contributed to the rise of large corporations in the late 1800s?",
+    choices: [
+      "Expanded national markets created by railroads and new technology",
+      "The end of the Cold War",
+      "The passage of the Voting Rights Act of 1965",
+      "The abolition of slavery"
+    ],
+    answer: "Expanded national markets created by railroads and new technology",
+    hint: "Think: transportation + communication shrinking distances for business."
+  },
+  {
+    id: 9,
+    skill: "Effect",
+    prompt: "Which is a major EFFECT of mechanized farming in the late 19th century?",
+    choices: [
+      "Higher agricultural output with fewer farm laborers needed",
+      "Lower crop yields because machines replaced skilled workers",
+      "The end of all rural communities",
+      "A decline in food supply nationwide"
+    ],
+    answer: "Higher agricultural output with fewer farm laborers needed",
+    hint: "Machines boosted productivity and reduced labor demand."
+  },
+  {
+    id: 10,
+    skill: "Correlation (not causation)",
+    prompt: "Two events occur around the same time: increased automobile ownership and growth of suburbs. What is the BEST historical conclusion?",
+    choices: [
+      "Automobiles likely helped make suburban living more practical by expanding commuting range",
+      "Suburban growth proves automobiles were invented in suburbs",
+      "Automobiles and suburbs have no relationship at all",
+      "Suburbs caused the invention of the automobile"
+    ],
+    answer: "Automobiles likely helped make suburban living more practical by expanding commuting range",
+    hint: "Correlation suggests a relationship; look for a plausible mechanism, not a reversed claim."
+  },
+  {
+    id: 11,
+    skill: "Cause",
+    prompt: "Which factor MOST contributed to the rise of labor unions in the early industrial era?",
+    choices: [
+      "Unsafe working conditions and low wages in factories",
+      "The end of Reconstruction",
+      "The Louisiana Purchase",
+      "The growth of television advertising"
+    ],
+    answer: "Unsafe working conditions and low wages in factories",
+    hint: "Unions grew to address workplace problems created by industrialization."
+  },
+  {
+    id: 12,
+    skill: "Effect",
+    prompt: "A key EFFECT of laissez-faire policies toward big business was:",
+    choices: [
+      "The growth of monopolies and trusts with limited regulation",
+      "Immediate equal pay for all workers",
+      "The elimination of corporate power",
+      "A guaranteed 8-hour workday nationwide"
+    ],
+    answer: "The growth of monopolies and trusts with limited regulation",
+    hint: "Less regulation often allowed consolidation and market control."
+  },
+  {
+    id: 13,
+    skill: "Cause",
+    prompt: "Which problem MOST directly fueled Progressive calls for consumer protection laws?",
+    choices: [
+      "Unsafe food and medicine exposed by muckrakers",
+      "The drafting of the Constitution",
+      "The end of the frontier",
+      "The creation of Social Security in 1935"
+    ],
+    answer: "Unsafe food and medicine exposed by muckrakers",
+    hint: "Think Pure Food and Drug Act / Meat Inspection concerns."
+  },
+  {
+    id: 14,
+    skill: "Effect",
+    prompt: "Which is a major EFFECT of the 19th Amendment (1920)?",
+    choices: [
+      "Women gained the constitutional right to vote nationwide",
+      "Slavery was abolished",
+      "Income taxes were eliminated",
+      "Segregation was declared unconstitutional"
+    ],
+    answer: "Women gained the constitutional right to vote nationwide",
+    hint: "19th = women’s suffrage."
+  },
+  {
+    id: 15,
+    skill: "Sequence",
+    prompt: "Which sequence correctly places these events from earliest to latest?",
+    choices: [
+      "Spanish-American War → World War I → Great Depression → World War II",
+      "World War II → Great Depression → World War I → Spanish-American War",
+      "Great Depression → World War I → Spanish-American War → World War II",
+      "World War I → Spanish-American War → World War II → Great Depression"
+    ],
+    answer: "Spanish-American War → World War I → Great Depression → World War II",
+    hint: "1898 → 1917 → 1929 → 1941 (U.S. entry)."
+  },
+  {
+    id: 16,
+    skill: "Cause",
+    prompt: "Which was a major reason the U.S. Senate opposed joining the League of Nations after World War I?",
+    choices: [
+      "Fear it would pull the United States into future foreign wars",
+      "Belief that isolationism required building more colonies",
+      "A desire to return the Philippines to Spain immediately",
+      "Support for unlimited presidential war-making power"
+    ],
+    answer: "Fear it would pull the United States into future foreign wars",
+    hint: "Many senators worried about entangling commitments."
+  },
+  {
+    id: 17,
+    skill: "Effect",
+    prompt: "A major EFFECT of the Stock Market Crash of 1929 was:",
+    choices: [
+      "A loss of wealth that contributed to bank failures and reduced consumer spending",
+      "Immediate prosperity and rising wages",
+      "The end of all federal regulation",
+      "The start of the Civil Rights Movement"
+    ],
+    answer: "A loss of wealth that contributed to bank failures and reduced consumer spending",
+    hint: "Crash → confidence collapses → spending/investment fall → banks fail."
+  },
+  {
+    id: 18,
+    skill: "Cause",
+    prompt: "Which factor helped intensify the Dust Bowl crisis in the 1930s?",
+    choices: [
+      "Drought combined with poor farming practices that damaged topsoil",
+      "The expansion of the interstate highway system",
+      "The GI Bill",
+      "The invention of the telegraph"
+    ],
+    answer: "Drought combined with poor farming practices that damaged topsoil",
+    hint: "Environmental + human land use decisions."
+  },
+  {
+    id: 19,
+    skill: "Effect",
+    prompt: "A major EFFECT of New Deal programs was:",
+    choices: [
+      "An expanded federal role in regulating the economy and providing relief",
+      "The elimination of all taxes",
+      "A return to complete laissez-faire economics",
+      "The end of the federal government’s involvement in banking"
+    ],
+    answer: "An expanded federal role in regulating the economy and providing relief",
+    hint: "New Deal = relief, recovery, reform—bigger federal footprint."
+  },
+  {
+    id: 20,
+    skill: "Correlation",
+    prompt: "During WWII, industrial production rises while unemployment falls. The BEST analysis is:",
+    choices: [
+      "War mobilization likely increased demand for labor, contributing to lower unemployment",
+      "Lower unemployment caused WWII to begin",
+      "Unemployment fell only because people stopped counting jobs",
+      "There is no possible relationship between the two trends"
+    ],
+    answer: "War mobilization likely increased demand for labor, contributing to lower unemployment",
+    hint: "Look for how one could plausibly influence the other without claiming it ‘caused the war.’"
+  },
+  {
+    id: 21,
+    skill: "Cause",
+    prompt: "Which event MOST directly caused the United States to enter World War II?",
+    choices: [
+      "Japan’s attack on Pearl Harbor",
+      "The signing of the Treaty of Versailles",
+      "The passage of the Homestead Act",
+      "The completion of the transcontinental railroad"
+    ],
+    answer: "Japan’s attack on Pearl Harbor",
+    hint: "Immediate trigger for U.S. entry in December 1941."
+  },
+  {
+    id: 22,
+    skill: "Effect",
+    prompt: "Which was an EFFECT of the GI Bill after World War II?",
+    choices: [
+      "Expanded access to education and home ownership for many veterans",
+      "The elimination of the Great Migration",
+      "The creation of the League of Nations",
+      "The start of the Progressive movement"
+    ],
+    answer: "Expanded access to education and home ownership for many veterans",
+    hint: "Benefits for veterans helped reshape the postwar economy and middle class."
+  },
+  {
+    id: 23,
+    skill: "Cause",
+    prompt: "Which factor MOST contributed to the rise of suburbanization after World War II?",
+    choices: [
+      "Affordable housing, highway expansion, and increased car ownership",
+      "The collapse of the Soviet Union",
+      "The Dawes Act",
+      "The annexation of Hawaii"
+    ],
+    answer: "Affordable housing, highway expansion, and increased car ownership",
+    hint: "Housing + transportation + prosperity = suburban growth."
+  },
+  {
+    id: 24,
+    skill: "Effect",
+    prompt: "A major EFFECT of Brown v. Board of Education (1954) was:",
+    choices: [
+      "The legal challenge to segregated public schools based on ‘separate but equal’",
+      "The creation of Jim Crow laws",
+      "The end of women’s suffrage",
+      "The start of World War I"
+    ],
+    answer: "The legal challenge to segregated public schools based on ‘separate but equal’",
+    hint: "Brown rejected school segregation as constitutional."
+  },
+  {
+    id: 25,
+    skill: "Cause",
+    prompt: "Which factor MOST directly contributed to Cold War tensions between the U.S. and the USSR?",
+    choices: [
+      "Ideological conflict between capitalism and communism",
+      "Disagreement over the Louisiana Purchase",
+      "The abolition of slavery",
+      "The passage of the Pure Food and Drug Act"
+    ],
+    answer: "Ideological conflict between capitalism and communism",
+    hint: "Competing political/economic systems drove mistrust and rivalry."
+  },
+  {
+    id: 26,
+    skill: "Sequence",
+    prompt: "Which event occurred FIRST?",
+    choices: [
+      "Progressive Era reforms",
+      "The Great Depression",
+      "World War II",
+      "The Vietnam War"
+    ],
+    answer: "Progressive Era reforms",
+    hint: "Progressives are early 1900s; Depression is 1930s; WWII 1940s; Vietnam later."
+  },
+  {
+    id: 27,
+    skill: "Effect",
+    prompt: "Which was an EFFECT of the Civil Rights Act of 1964?",
+    choices: [
+      "It prohibited segregation and discrimination in many public places and employment",
+      "It created Jim Crow laws",
+      "It ended the Great Depression",
+      "It established the Electoral College"
+    ],
+    answer: "It prohibited segregation and discrimination in many public places and employment",
+    hint: "Think: broad protections against discrimination and segregation."
+  },
+  {
+    id: 28,
+    skill: "Cause & Effect Chain",
+    prompt: "Which chain BEST shows a cause-and-effect relationship?",
+    choices: [
+      "Factory growth → more urban jobs → people move to cities → overcrowded housing problems",
+      "Newspapers grow → dinosaurs go extinct → telephones invented → Civil War begins",
+      "Railroads expand → Ice Age ends → Harlem Renaissance begins → Pearl Harbor attacked",
+      "Women gain suffrage → Boston Tea Party → New Deal → Spanish-American War"
+    ],
+    answer: "Factory growth → more urban jobs → people move to cities → overcrowded housing problems",
+    hint: "Look for a realistic chain where each step plausibly leads to the next."
+  }
+];
 
 /* =========================
-   CONFIG
-========================= */
-const GAME_CODE = "AMSTUD1";
-const VERSION = "V1";
-const KEY = `LEGEND_${GAME_CODE}_${VERSION}`;
+   ENGINE
+   ========================= */
+const $ = (id)=>document.getElementById(id);
 
-// 25–30 required
-const QUESTION_COUNT = 28;
+let studentName = "";
+let startedAt = null;     // Date
+let endedAt = null;       // Date
+let timer = null;
 
-// prioritize: causality + skills + big units
-const CS_PRIORITY = new Set([
-  "CS 1 – Evaluating Source Credibility",
-  "CS 2 – Using Evidence to Form a Thesis",
-  "CS 3 – Cause, Effect, and Sequence Analysis",
-  "CS 8 – Rise of Industry & Technology",
-  "CS 9 – Labor, Unions & Laissez-Faire",
-  "CS 10 – Immigration, Migration & Urbanization",
-  "CS 14 – Rise as a World Power",
-  "CS 15 – Post-WWI Isolationism",
-  "CS 19 – Causes of the Great Depression & the New Deal",
-  "CS 20 – Shift from Isolation to World War II"
-]);
+let idx = 0;
+let correct = 0;
+let misses = 0;           // total incorrect clicks
+let lock = false;
 
-/* =========================
-   UTIL
-========================= */
-const LETTERS = ["A","B","C","D"];
+let order = [];           // question order (shuffled)
+let renderedChoices = []; // current shuffled choice objects [{text,isCorrect}]
+
+function fmt(d){
+  if(!d) return "—";
+  const pad = (n)=>String(n).padStart(2,"0");
+  const mm = pad(d.getMonth()+1);
+  const dd = pad(d.getDate());
+  const yy = d.getFullYear();
+  let h = d.getHours(); const ampm = h>=12 ? "PM":"AM";
+  h = h%12; if(h===0) h=12;
+  const mi = pad(d.getMinutes());
+  const se = pad(d.getSeconds());
+  return `${mm}/${dd}/${yy} ${h}:${mi}:${se} ${ampm}`;
+}
+function durMS(a,b){
+  const ms = Math.max(0, b-a);
+  const s = Math.floor(ms/1000);
+  const hh = Math.floor(s/3600);
+  const mm = Math.floor((s%3600)/60);
+  const ss = s%60;
+  const pad = (n)=>String(n).padStart(2,"0");
+  return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+}
+
 function shuffle(arr){
   const a = arr.slice();
   for(let i=a.length-1;i>0;i--){
@@ -307,425 +710,192 @@ function shuffle(arr){
   }
   return a;
 }
-function fmtElapsed(ms){
-  const s = Math.floor(ms/1000);
-  const m = Math.floor(s/60);
-  const r = s%60;
-  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
-}
-function dateOnly(){
-  return new Date().toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
-}
-function timeOnly(dt){
-  const d = dt ? new Date(dt) : new Date();
-  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
-}
-function safeId(){
-  return Math.random().toString(16).slice(2) + "-" + Date.now().toString(16);
-}
-
-/* =========================
-   BALANCED ANSWER SHUFFLE
-========================= */
-function buildBalancedSet(raw){
-  const counts = {A:0,B:0,C:0,D:0};
-  const built = raw.map(q=>{
-    const base = q.choices.map((txt, idx)=>({txt, isCorrect: idx===q.answerIndex}));
-    let s = shuffle(base);
-    let ci = s.findIndex(x=>x.isCorrect);
-
-    const min = Math.min(counts.A,counts.B,counts.C,counts.D);
-    const candidates = LETTERS.filter(L=>counts[L]===min);
-    const targetLetter = candidates[Math.floor(Math.random()*candidates.length)];
-    const targetIndex = LETTERS.indexOf(targetLetter);
-
-    if(ci !== targetIndex){
-      const tmp = s[targetIndex];
-      s[targetIndex] = s[ci];
-      s[ci] = tmp;
-      ci = targetIndex;
-    }
-    counts[targetLetter]++;
-
-    return {
-      cs: q.cs || q.tag || "CS aligned",
-      tag: q.tag || "OST-style • CS aligned",
-      stem: q.stem,
-      hint: q.hint || "Hint: Identify what caused the change and what effect followed.",
-      explain: q.explain || "",
-      choices: s.map(x=>x.txt),
-      answerIndex: ci
-    };
-  });
-
-  return shuffle(built);
-}
-
-/* =========================
-   PICK QUESTIONS (PRIORITIZE BANK)
-========================= */
-function pickQuestions(){
-  if(typeof AMSTUD_BANK === "undefined" || !Array.isArray(AMSTUD_BANK)){
-    throw new Error("AMSTUD_BANK not found. Make sure amstud_bank.js is in repo root and defines const AMSTUD_BANK = [...]");
-  }
-
-  // prioritize CS list
-  const prioritized = AMSTUD_BANK.filter(q => CS_PRIORITY.has(q.cs || q.tag));
-  const backup = AMSTUD_BANK.filter(q => !CS_PRIORITY.has(q.cs || q.tag));
-
-  const picked = [];
-  for(const q of shuffle(prioritized)){
-    if(picked.length >= QUESTION_COUNT) break;
-    // must be 4-choice MCQ
-    if(Array.isArray(q.choices) && q.choices.length === 4 && Number.isInteger(q.answerIndex)){
-      picked.push(q);
-    }
-  }
-  for(const q of shuffle(backup)){
-    if(picked.length >= QUESTION_COUNT) break;
-    if(Array.isArray(q.choices) && q.choices.length === 4 && Number.isInteger(q.answerIndex)){
-      picked.push(q);
-    }
-  }
-
-  if(picked.length < QUESTION_COUNT){
-    throw new Error(`Not enough usable questions in AMSTUD_BANK. Need ${QUESTION_COUNT}, found ${picked.length}.`);
-  }
-
-  return buildBalancedSet(picked);
-}
-
-/* =========================
-   STATE + STORAGE
-========================= */
-let state = null;
-let timer = null;
-
-function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-function load(){
-  try{
-    const raw = localStorage.getItem(KEY);
-    return raw ? JSON.parse(raw) : null;
-  }catch(_){ return null; }
-}
-function hardRestart(){
-  localStorage.removeItem(KEY);
-  window.location.reload();
-}
-
-/* =========================
-   DOM
-========================= */
-const elPlayerName = document.getElementById('playerName');
-const elElapsed = document.getElementById('elapsed');
-const elAcc = document.getElementById('acc');
-const elMisses = document.getElementById('misses');
-const elQpos = document.getElementById('qpos');
-const elStartStamp = document.getElementById('startStamp');
-const elEndStamp = document.getElementById('endStamp');
-const elDateStamp = document.getElementById('dateStamp');
-
-const gate = document.getElementById('gate');
-const game = document.getElementById('game');
-const startBtn = document.getElementById('startBtn');
-const nameInput = document.getElementById('nameInput');
-
-const qnum = document.getElementById('qnum');
-const tag = document.getElementById('tag');
-const stem = document.getElementById('stem');
-const choicesBox = document.getElementById('choices');
-const goodMsg = document.getElementById('goodMsg');
-const badMsg = document.getElementById('badMsg');
-const hintMsg = document.getElementById('hintMsg');
-
-const finish = document.getElementById('finish');
-const finName = document.getElementById('finName');
-const finDate = document.getElementById('finDate');
-const finStart = document.getElementById('finStart');
-const finEnd = document.getElementById('finEnd');
-const finElapsed = document.getElementById('finElapsed');
-const finAcc = document.getElementById('finAcc');
-const finMiss = document.getElementById('finMiss');
-const finResult = document.getElementById('finResult');
-
-const ticketBox = document.getElementById('ticketBox');
-const ticketText = document.getElementById('ticketText');
-const copyTicketBtn = document.getElementById('copyTicketBtn');
-const downloadTicketBtn = document.getElementById('downloadTicketBtn');
-
-document.getElementById('restartBtn').addEventListener('click', hardRestart);
-document.getElementById('restartBtn2').addEventListener('click', hardRestart);
-
-startBtn.addEventListener('click', ()=>{
-  const nm = (nameInput.value||"").trim();
-  if(!nm){
-    nameInput.focus();
-    hintMsg.className="msg warn";
-    hintMsg.style.display="block";
-    hintMsg.textContent="Name is required to start.";
-    return;
-  }
-  startNew(nm);
-});
-nameInput.addEventListener('keydown', (e)=>{ if(e.key==="Enter") startBtn.click(); });
-
-function startNew(name){
-  const bank = pickQuestions();
-  const startAt = Date.now();
-
-  state = {
-    version: `${GAME_CODE}_${VERSION}`,
-    game: "AmStud Game 1 — Cause & Effect (Mastery)",
-    gameCode: GAME_CODE,
-    sessionId: safeId(),
-    name,
-    startAt,
-    endAt: null,
-    idx: 0,
-    bank,
-    misses: 0,
-    attempts: 0,
-    wrongSet: {},
-    finished: false
-  };
-  save();
-  beginUI();
-}
-
-function beginUI(){
-  gate.style.display="none";
-  game.style.display="block";
-
-  elPlayerName.textContent = state.name || "—";
-  elDateStamp.textContent = dateOnly();
-  elStartStamp.textContent = timeOnly(state.startAt);
-  elEndStamp.textContent = "—";
-
-  if(timer) clearInterval(timer);
-  timer = setInterval(()=> elElapsed.textContent = fmtElapsed(Date.now()-state.startAt), 250);
-
-  render();
-}
 
 function computeAcc(){
-  const total = state.attempts;
-  const wrong = state.misses;
-  if(total===0) return "—";
-  const correct = total - wrong;
-  const pct = Math.round((correct/total)*1000)/10;
-  return `${pct}%`;
+  const totalClicks = correct + misses;
+  if(totalClicks === 0) return 100;
+  return (correct / totalClicks) * 100;
 }
 
-function resetMsgs(){
-  for(const el of [goodMsg,badMsg,hintMsg]){
-    el.style.display="none";
-    el.textContent="";
-  }
+function setAccUI(){
+  const a = computeAcc();
+  $("acc").textContent = `${a.toFixed(1)}%`;
+  $("correct").textContent = String(correct);
+  $("misses").textContent = String(misses);
 }
 
-function lockChoices(lock=true){
-  choicesBox.querySelectorAll('button.choice').forEach(b=>b.disabled = lock);
+function tickNow(){
+  $("now").textContent = fmt(new Date());
+}
+
+function startGame(){
+  // build shuffled order
+  order = shuffle(QUESTIONS.map((_,i)=>i));
+  idx = 0; correct = 0; misses = 0; lock = false;
+  startedAt = new Date(); endedAt = null;
+
+  $("student").textContent = studentName;
+  $("start").textContent = fmt(startedAt);
+  $("ticket").style.display = "none";
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+
+  setAccUI();
+  render();
+  tickNow();
+  if(timer) clearInterval(timer);
+  timer = setInterval(tickNow, 500);
 }
 
 function render(){
-  if(state.finished){ showFinish(); return; }
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+  lock = false;
 
-  const q = state.bank[state.idx];
-  resetMsgs();
+  const qIndex = order[idx];
+  const q = QUESTIONS[qIndex];
 
-  elMisses.textContent = String(state.misses);
-  elAcc.textContent = computeAcc();
-  elQpos.textContent = `${state.idx+1}/${state.bank.length}`;
+  $("qnum").textContent = `Question ${idx+1} / ${QUESTIONS.length}`;
+  $("skill").textContent = q.skill;
+  $("prompt").textContent = q.prompt;
 
-  qnum.textContent = `Question ${state.idx+1}`;
-  tag.textContent = q.cs || q.tag || "OST-style • CS aligned";
-  stem.textContent = q.stem;
+  const pct = ((idx)/QUESTIONS.length)*100;
+  $("pbar").style.width = `${pct}%`;
 
-  choicesBox.innerHTML = "";
-  q.choices.forEach((c, i)=>{
-    const btn = document.createElement('button');
-    btn.className = "choice";
-    btn.type = "button";
-    btn.textContent = `${LETTERS[i]}. ${c}`;
-    btn.addEventListener('click', ()=>choose(i));
-    choicesBox.appendChild(btn);
+  // shuffle choices each time, track correct
+  renderedChoices = shuffle(q.choices).map(t => ({ text: t, isCorrect: t === q.answer }));
+
+  const box = $("choices");
+  box.innerHTML = "";
+  renderedChoices.forEach((c)=>{
+    const div = document.createElement("div");
+    div.className = "choice";
+    div.textContent = c.text;
+    div.addEventListener("click", ()=>onPick(div, c, q));
+    box.appendChild(div);
   });
 }
 
-function choose(choiceIndex){
-  const q = state.bank[state.idx];
-  state.attempts += 1;
+function setChoicesLocked(locked){
+  [...$("choices").children].forEach(el=>{
+    if(locked) el.classList.add("locked");
+    else el.classList.remove("locked");
+  });
+}
 
-  const correct = (choiceIndex === q.answerIndex);
-  if(correct){
-    lockChoices(true);
-    goodMsg.className="msg good";
-    goodMsg.style.display="block";
-    goodMsg.textContent = "Correct. " + (q.explain || "");
+function onPick(el, choice, q){
+  if(lock) return;
 
-    save();
+  if(choice.isCorrect){
+    lock = true;
+    setChoicesLocked(true);
+    el.classList.add("correct");
+    correct++;
+    setAccUI();
+
+    $("goodMsg").style.display = "block";
+    $("badMsg").style.display = "none";
+
     setTimeout(()=>{
-      state.idx += 1;
-      if(state.idx >= state.bank.length){
-        finishGame();
+      idx++;
+      if(idx >= QUESTIONS.length){
+        finish();
       }else{
-        lockChoices(false);
-        save();
         render();
       }
-    }, 1800);
+    }, 650);
 
   }else{
-    if(!state.wrongSet[state.idx]){
-      state.wrongSet[state.idx] = true;
-      state.misses += 1;
-    }
-    badMsg.className="msg bad";
-    badMsg.style.display="block";
-    badMsg.textContent = "Not yet. A miss has been recorded. Use the hint, then try again.";
+    // count miss, show hint, allow re-try
+    misses++;
+    setAccUI();
 
-    hintMsg.className="msg warn";
-    hintMsg.style.display="block";
-    hintMsg.textContent = q.hint || "Hint: Identify what caused the change and what effect followed.";
-
-    save();
-    elMisses.textContent = String(state.misses);
-    elAcc.textContent = computeAcc();
+    el.classList.add("wrong");
+    $("hint").textContent = q.hint || "Re-read the prompt and eliminate options that don’t connect logically.";
+    $("badMsg").style.display = "block";
   }
 }
 
-function finishGame(){
-  state.finished = true;
-  state.endAt = Date.now();
-  save();
-  showFinish();
-}
-
-function buildTicketText(passed){
-  const total = state.attempts;
-  const wrong = state.misses;
-  const correct = total - wrong;
-  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
-
-  const lines = [
-    "LEGEND SUBMIT TICKET",
-    `Game: ${state.game}`,
-    `GameCode: ${state.gameCode}`,
-    `SessionID: ${state.sessionId}`,
-    "------------------------------",
-    `Name: ${state.name}`,
-    `Date: ${dateOnly()}`,
-    `Start: ${timeOnly(state.startAt)}`,
-    `End: ${timeOnly(state.endAt)}`,
-    `Elapsed: ${fmtElapsed(state.endAt - state.startAt)}`,
-    "------------------------------",
-    `Passed: ${passed ? "YES" : "NO"}`,
-    `Accuracy: ${pct}%`,
-    `Misses: ${state.misses}`,
-    `Attempts: ${state.attempts}`,
-  ];
-  return lines.join("\n");
-}
-
-function showFinish(){
+function finish(){
+  lock = true;
+  setChoicesLocked(true);
+  endedAt = new Date();
   if(timer) clearInterval(timer);
-  elEndStamp.textContent = timeOnly(state.endAt);
-  elAcc.textContent = computeAcc();
-  elMisses.textContent = String(state.misses);
 
-  finish.style.display="block";
-  finName.textContent = state.name || "—";
-  finDate.textContent = dateOnly();
-  finStart.textContent = timeOnly(state.startAt);
-  finEnd.textContent = timeOnly(state.endAt);
-  finElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
+  $("pbar").style.width = `100%`;
 
-  const total = state.attempts;
-  const wrong = state.misses;
-  const correct = total - wrong;
-  const pct = total===0 ? 0 : Math.round((correct/total)*1000)/10;
-  finAcc.textContent = `${pct}%`;
-  finMiss.textContent = String(state.misses);
+  const acc = computeAcc();
+  const passed = (misses === 0);
 
-  const passed = (state.misses===0);
+  const ticket =
+`AMERICAN STUDIES — OST MASTERY HUB
+Game: AmStud 1 — Cause & Effect (Mastery)
 
-  if(passed){
-    finResult.innerHTML = "<b style='color:var(--good)'>MASTERY ACHIEVED ✅ (0 misses)</b>";
-    // unlock ticket
-    ticketBox.style.display="block";
-    ticketText.value = buildTicketText(true);
-  }else{
-    finResult.innerHTML =
-      "<b style='color:var(--warn)'>Completed — Not Mastery</b>" +
-      "<div class='small'>Ticket locked. Hard Restart to try again for 0 misses.</div>";
-    ticketBox.style.display="none";
-    ticketText.value = "";
-  }
+Student: ${studentName}
+Passed: ${passed ? "YES (Mastery)" : "NO"}
+Accuracy: ${acc.toFixed(1)}%
+Correct: ${correct}
+Misses: ${misses}
 
-  lockChoices(true);
+Start: ${fmt(startedAt)}
+End:   ${fmt(endedAt)}
+Duration: ${durMS(startedAt, endedAt)}
+
+Reminder: Mastery requires 0 misses.`;
+
+  $("ticketText").textContent = ticket;
+  $("ticket").style.display = "block";
+
+  $("goodMsg").style.display = "block";
+  $("goodText").textContent = passed
+    ? "Mastery earned. Screenshot your ticket."
+    : "Not mastery. Hit Restart and go again for 100%.";
 }
 
-copyTicketBtn.addEventListener('click', async ()=>{
+function restart(){
+  startGame();
+}
+
+$("restartBtn").addEventListener("click", restart);
+
+$("copyBtn").addEventListener("click", async ()=>{
   try{
-    await navigator.clipboard.writeText(ticketText.value || "");
-    copyTicketBtn.textContent = "Copied ✅";
-    setTimeout(()=> copyTicketBtn.textContent = "Copy Ticket", 1200);
+    await navigator.clipboard.writeText($("ticketText").textContent);
+    $("copyBtn").textContent = "Copied!";
+    setTimeout(()=>$("copyBtn").textContent="Copy Ticket", 900);
   }catch(e){
-    alert("Copy failed on this browser. You can manually select/copy the ticket text.");
+    alert("Copy blocked by browser. Please screenshot instead.");
   }
 });
 
-downloadTicketBtn.addEventListener('click', ()=>{
-  const blob = new Blob([ticketText.value || ""], {type:"text/plain;charset=utf-8"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `ticket_${GAME_CODE}_${(state.name||"student").replace(/\s+/g,"_")}.txt`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
+// Name gate
+const gate = $("gate");
+const nameInput = $("nameInput");
+const beginBtn = $("beginBtn");
+
+function begin(){
+  const v = (nameInput.value || "").trim();
+  if(!v){
+    nameInput.focus();
+    return;
+  }
+  studentName = v;
+  localStorage.setItem("legend_amstud_student_name", studentName);
+  gate.style.display = "none";
+  startGame();
+}
+
+beginBtn.addEventListener("click", begin);
+nameInput.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter") begin();
 });
 
-/* =========================
-   BOOT (resume-safe + name-lock)
-========================= */
-(function boot(){
-  const existing = load();
-  if(existing && existing.version === `${GAME_CODE}_${VERSION}`){
-    state = existing;
-
-    // If name is missing (your lunch/close device issue), force re-entry.
-    if(!state.name || !String(state.name).trim()){
-      localStorage.removeItem(KEY);
-      gate.style.display="block";
-      game.style.display="none";
-      hintMsg.className="msg warn";
-      hintMsg.style.display="block";
-      hintMsg.textContent = "Name was missing in a saved session. Please restart and enter your name.";
-      return;
-    }
-
-    gate.style.display="none";
-    game.style.display="block";
-
-    elPlayerName.textContent = state.name;
-    elDateStamp.textContent = dateOnly();
-    elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
-    elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
-
-    if(!state.finished){
-      timer = setInterval(()=> elElapsed.textContent = fmtElapsed(Date.now()-state.startAt), 250);
-      render();
-    }else{
-      elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
-      showFinish();
-    }
-  }else{
-    gate.style.display="block";
-    game.style.display="none";
-  }
-})();
+// Prefill if available
+const saved = localStorage.getItem("legend_amstud_student_name");
+if(saved){
+  nameInput.value = saved;
+  nameInput.select();
+}
 </script>
 </body>
 </html>
