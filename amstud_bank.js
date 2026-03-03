@@ -898,7 +898,7 @@ const AMSTUD_BANK = [
     hint:"Think: more rights applied against states."
   },
 
-  /* =========================================================
+ /* =========================================================
      GAME 6 (G6) — Cause & Effect Chain (28)
      required:
        type:"cause-effect-chain"
@@ -1143,6 +1143,45 @@ const AMSTUD_BANK = [
     correctOrder:[0,1,2,3],
     hint:"Relocation changes local labor markets."
   },
+  {
+    id:"G6-019", tags:["G6"], type:"cause-effect-chain",
+    cs:"CS 5 — Popular Sovereignty",
+    prompt:"Trace how popular sovereignty shapes government decisions.",
+    chain:[
+      "Citizens hold political power and choose representatives",
+      "Public opinion and elections pressure officials",
+      "Elected officials respond through laws/policies or leadership changes",
+      "Government authority continues to rest on consent of the governed"
+    ],
+    correctOrder:[0,1,2,3],
+    hint:"Popular sovereignty = power comes from the people."
+  },
+  {
+    id:"G6-020", tags:["G6"], type:"cause-effect-chain",
+    cs:"CS 5 — Separation of Powers",
+    prompt:"Trace how separation of powers prevents power from concentrating.",
+    chain:[
+      "Constitution creates three branches with different roles",
+      "Each branch receives specific powers and responsibilities",
+      "No single branch can do everything alone",
+      "Power is dispersed to reduce the risk of tyranny"
+    ],
+    correctOrder:[0,1,2,3],
+    hint:"Different jobs for different branches keeps power split."
+  },
+  {
+    id:"G6-021", tags:["G6"], type:"cause-effect-chain",
+    cs:"CS 5 — Checks and Balances",
+    prompt:"Trace how checks and balances restrain government power.",
+    chain:[
+      "One branch proposes or takes an action",
+      "Another branch uses a constitutional power to review or limit it",
+      "The first branch must adjust, negotiate, or seek approval",
+      "Government power is restrained through shared authority"
+    ],
+    correctOrder:[0,1,2,3],
+    hint:"A check is one branch limiting another."
+  },
 
   // --- The 7 you asked to add explicitly (Federalism / N&P / 10th / Incorporation / 22 / 23 / 25) ---
   {
@@ -1250,48 +1289,6 @@ const AMSTUD_BANK = [
     correctOrder:[0,1,2,3],
     hint:"Succession rules prevent leadership gaps."
   },
-
-  // Fill missing IDs to ensure 28 total (we already have 18 + 7 = 25, add 3 more clean chains)
-  {
-    id:"G6-019", tags:["G6"], type:"cause-effect-chain",
-    cs:"CS 33 — Civil Rights Expansion",
-    prompt:"Trace how federal laws strengthened civil rights in the 1960s.",
-    chain:[
-      "Activism highlights discrimination and barriers",
-      "National attention increases political pressure",
-      "Congress passes Civil Rights Act and Voting Rights Act",
-      "Enforcement expands equal access and voting protections"
-    ],
-    correctOrder:[0,1,2,3],
-    hint:"Legislation + enforcement changed the system."
-  },
-  {
-    id:"G6-020", tags:["G6"], type:"cause-effect-chain",
-    cs:"CS 9 — Technology & Daily Life",
-    prompt:"Trace how new technology improved daily life in the early 1900s.",
-    chain:[
-      "New inventions spread (electric lighting, appliances)",
-      "Household tasks become faster and easier",
-      "Time use and daily routines shift",
-      "Standard of living improves for many households"
-    ],
-    correctOrder:[0,1,2,3],
-    hint:"Technology changes time and labor."
-  },
-  {
-    id:"G6-021", tags:["G6"], type:"cause-effect-chain",
-    cs:"CS 28 — Mass Media & Culture",
-    prompt:"Trace how mass media shaped culture after WWII.",
-    chain:[
-      "Television and radio reach mass audiences",
-      "People consume shared national programs and messages",
-      "Trends spread faster across regions",
-      "Shared culture and consumer patterns strengthen"
-    ],
-    correctOrder:[0,1,2,3],
-    hint:"Mass reach creates shared culture."
-  }
-];
 
 // Exports (do not remove)
 window.AMSTUD_BANK = AMSTUD_BANK;
