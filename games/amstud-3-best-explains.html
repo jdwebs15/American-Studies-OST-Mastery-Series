@@ -1,669 +1,682 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>AmStud Game 3 — Best Explains (Mastery)</title>
-  <link rel="stylesheet" href="../styles.css" />
-  <meta name="description" content="American Studies OST Mastery — Best Explains (0 misses required)" />
-
-  <!-- Load the shared bank (repo root) -->
-  <script src="../amstud_bank.js?v=1"></script>
-
   <style>
-    .gameWrap{ width:min(1100px,92vw); margin:26px auto; }
+    :root{
+      --bg:#0b1220;
+      --panel:#111a2f;
+      --text:#e7eefc;
+      --muted:#a8b4cf;
+      --line:rgba(255,255,255,.12);
+      --shadow:0 18px 55px rgba(0,0,0,.40);
+      --radius:18px;
+      --good:#2bd576;
+      --bad:#ff5c7a;
+      --warn:#ffd166;
+      --accent:#7aa2ff;
+      --chip:rgba(122,162,255,.14);
+      --chipLine:rgba(122,162,255,.28);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:radial-gradient(1200px 700px at 20% -10%, rgba(122,162,255,.22), transparent 55%),
+                 radial-gradient(900px 600px at 90% 0%, rgba(43,213,118,.10), transparent 55%),
+                 linear-gradient(180deg,#0b1220,#070b14);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    .wrap{width:min(1020px,92vw);margin:28px auto 40px;}
+    .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+    h1{font-size:22px;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:13px;line-height:1.35}
     .panel{
-      background:rgba(0,0,0,.18);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:18px;
+      padding:16px;
     }
-    .topbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:12px; }
-    .k{ letter-spacing:.18em; font-weight:800; color:var(--muted); font-size:12px; text-transform:uppercase; }
-    .stats{ display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
-    .pill2{
-      font-size:12px; color:var(--text);
-      background:rgba(255,255,255,.06);
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:8px 10px;
-      white-space:nowrap;
+    .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .chip{
+      border:1px solid var(--chipLine);
+      background:var(--chip);
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;color:var(--text);white-space:nowrap
     }
-    h1{ margin:6px 0 6px; font-size:26px; line-height:1.15; }
-    .sub{ margin:0; color:var(--muted); max-width:90ch; line-height:1.35; }
-
-    .err{
-      display:none;
-      margin:12px 0;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,92,122,.45);
-      background:rgba(255,92,122,.10);
-      color:var(--text);
-      white-space:pre-wrap;
-      text-align:left;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      font-size:12px;
-    }
-
-    .gate{
-      margin-top:12px;
-      display:block;
-    }
-    .gateRow{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    input[type="text"]{
-      flex:1;
-      min-width:220px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.22);
-      color:var(--text);
-      outline:none;
-    }
-    .btn{
-      appearance:none; border:1px solid var(--line);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .12s ease, border-color .12s ease, background .12s ease;
-    }
-    .btn:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.10); }
-    .btn.danger:hover{ border-color:rgba(255,92,122,.35); background:rgba(255,92,122,.10); }
-
-    .game{ display:none; margin-top:12px; }
-    .qbox{
-      margin-top:12px;
-      padding:14px;
-      border:1px solid var(--line);
-      border-radius:16px;
+    .chip strong{font-weight:800}
+    .row{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;align-items:stretch}
+    @media (max-width:880px){.row{grid-template-columns:1fr}}
+    .stats{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+    .stat{
       background:rgba(0,0,0,.18);
-    }
-    .qmeta{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:8px; }
-    .tag{
-      font-size:12px; color:var(--text);
-      background:rgba(0,0,0,.22);
       border:1px solid var(--line);
-      border-radius:999px;
-      padding:6px 10px;
-      white-space:nowrap;
+      border-radius:14px;
+      padding:10px 12px;
     }
-    .stem{ font-size:16px; font-weight:800; line-height:1.35; margin:8px 0 10px; }
+    .stat .k{color:var(--muted);font-size:12px;margin-bottom:4px}
+    .stat .v{font-family:var(--mono);font-size:13px}
+    .bar{
+      height:10px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;border:1px solid var(--line);
+    }
+    .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),rgba(43,213,118,.9))}
+    .qbox{padding:16px}
+    .qhead{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}
+    .qnum{font-family:var(--mono);font-size:13px;color:var(--muted)}
+    .skill{font-size:12px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.18)}
+    .prompt{font-size:16px;line-height:1.35;margin:10px 0 12px}
+    .choices{display:grid;gap:10px;margin-top:10px}
     .choice{
-  margin:10px 0;
-  padding:12px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.03);
-  cursor:pointer;
-  text-align:left;
-  transition:transform .08s ease, border-color .12s ease, background .12s ease;
-
-  color: var(--text) !important;
-}
-.choice b{ color: var(--text) !important; }
-    .choice:hover{ transform:translateY(-1px); border-color:rgba(122,162,255,.35); background:rgba(122,162,255,.08); }
-    .choice.lock{ cursor:not-allowed; opacity:.9; }
-    .choice.good{ border-color:rgba(43,213,118,.55); background:rgba(43,213,118,.10); }
-    .choice.bad{ border-color:rgba(255,92,122,.55); background:rgba(255,92,122,.10); }
-
-    .msg{
-      display:none;
-      margin-top:10px;
-      padding:10px 12px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.16);
       border-radius:14px;
+      padding:12px 12px;
+      cursor:pointer;
+      transition:transform .05s ease, border-color .15s ease, background .15s ease;
+      user-select:none;
+      display:flex;gap:10px;align-items:flex-start;
+    }
+    .choice:hover{border-color:rgba(122,162,255,.6);transform:translateY(-1px)}
+    .badge{
+      width:24px;height:24px;border-radius:8px;
+      border:1px solid var(--line);
+      display:grid;place-items:center;
+      font-family:var(--mono);font-size:12px;color:var(--muted);
+      flex:0 0 auto;
+      background:rgba(0,0,0,.18);
+    }
+    .choice.locked{cursor:not-allowed;opacity:.92}
+    .choice.correct{border-color:rgba(43,213,118,.75);background:rgba(43,213,118,.10)}
+    .choice.wrong{border-color:rgba(255,92,122,.75);background:rgba(255,92,122,.10)}
+    .msg{
+      margin-top:12px;border-radius:14px;border:1px solid var(--line);
+      padding:10px 12px;display:none;
+    }
+    .msg.bad{display:block;background:rgba(255,92,122,.10)}
+    .msg.good{display:block;background:rgba(43,213,118,.10)}
+    .msg .t{font-weight:800;margin-bottom:4px}
+    .footer{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:14px}
+    .btn{
       border:1px solid var(--line);
       background:rgba(0,0,0,.18);
-      color:var(--muted);
-      text-align:left;
+      color:var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:800;
+    }
+    .btn:hover{border-color:rgba(122,162,255,.6)}
+    .btn.primary{border-color:rgba(122,162,255,.65);background:rgba(122,162,255,.16)}
+    .ticket{
+      margin-top:14px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;display:none;
+    }
+    pre{
+      margin:10px 0 0;
+      white-space:pre-wrap;
+      background:rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px;
+      font-family:var(--mono);
+      font-size:12px;
       line-height:1.35;
     }
-    .msg.show{ display:block; }
-    .msg b{ color:var(--text); }
-
-    .finish{
-      display:none;
-      margin-top:12px;
-      padding:14px;
+    /* Name gate */
+    .gate{position:fixed;inset:0;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:20px}
+    .gateCard{
+      width:min(560px,94vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
       border:1px solid var(--line);
-      border-radius:16px;
-      background:rgba(0,0,0,.18);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:18px;
     }
-    textarea{
-      width:100%;
-      min-height:160px;
-      resize:vertical;
-      padding:12px;
-      border-radius:14px;
+    .gateCard h2{margin:0 0 8px;font-size:18px}
+    .gateCard p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.35}
+    .inrow{display:flex;gap:10px;flex-wrap:wrap}
+    input{
+      flex:1;min-width:240px;
       border:1px solid var(--line);
       background:rgba(0,0,0,.22);
       color:var(--text);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      font-size:12px;
-      margin-top:10px;
+      border-radius:14px;
+      padding:12px 12px;
+      outline:none;font-size:14px;
     }
-    .rowBtns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .tiny{ font-size:12px; color:var(--muted); margin-top:8px; }
+    input:focus{border-color:rgba(122,162,255,.7)}
   </style>
 </head>
 <body>
-  <div class="gameWrap">
-    <div class="panel">
-      <div class="topbar">
-        <div>
-          <div class="k">LEGEND MASTERY SERIES</div>
-          <h1>AmStud Game 3 — Best Explains (Mastery)</h1>
-          <p class="sub">Mastery = 0 misses. Wrong answer = hint → must answer correctly to move on (miss recorded).</p>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>AmStud Game 3 — Best Explains (Mastery)</h1>
+        <div class="sub">
+          Pick the answer that <strong>best explains</strong> an idea, relationship, policy, or historical consequence.
+          Auto-submit on click. Mastery requires <strong>0 misses</strong>.
         </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><strong>LIVE</strong></div>
+        <div class="chip">Best explains</div>
+        <div class="chip">Auto-submit</div>
+        <div class="chip">Auto-advance</div>
+        <div class="chip">Ticket: Name/Times/Accuracy</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="panel qbox">
+        <div class="qhead">
+          <div class="qnum" id="qnum">Question —</div>
+          <div class="skill" id="skill">Best Explains</div>
+        </div>
+
+        <div class="bar" aria-label="progress"><div id="pbar"></div></div>
+
+        <div class="prompt" id="prompt">—</div>
+        <div class="choices" id="choices"></div>
+
+        <div class="msg bad" id="badMsg">
+          <div class="t">Not yet.</div>
+          <div id="hint">—</div>
+        </div>
+        <div class="msg good" id="goodMsg">
+          <div class="t">Correct.</div>
+          <div id="goodText">Auto-advancing…</div>
+        </div>
+
+        <div class="footer">
+          <button class="btn" id="restartBtn" type="button">Restart</button>
+          <div class="qnum" id="note">Tip: one miss breaks Mastery. Restart and go again for 100%.</div>
+        </div>
+
+        <div class="ticket" id="ticket">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+            <div><strong>Submit Ticket</strong> (screenshot this)</div>
+            <button class="btn primary" id="copyBtn" type="button">Copy Ticket</button>
+          </div>
+          <pre id="ticketText"></pre>
+        </div>
+      </div>
+
+      <div class="panel">
         <div class="stats">
-          <div class="pill2">Player: <b id="playerName">—</b></div>
-          <div class="pill2">Elapsed: <b id="elapsed">00:00</b></div>
-          <div class="pill2">Accuracy: <b id="acc">—</b></div>
-          <div class="pill2">Misses: <b id="misses">0</b></div>
-          <div class="pill2"><b id="prog">0/0</b></div>
-          <button class="btn danger" id="hardRestart">Hard Restart</button>
-        </div>
-      </div>
-
-      <div class="tiny">Start: <b id="startStamp">—</b> · End: <b id="endStamp">—</b> · Date: <b id="dateStamp">—</b></div>
-
-      <div id="errBox" class="err"></div>
-
-      <div id="gate" class="gate">
-        <div class="qbox">
-          <div class="stem" style="margin:0 0 10px;">Enter your name to begin:</div>
-          <div class="gateRow">
-            <input id="nameInput" type="text" placeholder="e.g., dave" autocomplete="off" />
-            <button class="btn" id="startBtn">Start</button>
-          </div>
-          <div class="tiny">Tip: You must finish with 0 misses to unlock a mastery ticket.</div>
-        </div>
-      </div>
-
-      <div id="game" class="game">
-        <div class="qbox">
-          <div class="qmeta">
-            <div class="tag" id="csTag">CS —</div>
-            <div class="tag" id="typeTag">Best Explains</div>
-          </div>
-          <div class="stem" id="stem">—</div>
-
-          <div id="choices"></div>
-
-          <div id="msg" class="msg"></div>
+          <div class="stat"><div class="k">Student</div><div class="v" id="student">—</div></div>
+          <div class="stat"><div class="k">Accuracy</div><div class="v" id="acc">100.0%</div></div>
+          <div class="stat"><div class="k">Start</div><div class="v" id="start">—</div></div>
+          <div class="stat"><div class="k">Now</div><div class="v" id="now">—</div></div>
+          <div class="stat"><div class="k">Correct</div><div class="v" id="correct">0</div></div>
+          <div class="stat"><div class="k">Misses</div><div class="v" id="misses">0</div></div>
         </div>
 
-        <div id="finish" class="finish">
-          <div class="stem" style="margin:0;">Finish</div>
-          <div class="tiny" id="finishLine"></div>
-          <textarea id="ticket" readonly></textarea>
-          <div class="rowBtns">
-            <button class="btn" id="copyTicket">Copy Ticket</button>
-            <button class="btn" id="printTicket">Print</button>
-          </div>
-          <div class="tiny">If you didn’t earn mastery, use <b>Hard Restart</b> to reset and try again.</div>
+        <div style="margin-top:12px;color:var(--muted);font-size:12px;line-height:1.35">
+          <strong>Mastery:</strong> finish with <strong>0 misses</strong>.
+          Any incorrect click counts as a miss.
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="tiny" style="margin-top:10px;">
-        If the page ever “white screens,” the error box above will show where/why.
+  <!-- Name Gate -->
+  <div class="gate" id="gate" role="dialog" aria-modal="true">
+    <div class="gateCard">
+      <h2>Enter your name to begin</h2>
+      <p>Your name + timestamps + accuracy will appear on the final submit ticket.</p>
+      <div class="inrow">
+        <input id="nameInput" type="text" placeholder="First and last name" autocomplete="name"/>
+        <button class="btn primary" id="beginBtn" type="button">Begin</button>
       </div>
+      <p style="margin-top:10px;color:var(--muted);font-size:12px">
+        (If you close your device, refresh to restart clean.)
+      </p>
     </div>
   </div>
 
 <script>
 /* =========================
-   HARDENED SHELL + SAFETY
-========================= */
-(function(){
-  const errBox = document.getElementById('errBox');
-  window.addEventListener('error', (e)=>{
-    errBox.style.display='block';
-    errBox.textContent = "Runtime Error:\n" + (e?.message || e) + "\n" + (e?.filename || "") + ":" + (e?.lineno || "") + ":" + (e?.colno || "");
-  });
-  window.addEventListener('unhandledrejection', (e)=>{
-    errBox.style.display='block';
-    errBox.textContent = "Unhandled Promise Rejection:\n" + (e?.reason?.message || e?.reason || e);
-  });
-})();
-
-window.addEventListener('pageshow', (event) => {
-  if (event.persisted) window.location.reload();
-});
-
-(function(){
-  try{
-    history.replaceState({guard:1}, document.title, location.href);
-    window.addEventListener('popstate', ()=>{
-      history.pushState({guard:1}, document.title, location.href);
-    });
-  }catch(_){}
-})();
+   QUESTIONS (Embedded) — Best Explains
+   30 items (full-year spiral)
+   ========================= */
+const QUESTIONS = [
+  { id:1,  skill:"Founding ideals", prompt:"Which statement best explains the idea of popular sovereignty?", choices:[
+      "Government gets its authority from the people, who may change it through elections and law",
+      "The president may rule without limits during emergencies",
+      "Only landowners should vote because they pay taxes",
+      "Courts should write laws whenever Congress disagrees"
+    ], answer:0, hint:"Popular sovereignty = the people are the source of government power."
+  },
+  { id:2,  skill:"Declaration of Independence", prompt:"Which statement best explains the Declaration of Independence’s argument about government?", choices:[
+      "Government exists to protect rights and is legitimate only with the consent of the governed",
+      "Government is legitimate because kings inherit power",
+      "Government should prevent all criticism of leaders",
+      "Government must control religion to maintain order"
+    ], answer:0, hint:"Consent + rights protection are the core claims."
+  },
+  { id:3,  skill:"Federalism", prompt:"Which statement best explains federalism in the United States?", choices:[
+      "Power is divided between the national government and state governments",
+      "All power belongs to the states and the national government is optional",
+      "All power belongs to the national government and states have no authority",
+      "Power is held only by courts because judges are unelected"
+    ], answer:0, hint:"Federalism = shared/dual sovereignty between national and state levels."
+  },
+  { id:4,  skill:"Separation of powers", prompt:"Which statement best explains why the Constitution separates powers among branches?", choices:[
+      "To limit government by preventing any one branch from becoming too powerful",
+      "To make laws faster by allowing one person to decide everything",
+      "To eliminate conflict by requiring branches to always agree",
+      "To allow the military to veto elections"
+    ], answer:0, hint:"Separation of powers is a structural limit on power."
+  },
+  { id:5,  skill:"Checks and balances", prompt:"Which example best explains checks and balances?", choices:[
+      "Congress passes a law and the president vetoes it; Congress can override the veto",
+      "The president appoints all governors in every state",
+      "The Supreme Court writes the federal budget",
+      "The Senate commands the army directly"
+    ], answer:0, hint:"Checks and balances = branches restrain each other through specific powers."
+  },
+  { id:6,  skill:"Judicial review", prompt:"Which statement best explains the concept of judicial review?", choices:[
+      "Courts can declare laws unconstitutional if they conflict with the Constitution",
+      "Courts can create new taxes without Congress",
+      "Courts can command the president’s daily schedule",
+      "Courts can force states to rewrite their constitutions immediately"
+    ], answer:0, hint:"Judicial review = constitutional interpretation with power to invalidate laws."
+  },
+  { id:7,  skill:"Bill of Rights", prompt:"Which statement best explains why the Bill of Rights was added to the Constitution?", choices:[
+      "To protect individual liberties and limit the power of the federal government",
+      "To give the president unlimited power during war",
+      "To eliminate elections and political parties",
+      "To require citizens to join a national church"
+    ], answer:0, hint:"Bill of Rights = explicit protections for individuals."
+  },
+  { id:8,  skill:"Incorporation", prompt:"Which statement best explains the doctrine of incorporation?", choices:[
+      "The 14th Amendment applied many Bill of Rights protections to the states over time",
+      "The 10th Amendment eliminated all federal power",
+      "The 19th Amendment created the Electoral College",
+      "The 22nd Amendment guaranteed freedom of speech"
+    ], answer:0, hint:"Incorporation uses 14th Amendment due process to apply rights to states."
+  },
+  { id:9,  skill:"Industrialization", prompt:"Which statement best explains how industrialization changed the U.S. economy?", choices:[
+      "It shifted many workers from farms to factories and increased urban growth",
+      "It returned the nation to small-scale subsistence farming",
+      "It reduced the need for machines in production",
+      "It ended immigration and city growth"
+    ], answer:0, hint:"Industrialization = factory work + urbanization."
+  },
+  { id:10, skill:"Urbanization", prompt:"Which statement best explains a major challenge caused by rapid urbanization?", choices:[
+      "Cities grew faster than housing and sanitation systems could handle, causing overcrowding and disease",
+      "Cities became less crowded as more people returned to rural areas",
+      "Public transportation became unnecessary because people walked everywhere",
+      "Tenements disappeared because cities required single-family homes only"
+    ], answer:0, hint:"Urban growth outpaced infrastructure."
+  },
+  { id:11, skill:"Labor", prompt:"Which statement best explains why labor unions grew in the late 1800s?", choices:[
+      "Workers organized to demand safer conditions, higher wages, and shorter hours",
+      "Workers organized to increase child labor in factories",
+      "Workers organized to end elections and create dictatorships",
+      "Workers organized to remove all workplace rules and safety standards"
+    ], answer:0, hint:"Unions formed to improve conditions and bargaining power."
+  },
+  { id:12, skill:"Laissez-faire", prompt:"Which statement best explains laissez-faire policies toward business?", choices:[
+      "Government should limit regulation and allow markets to operate with minimal interference",
+      "Government should own all businesses and set all prices",
+      "Government should ban private property",
+      "Government should require every company to be a monopoly"
+    ], answer:0, hint:"Laissez-faire = minimal government intervention."
+  },
+  { id:13, skill:"Progressivism", prompt:"Which statement best explains the goal of Progressive Era reforms?", choices:[
+      "To address problems caused by industrialization, urbanization, and political corruption",
+      "To restore monarchy and end republican government",
+      "To end consumer protections and return to unsafe products",
+      "To expand child labor to increase profits"
+    ], answer:0, hint:"Progressives targeted corruption and social/economic harms."
+  },
+  { id:14, skill:"Muckrakers", prompt:"Which statement best explains why muckrakers were influential?", choices:[
+      "They exposed corruption and unsafe conditions, building public support for reform laws",
+      "They convinced Congress to abolish elections",
+      "They ended immigration through constitutional amendments",
+      "They successfully banned newspapers nationwide"
+    ], answer:0, hint:"Muckrakers = investigative journalists pushing reform."
+  },
+  { id:15, skill:"Women’s suffrage", prompt:"Which statement best explains the significance of the 19th Amendment?", choices:[
+      "It expanded democracy by guaranteeing women the right to vote nationwide",
+      "It created segregation in public schools",
+      "It limited presidential terms to two",
+      "It established freedom of the press"
+    ], answer:0, hint:"19th Amendment = women’s voting rights."
+  },
+  { id:16, skill:"WWI", prompt:"Which statement best explains a major reason the U.S. entered World War I?", choices:[
+      "German actions and diplomatic threats pushed the U.S. toward intervention to protect interests and security",
+      "The U.S. entered because Pearl Harbor was attacked",
+      "The U.S. entered to join the League of Nations immediately",
+      "The U.S. entered to end the Great Depression"
+    ], answer:0, hint:"WWI entry relates to German actions (not WWII events)."
+  },
+  { id:17, skill:"Isolationism", prompt:"Which statement best explains why many Americans favored isolationism after WWI?", choices:[
+      "They wanted to avoid future entanglements after the human and economic costs of war",
+      "They wanted to expand U.S. colonies in Europe",
+      "They believed the Constitution banned trade",
+      "They wanted to end all elections"
+    ], answer:0, hint:"War fatigue + fear of new foreign commitments."
+  },
+  { id:18, skill:"Great Depression", prompt:"Which statement best explains why the stock market crash worsened the Great Depression?", choices:[
+      "It destroyed wealth and confidence, reducing spending and investment and contributing to bank failures",
+      "It immediately increased wages and consumer spending",
+      "It ended bank failures by increasing deposits",
+      "It had no impact on businesses or employment"
+    ], answer:0, hint:"Crash → confidence falls → spending/investment drop → banks/businesses fail."
+  },
+  { id:19, skill:"New Deal", prompt:"Which statement best explains how the New Deal changed the federal government’s role?", choices:[
+      "It expanded federal involvement in providing relief and regulating parts of the economy",
+      "It eliminated all federal agencies permanently",
+      "It returned the nation to the Articles of Confederation",
+      "It ended taxes and government spending"
+    ], answer:0, hint:"New Deal = larger federal role in relief/reform."
+  },
+  { id:20, skill:"WWII mobilization", prompt:"Which statement best explains how WWII affected the U.S. economy?", choices:[
+      "War mobilization increased production and employment as factories shifted to wartime needs",
+      "War mobilization ended industrial production",
+      "War mobilization reduced employment by closing factories",
+      "War mobilization had no effect on production"
+    ], answer:0, hint:"Mobilization ramps up manufacturing and jobs."
+  },
+  { id:21, skill:"Cold War", prompt:"Which statement best explains the main cause of Cold War tensions?", choices:[
+      "Competing ideologies and distrust between the U.S. and the Soviet Union after WWII",
+      "A disagreement over the Stamp Act",
+      "The failure of the New Deal",
+      "Territorial conflict over the Louisiana Purchase"
+    ], answer:0, hint:"Ideological rivalry + postwar power struggle."
+  },
+  { id:22, skill:"Containment", prompt:"Which statement best explains the strategy of containment?", choices:[
+      "The U.S. sought to limit the spread of communism through alliances, aid, and diplomatic/military pressure",
+      "The U.S. sought to spread communism worldwide",
+      "The U.S. avoided all alliances and foreign involvement forever",
+      "The U.S. ended trade with every country"
+    ], answer:0, hint:"Containment = stop spread, not withdraw from the world."
+  },
+  { id:23, skill:"Civil Rights", prompt:"Which statement best explains the purpose of the Civil Rights Act of 1964?", choices:[
+      "To prohibit discrimination and segregation in many public settings and employment",
+      "To create Jim Crow laws nationwide",
+      "To limit voting rights to property owners",
+      "To end freedom of speech"
+    ], answer:0, hint:"1964 Act targeted discrimination and segregation."
+  },
+  { id:24, skill:"Voting Rights", prompt:"Which statement best explains the significance of the Voting Rights Act of 1965?", choices:[
+      "It targeted barriers like literacy tests and supported enforcement of voting rights",
+      "It ended women’s suffrage",
+      "It created the League of Nations",
+      "It established presidential term limits"
+    ], answer:0, hint:"1965 Act focuses on enforcing voting access."
+  },
+  { id:25, skill:"Immigration & urban life", prompt:"Which statement best explains why immigrants often formed ethnic neighborhoods in cities?", choices:[
+      "They sought community support, familiar language/culture, and job networks in a new environment",
+      "They were legally required to live only in one neighborhood",
+      "Cities banned cultural traditions and languages",
+      "They had no access to any jobs outside farming"
+    ], answer:0, hint:"Neighborhoods provided support and networks."
+  },
+  { id:26, skill:"Westward expansion", prompt:"Which statement best explains how the reservation system affected American Indians?", choices:[
+      "It restricted many tribes to limited lands and undermined traditional economic and cultural patterns",
+      "It guaranteed full tribal independence and expanded tribal lands",
+      "It ended all conflict by giving tribes control of all western territories",
+      "It eliminated federal involvement in Native affairs"
+    ], answer:0, hint:"Reservations often meant land loss and forced change."
+  },
+  { id:27, skill:"Reconstruction", prompt:"Which statement best explains the purpose of the Reconstruction Amendments?", choices:[
+      "To abolish slavery and extend citizenship and legal protections to formerly enslaved people",
+      "To create new colonies overseas",
+      "To establish a national church",
+      "To remove Congress from lawmaking"
+    ], answer:0, hint:"13th/14th/15th expand freedom, citizenship, and voting rights."
+  },
+  { id:28, skill:"Plessy & Jim Crow", prompt:"Which statement best explains the effect of Plessy v. Ferguson (1896)?", choices:[
+      "It upheld segregation by accepting ‘separate but equal,’ reinforcing Jim Crow policies",
+      "It ended segregation nationwide immediately",
+      "It created the 19th Amendment",
+      "It required school desegregation in 1954"
+    ], answer:0, hint:"Plessy upheld segregation; Brown later challenged it in education."
+  },
+  { id:29, skill:"Media & culture", prompt:"Which statement best explains how mass media affected American life in the early 20th century?", choices:[
+      "It spread ideas, culture, and advertising widely, shaping public opinion and consumer behavior",
+      "It eliminated communication across long distances",
+      "It ended political debate by banning newspapers",
+      "It reduced access to information for most people"
+    ], answer:0, hint:"Media expands reach of information and culture."
+  },
+  { id:30, skill:"Cause vs correlation", prompt:"Two trends rise together: car ownership and suburban growth. Which statement best explains the relationship?", choices:[
+      "Cars likely made commuting easier, helping suburban growth, though multiple factors also mattered",
+      "Suburbs caused the invention of cars",
+      "The trends prove the government forced people to move",
+      "The trends can never be related"
+    ], answer:0, hint:"Look for a plausible mechanism without claiming a single absolute cause."
+  }
+];
 
 /* =========================
-   CONFIG
-========================= */
-const GAME_ID = "AMSTUD_G3";
-const SESSION_KEY = "LEGEND_AMSTUD_G3_V1";
-const SEEN_KEY = "LEGEND_AMSTUD_G3_SEEN_V1";
-const QUESTION_COUNT = 28; // set to 25–30; requires enough in bank
+   ENGINE — Best Explains
+   ========================= */
+const $ = (id)=>document.getElementById(id);
 
-const LETTERS = ["A","B","C","D"];
+let studentName = "";
+let startedAt = null;
+let endedAt = null;
+let timer = null;
 
-function dateOnly(){
-  const d = new Date();
-  return d.toLocaleDateString([], {year:"numeric",month:"2-digit",day:"2-digit"});
+let idx = 0;
+let correct = 0;
+let misses = 0;
+let lock = false;
+
+let order = [];
+let rendered = []; // current shuffled choice texts
+
+function fmt(d){
+  if(!d) return "—";
+  const pad = (n)=>String(n).padStart(2,"0");
+  const mm = pad(d.getMonth()+1);
+  const dd = pad(d.getDate());
+  const yy = d.getFullYear();
+  let h = d.getHours(); const ampm = h>=12 ? "PM":"AM";
+  h = h%12; if(h===0) h=12;
+  const mi = pad(d.getMinutes());
+  const se = pad(d.getSeconds());
+  return `${mm}/${dd}/${yy} ${h}:${mi}:${se} ${ampm}`;
 }
-function timeOnly(dt){
-  const d = dt ? new Date(dt) : new Date();
-  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
-}
-function fmtElapsed(ms){
+function durMS(a,b){
+  const ms = Math.max(0, b-a);
   const s = Math.floor(ms/1000);
-  const m = Math.floor(s/60);
-  const r = s%60;
-  return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+  const hh = Math.floor(s/3600);
+  const mm = Math.floor((s%3600)/60);
+  const ss = s%60;
+  const pad = (n)=>String(n).padStart(2,"0");
+  return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
 }
 function shuffle(arr){
   const a = arr.slice();
   for(let i=a.length-1;i>0;i--){
     const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
+    [a[i],a[j]]=[a[j],a[i]];
   }
   return a;
 }
-function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
-
-function loadSeen(){
-  try{ return JSON.parse(localStorage.getItem(SEEN_KEY) || "[]"); }catch(_){ return []; }
+function computeAcc(){
+  const totalClicks = correct + misses;
+  if(totalClicks === 0) return 100;
+  return (correct / totalClicks) * 100;
 }
-function saveSeen(list){
-  localStorage.setItem(SEEN_KEY, JSON.stringify(list.slice(-500))); // cap
+function setAccUI(){
+  $("acc").textContent = `${computeAcc().toFixed(1)}%`;
+  $("correct").textContent = String(correct);
+  $("misses").textContent = String(misses);
 }
+function tickNow(){ $("now").textContent = fmt(new Date()); }
 
-function resetAll(){
-  localStorage.removeItem(SESSION_KEY);
-  // NOTE: keep SEEN by default so repeats are reduced; clear if you want.
-  location.reload();
-}
+function startGame(){
+  order = shuffle(QUESTIONS.map((_,i)=>i));
+  idx = 0; correct = 0; misses = 0; lock = false;
+  startedAt = new Date(); endedAt = null;
 
-/* =========================
-   BANK FILTER (Game 3)
-========================= */
-function isBestExplains(q){
-  const tag = (q.tag || "").toLowerCase();
-  const type = (q.type || "").toLowerCase();
-  const tags = Array.isArray(q.tags) ? q.tags.map(x=>String(x).toLowerCase()) : [];
-  return tag === "best explains"
-    || type === "best-explains"
-    || tags.includes("g3")
-    || tags.includes("best explains")
-    || tags.includes("best-explains");
-}
+  $("student").textContent = studentName;
+  $("start").textContent = fmt(startedAt);
+  $("ticket").style.display = "none";
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
 
-function normalizeToMCQ(q){
-  // Accept either:
-  //  - {stem, choices, answerIndex}
-  //  - {stem, choices, correctIndices:[i]} (we'll convert if single)
-  let answerIndex = Number.isInteger(q.answerIndex) ? q.answerIndex : null;
-  if(answerIndex === null && Array.isArray(q.correctIndices) && q.correctIndices.length === 1){
-    answerIndex = q.correctIndices[0];
-  }
-  if(answerIndex === null) return null;
-
-  if(!q.stem || !Array.isArray(q.choices) || q.choices.length !== 4) return null;
-  if(answerIndex < 0 || answerIndex > 3) return null;
-
-  return {
-    id: q.id || (q.cs || q.stem).slice(0,60),
-    cs: q.cs || `CS ${q.csNum || "?"}`,
-    csNum: q.csNum || null,
-    stem: q.stem,
-    choices: q.choices.slice(),
-    answerIndex,
-    hint: q.hint || "",
-    explain: q.explain || ""
-  };
+  setAccUI();
+  render();
+  tickNow();
+  if(timer) clearInterval(timer);
+  timer = setInterval(tickNow, 500);
 }
 
-function buildDeck(){
-  if(!window.AMSTUD_BANK) throw new Error("AMSTUD_BANK is not defined. Ensure ../amstud_bank.js is loaded before this script.");
-  if(!Array.isArray(window.AMSTUD_BANK)) throw new Error("AMSTUD_BANK is not an array.");
-
-  const seen = new Set(loadSeen());
-  const poolRaw = window.AMSTUD_BANK.filter(isBestExplains);
-  const pool = poolRaw.map(normalizeToMCQ).filter(Boolean);
-
-  // Prefer unseen items first
-  const unseen = pool.filter(q => !seen.has(q.id));
-  const fallback = pool.filter(q => seen.has(q.id));
-
-  const ordered = shuffle(unseen).concat(shuffle(fallback));
-  if(ordered.length < QUESTION_COUNT){
-    throw new Error(`Not enough usable questions for Game 3. Need ${QUESTION_COUNT}, found ${ordered.length}. Add more G3/Best Explains items to amstud_bank.js (choices must be 4, answerIndex 0–3).`);
-  }
-  const deck = ordered.slice(0, QUESTION_COUNT);
-
-  // Record as seen
-  deck.forEach(q => seen.add(q.id));
-  saveSeen(Array.from(seen));
-
-  return deck;
-}
-
-/* =========================
-   STATE
-========================= */
-let timer = null;
-let deck = [];
-let idx = 0;
-
-const state = {
-  name:"",
-  date:"",
-  startAt:null,
-  endAt:null,
-  correct:0,
-  wrong:0,
-  answered:0,
-  finished:false
-};
-
-function saveSession(){
-  localStorage.setItem(SESSION_KEY, JSON.stringify({state, idx, deck}));
-}
-function loadSession(){
-  try{
-    const raw = localStorage.getItem(SESSION_KEY);
-    if(!raw) return null;
-    return JSON.parse(raw);
-  }catch(_){ return null; }
-}
-
-/* =========================
-   UI HOOKS
-========================= */
-const elPlayerName = document.getElementById('playerName');
-const elElapsed = document.getElementById('elapsed');
-const elAcc = document.getElementById('acc');
-const elMisses = document.getElementById('misses');
-const elProg = document.getElementById('prog');
-const elStartStamp = document.getElementById('startStamp');
-const elEndStamp = document.getElementById('endStamp');
-const elDateStamp = document.getElementById('dateStamp');
-
-const gate = document.getElementById('gate');
-const game = document.getElementById('game');
-
-const nameInput = document.getElementById('nameInput');
-const startBtn = document.getElementById('startBtn');
-const hardRestart = document.getElementById('hardRestart');
-
-const csTag = document.getElementById('csTag');
-const stemEl = document.getElementById('stem');
-const choicesEl = document.getElementById('choices');
-const msgEl = document.getElementById('msg');
-
-const finishBox = document.getElementById('finish');
-const finishLine = document.getElementById('finishLine');
-const ticketEl = document.getElementById('ticket');
-const copyTicket = document.getElementById('copyTicket');
-const printTicket = document.getElementById('printTicket');
-
-function renderTop(){
-  elPlayerName.textContent = state.name || "—";
-  elDateStamp.textContent = state.date || dateOnly();
-  elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
-  elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
-  elMisses.textContent = String(state.wrong);
-
-  const total = state.correct + state.wrong;
-  const acc = total ? Math.round((state.correct/total)*100) : 0;
-  elAcc.textContent = total ? `${acc}%` : "—";
-
-  elProg.textContent = `${clamp(idx,0,deck.length)}/${deck.length || 0}`;
-}
-
-function lockChoices(lock=true){
-  choicesEl.querySelectorAll('.choice').forEach(btn=>{
-    if(lock) btn.classList.add('lock');
-    else btn.classList.remove('lock');
-    btn.disabled = !!lock;
+function setChoicesLocked(locked){
+  [...$("choices").children].forEach(el=>{
+    if(locked) el.classList.add("locked");
+    else el.classList.remove("locked");
   });
 }
 
-function makeChoiceButton(label, text, onClick){
-  const b = document.createElement('button');
-  b.className = "choice";
-  b.type = "button";
-  b.innerHTML = `<b>${label}.</b> ${text}`;
-  b.addEventListener('click', onClick);
-  return b;
-}
+function render(){
+  lock = false;
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
 
-function shuffleChoices(q){
-  // shuffle choices but keep correct mapping
-  const pairs = q.choices.map((t,i)=>({t,i}));
-  const shuffled = shuffle(pairs);
+  const qIndex = order[idx];
+  const q = QUESTIONS[qIndex];
 
-  const newChoices = shuffled.map(p=>p.t);
-  const newAnswerIndex = shuffled.findIndex(p=>p.i === q.answerIndex);
+  $("qnum").textContent = `Question ${idx+1} / ${QUESTIONS.length}`;
+  $("skill").textContent = q.skill || "Best Explains";
+  $("prompt").textContent = q.prompt;
 
-  return {...q, choices:newChoices, answerIndex:newAnswerIndex};
-}
+  $("pbar").style.width = `${(idx / QUESTIONS.length) * 100}%`;
 
-function renderQuestion(){
-  msgEl.className = "msg";
-  msgEl.textContent = "";
-  msgEl.style.display = "none";
+  const letters = ["A","B","C","D","E"];
+  rendered = shuffle(q.choices.map((t, i)=>({ t, i }))); // keep original index
+  const box = $("choices");
+  box.innerHTML = "";
 
-  const rawQ = deck[idx];
-  const q = shuffleChoices(rawQ);
-
-  // persist the shuffled version into deck so retries are consistent
-  deck[idx] = q;
-
-  csTag.textContent = q.cs || "CS —";
-  stemEl.textContent = q.stem;
-
-  choicesEl.innerHTML = "";
-  q.choices.forEach((c,i)=>{
-    const btn = makeChoiceButton(LETTERS[i], c, ()=>handleAnswer(i));
-    choicesEl.appendChild(btn);
+  rendered.forEach((c, pos)=>{
+    const div = document.createElement("div");
+    div.className = "choice";
+    const b = document.createElement("div");
+    b.className = "badge";
+    b.textContent = letters[pos] || "";
+    const t = document.createElement("div");
+    t.textContent = c.t;
+    div.appendChild(b);
+    div.appendChild(t);
+    div.addEventListener("click", ()=>onPick(div, c, q));
+    box.appendChild(div);
   });
-
-  renderTop();
-  saveSession();
 }
 
-function showMsg(html){
-  msgEl.style.display = "block";
-  msgEl.className = "msg show";
-  msgEl.innerHTML = html;
-}
+function onPick(el, c, q){
+  if(lock) return;
 
-function handleAnswer(choiceIdx){
-  if(state.finished) return;
+  if(c.i === q.answer){
+    lock = true;
+    setChoicesLocked(true);
+    el.classList.add("correct");
+    correct++;
+    setAccUI();
 
-  const q = deck[idx];
-  lockChoices(true);
-
-  const allBtns = choicesEl.querySelectorAll('.choice');
-  const correct = q.answerIndex;
-
-  if(choiceIdx === correct){
-    state.correct++;
-    state.answered++;
-    allBtns[choiceIdx].classList.add('good');
-
-    showMsg(`<b>Correct.</b> ${q.explain ? (" " + q.explain) : ""}`);
+    $("goodMsg").style.display = "block";
+    $("badMsg").style.display = "none";
 
     setTimeout(()=>{
       idx++;
-      lockChoices(false);
-
-      if(idx >= deck.length){
-        finish();
-      }else{
-        renderQuestion();
-      }
-    }, 1800);
+      if(idx >= QUESTIONS.length) finish();
+      else render();
+    }, 650);
 
   }else{
-    state.wrong++;
-    state.answered++;
-    allBtns[choiceIdx].classList.add('bad');
-    allBtns[correct].classList.add('good');
-
-    showMsg(`<b>Wrong.</b> Hint: <b>${q.hint || "Re-read the stem and pick the best explanation."}</b><br><span style="color:var(--muted)">${q.explain || ""}</span><br><b>You must select the correct answer to move on.</b>`);
-    // allow retry on same question
-    setTimeout(()=>{
-      lockChoices(false);
-    }, 250);
+    misses++;
+    setAccUI();
+    el.classList.add("wrong");
+    $("hint").textContent = q.hint || "Focus on the underlying principle and choose the option that explains WHY, not just WHAT happened.";
+    $("badMsg").style.display = "block";
   }
-
-  renderTop();
-  saveSession();
 }
 
 function finish(){
-  state.finished = true;
-  state.endAt = Date.now();
-  clearInterval(timer);
-  timer = null;
+  lock = true;
+  setChoicesLocked(true);
+  endedAt = new Date();
+  if(timer) clearInterval(timer);
 
-  const total = state.correct + state.wrong;
-  const acc = total ? Math.round((state.correct/total)*100) : 0;
-  const elapsedMs = state.endAt - state.startAt;
+  $("pbar").style.width = "100%";
 
-  const passed = (state.wrong === 0);
-  finishBox.style.display = "block";
-
-  finishLine.innerHTML = `Result: <b>${passed ? "MASTERED ✅" : "NOT MASTERED ❌"}</b> · Accuracy: <b>${acc}%</b> · Misses: <b>${state.wrong}</b> · Elapsed: <b>${fmtElapsed(elapsedMs)}</b>`;
+  const acc = computeAcc();
+  const passed = (misses === 0);
 
   const ticket =
-`LEGEND MASTERY TICKET
-Game: AmStud Game 3 — Best Explains (Mastery)
-Name: ${state.name}
-Date: ${state.date}
-Start: ${timeOnly(state.startAt)}
-End: ${timeOnly(state.endAt)}
-Elapsed: ${fmtElapsed(elapsedMs)}
-Passed: ${passed ? "YES" : "NO"}
-Accuracy: ${acc}%
-Misses: ${state.wrong}
-Questions: ${deck.length}
+`AMERICAN STUDIES — OST MASTERY HUB
+Game: AmStud 3 — Best Explains (Mastery)
 
-Teacher Notes:
-- Mastery requires 0 misses.
-- Wrong answers are recorded, then student must answer correctly to proceed.
-`;
-  ticketEl.value = ticket;
+Student: ${studentName}
+Passed: ${passed ? "YES (Mastery)" : "NO"}
+Accuracy: ${acc.toFixed(1)}%
+Correct: ${correct}
+Misses: ${misses}
 
-  renderTop();
-  saveSession();
+Start: ${fmt(startedAt)}
+End:   ${fmt(endedAt)}
+Duration: ${durMS(startedAt, endedAt)}
+
+Reminder: Mastery requires 0 misses.`;
+
+  $("ticketText").textContent = ticket;
+  $("ticket").style.display = "block";
+
+  $("goodMsg").style.display = "block";
+  $("goodText").textContent = passed
+    ? "Mastery earned. Screenshot your ticket."
+    : "Not mastery. Hit Restart and go again for 100%.";
 }
 
-function startGame(name){
-  state.name = (name || "").trim();
-  if(!state.name) throw new Error("Please enter a name.");
-  state.date = dateOnly();
-  state.startAt = Date.now();
-  state.endAt = null;
-  state.correct = 0;
-  state.wrong = 0;
-  state.answered = 0;
-  state.finished = false;
+function restart(){ startGame(); }
 
-  deck = buildDeck();
-  idx = 0;
+$("restartBtn").addEventListener("click", restart);
 
+$("copyBtn").addEventListener("click", async ()=>{
+  try{
+    await navigator.clipboard.writeText($("ticketText").textContent);
+    $("copyBtn").textContent = "Copied!";
+    setTimeout(()=>$("copyBtn").textContent="Copy Ticket", 900);
+  }catch(e){
+    alert("Copy blocked by browser. Please screenshot instead.");
+  }
+});
+
+// Name gate
+const gate = $("gate");
+const nameInput = $("nameInput");
+const beginBtn = $("beginBtn");
+
+function begin(){
+  const v = (nameInput.value || "").trim();
+  if(!v){ nameInput.focus(); return; }
+  studentName = v;
+  localStorage.setItem("legend_amstud_student_name", studentName);
   gate.style.display = "none";
-  game.style.display = "block";
-  finishBox.style.display = "none";
-
-  renderTop();
-  renderQuestion();
-
-  if(timer) clearInterval(timer);
-  timer = setInterval(()=>{
-    elElapsed.textContent = fmtElapsed(Date.now() - state.startAt);
-  }, 250);
-
-  saveSession();
+  startGame();
 }
+beginBtn.addEventListener("click", begin);
+nameInput.addEventListener("keydown", (e)=>{ if(e.key === "Enter") begin(); });
 
-/* =========================
-   EVENTS
-========================= */
-startBtn.addEventListener('click', ()=>{
-  startGame(nameInput.value);
-});
-nameInput.addEventListener('keydown', (e)=>{
-  if(e.key === "Enter") startGame(nameInput.value);
-});
-hardRestart.addEventListener('click', ()=>{
-  if(confirm("Hard Restart will reset this game attempt. Continue?")) resetAll();
-});
-
-copyTicket.addEventListener('click', async ()=>{
-  try{
-    await navigator.clipboard.writeText(ticketEl.value);
-    alert("Ticket copied.");
-  }catch(_){
-    ticketEl.select();
-    document.execCommand("copy");
-    alert("Ticket copied.");
-  }
-});
-printTicket.addEventListener('click', ()=>{
-  const w = window.open("", "_blank");
-  w.document.write(`<pre style="font-family: ui-monospace, Menlo, Consolas, monospace; white-space:pre-wrap;">${ticketEl.value.replace(/</g,"&lt;")}</pre>`);
-  w.document.close();
-  w.focus();
-  w.print();
-});
-
-/* =========================
-   RESUME
-========================= */
-(function resume(){
-  const saved = loadSession();
-  if(!saved) return;
-
-  try{
-    if(saved?.state?.name && saved?.deck?.length){
-      Object.assign(state, saved.state);
-      deck = saved.deck;
-      idx = saved.idx || 0;
-
-      gate.style.display = state.finished ? "none" : "none";
-      game.style.display = "block";
-
-      renderTop();
-
-      if(state.finished){
-        elElapsed.textContent = fmtElapsed(state.endAt - state.startAt);
-        finishBox.style.display = "block";
-        // regenerate finish ticket quickly
-        finish();
-      }else{
-        finishBox.style.display = "none";
-        renderQuestion();
-        if(timer) clearInterval(timer);
-        timer = setInterval(()=>{
-          elElapsed.textContent = fmtElapsed(Date.now() - state.startAt);
-        }, 250);
-      }
-    }
-  }catch(_){
-    localStorage.removeItem(SESSION_KEY);
-  }
-})();
+const saved = localStorage.getItem("legend_amstud_student_name");
+if(saved){
+  nameInput.value = saved;
+  nameInput.select();
+}
 </script>
 </body>
 </html>
