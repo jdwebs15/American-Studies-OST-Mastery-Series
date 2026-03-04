@@ -1,0 +1,949 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AmStud Game 7 — OST Simulation Mixer (Mastery)</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#111a2f;
+      --panel2:#0f1730;
+      --text:#e7eefc;
+      --muted:#a8b4cf;
+      --line:rgba(255,255,255,.12);
+      --shadow:0 18px 55px rgba(0,0,0,.40);
+      --radius:18px;
+      --good:#2bd576;
+      --bad:#ff5c7a;
+      --warn:#ffd166;
+      --accent:#7aa2ff;
+      --chip:rgba(122,162,255,.14);
+      --chipLine:rgba(122,162,255,.28);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:radial-gradient(1200px 700px at 20% -10%, rgba(122,162,255,.22), transparent 55%),
+                 radial-gradient(900px 600px at 90% 0%, rgba(43,213,118,.10), transparent 55%),
+                 linear-gradient(180deg,#0b1220,#070b14);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    .wrap{width:min(1100px,92vw);margin:28px auto 40px;}
+    .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+    h1{font-size:22px;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:13px;line-height:1.35}
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .chip{
+      border:1px solid var(--chipLine);
+      background:var(--chip);
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;color:var(--text);white-space:nowrap
+    }
+    .chip strong{font-weight:800}
+    .row{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;align-items:stretch}
+    @media (max-width:980px){.row{grid-template-columns:1fr}}
+
+    .stats{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+    .stat{
+      background:rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .stat .k{color:var(--muted);font-size:12px;margin-bottom:4px}
+    .stat .v{font-family:var(--mono);font-size:13px}
+
+    .bar{
+      height:10px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;border:1px solid var(--line);
+      margin-top:8px;
+    }
+    .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),rgba(43,213,118,.9))}
+
+    .qhead{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .qnum{font-family:var(--mono);font-size:13px;color:var(--muted)}
+    .skill{font-size:12px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.18)}
+
+    .stim{
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background:linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
+      border-radius:16px;
+      padding:12px;
+    }
+    .stim .label{
+      display:inline-flex;gap:8px;align-items:center;
+      font-size:12px;color:var(--muted);
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      padding:4px 8px;border-radius:999px;
+      font-family:var(--mono);
+      margin-bottom:8px;
+    }
+    .stim p{margin:8px 0;color:var(--text);line-height:1.4;font-size:13px}
+    .miniTable{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      margin-top:10px;
+      font-size:13px;
+    }
+    .miniTable th,.miniTable td{
+      padding:10px 10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      border-right:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.14);
+      vertical-align:top;
+    }
+    .miniTable th{color:var(--muted);font-weight:800;background:rgba(0,0,0,.20)}
+    .miniTable tr:last-child td{border-bottom:none}
+    .miniTable td:last-child,.miniTable th:last-child{border-right:none}
+
+    .prompt{font-size:16px;line-height:1.35;margin:12px 0 8px}
+    .rule{
+      font-size:12px;color:var(--muted);
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:14px;padding:8px 10px;background:rgba(0,0,0,.14);
+      margin-bottom:10px;
+    }
+
+    .choices{display:grid;gap:10px;margin-top:10px}
+    .choice{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.16);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      transition:transform .05s ease, border-color .15s ease, background .15s ease;
+      user-select:none;
+      display:flex;gap:10px;align-items:flex-start;
+    }
+    .choice:hover{border-color:rgba(122,162,255,.6);transform:translateY(-1px)}
+    .choice .badge{
+      width:26px;height:26px;border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      display:grid;place-items:center;
+      font-family:var(--mono);font-size:12px;color:var(--muted);
+      background:rgba(0,0,0,.18);
+      flex:0 0 auto;
+    }
+    .choice.selected{
+      border-color:rgba(255,209,102,.85);
+      background:rgba(255,209,102,.10);
+    }
+    .choice.correctFlash{
+      border-color:rgba(43,213,118,.70);
+      background:rgba(43,213,118,.10);
+    }
+    .choice.wrongFlash{
+      border-color:rgba(255,92,122,.70);
+      background:rgba(255,92,122,.10);
+    }
+
+    .msg{
+      margin-top:12px;border-radius:14px;border:1px solid var(--line);
+      padding:10px 12px;display:none;
+    }
+    .msg.bad{display:block;background:rgba(255,92,122,.10)}
+    .msg.good{display:block;background:rgba(43,213,118,.10)}
+    .msg .t{font-weight:900;margin-bottom:4px}
+
+    .controls{
+      margin-top:12px;
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    }
+    .btn{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .btn:hover{border-color:rgba(122,162,255,.6)}
+    .btn.primary{border-color:rgba(122,162,255,.65);background:rgba(122,162,255,.16)}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .ticket{
+      margin-top:14px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;display:none;
+    }
+    pre{
+      margin:10px 0 0;
+      white-space:pre-wrap;
+      background:rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px;
+      font-family:var(--mono);
+      font-size:12px;
+      line-height:1.35;
+    }
+
+    /* Name gate */
+    .gate{position:fixed;inset:0;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:20px}
+    .gateCard{
+      width:min(560px,94vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .gateCard h2{margin:0 0 8px;font-size:18px}
+    .gateCard p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.35}
+    .inrow{display:flex;gap:10px;flex-wrap:wrap}
+    input{
+      flex:1;min-width:240px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px 12px;
+      outline:none;font-size:14px;
+    }
+    input:focus{border-color:rgba(122,162,255,.7)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>AmStud Game 7 — OST Simulation Mixer (Mastery)</h1>
+        <div class="sub">
+          Mixed OST-style items (MCQ + Select-Two) with short stimuli. Auto-submit on selection.
+          Mastery requires <strong>0 misses</strong>. Wrong = hint + retry.
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><strong>LIVE</strong></div>
+        <div class="chip">MCQ + Select-Two</div>
+        <div class="chip">Stimulus passages</div>
+        <div class="chip">Tight distractors</div>
+        <div class="chip">100% required</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="panel">
+        <div class="qhead">
+          <div class="qnum" id="qnum">Item —</div>
+          <div class="skill" id="skill">Simulation Mixer</div>
+        </div>
+        <div class="bar"><div id="pbar"></div></div>
+
+        <div id="stimWrap" class="stim" style="display:none"></div>
+
+        <div class="prompt" id="prompt">—</div>
+        <div class="rule" id="rule">MCQ: click one answer. Select-Two: choose two; auto-check when you select the second.</div>
+
+        <div class="choices" id="choices"></div>
+
+        <div class="msg bad" id="badMsg">
+          <div class="t">Not yet.</div>
+          <div id="hint">—</div>
+        </div>
+        <div class="msg good" id="goodMsg">
+          <div class="t">Correct.</div>
+          <div id="goodText">Auto-advancing…</div>
+        </div>
+
+        <div class="controls">
+          <button class="btn" id="restartBtn" type="button">Restart</button>
+          <div class="qnum" id="note">Tip: one miss breaks Mastery. Restart and go again for 100%.</div>
+        </div>
+
+        <div class="ticket" id="ticket">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+            <div><strong>Submit Ticket</strong> (screenshot this)</div>
+            <button class="btn primary" id="copyBtn" type="button">Copy Ticket</button>
+          </div>
+          <pre id="ticketText"></pre>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="stats">
+          <div class="stat"><div class="k">Student</div><div class="v" id="student">—</div></div>
+          <div class="stat"><div class="k">Accuracy</div><div class="v" id="acc">100.0%</div></div>
+          <div class="stat"><div class="k">Start</div><div class="v" id="start">—</div></div>
+          <div class="stat"><div class="k">Now</div><div class="v" id="now">—</div></div>
+          <div class="stat"><div class="k">Correct Items</div><div class="v" id="correct">0</div></div>
+          <div class="stat"><div class="k">Misses</div><div class="v" id="misses">0</div></div>
+        </div>
+
+        <div style="margin-top:12px;color:var(--muted);font-size:12px;line-height:1.35">
+          <strong>Mastery rules:</strong><br/>
+          • You must answer every item correctly to finish.<br/>
+          • Wrong click = <strong>1 miss</strong> + hint, then you retry the same item.<br/>
+          • Ticket includes name + timestamps + accuracy.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Name Gate -->
+  <div class="gate" id="gate" role="dialog" aria-modal="true">
+    <div class="gateCard">
+      <h2>Enter your name to begin</h2>
+      <p>Your name + timestamps + accuracy will appear on the final submit ticket.</p>
+      <div class="inrow">
+        <input id="nameInput" type="text" placeholder="First and last name" autocomplete="name"/>
+        <button class="btn primary" id="beginBtn" type="button">Begin</button>
+      </div>
+      <p style="margin-top:10px;color:var(--muted);font-size:12px">
+        (If you close your device, refresh to restart clean.)
+      </p>
+    </div>
+  </div>
+
+<script>
+/* =========================================================
+   QUESTIONS (Embedded) — OST Simulation Mixer
+   - Types: "mcq" (single) or "select2" (two correct)
+   - Optional stimulus: { kind:"passage"|"table", label, html }
+   ========================================================= */
+const QUESTIONS = [
+  {
+    id:1, type:"mcq", skill:"Cause & Effect",
+    stimulus:{kind:"passage", label:"Short Passage",
+      html:`<p>During the late 1800s, many factories hired workers for long hours at low pay. As cities grew, housing and sanitation often failed to keep up.</p>`},
+    prompt:"Which outcome best matches the passage?",
+    choices:[
+      "Urban overcrowding and public health problems increased.",
+      "Most workers returned to rural farms to avoid city life.",
+      "Government eliminated immigration through a new constitutional amendment.",
+      "Factory output decreased because machines replaced labor."
+    ],
+    answer:[0],
+    hint:"Look for how rapid industrial city growth affects living conditions."
+  },
+  {
+    id:2, type:"mcq", skill:"Vocabulary in Context",
+    prompt:"Which term best describes a policy of minimal government regulation of business?",
+    choices:["Laissez-faire","Mercantilism","Judicial review","Incorporation"],
+    answer:[0],
+    hint:"This is the idea of “hands off” government in the economy."
+  },
+  {
+    id:3, type:"select2", skill:"Multiple Causation",
+    prompt:"Select TWO factors that helped increase American industrial production in the late 1800s.",
+    choices:[
+      "New technologies and mechanization",
+      "Access to natural resources (coal, iron, oil)",
+      "A return to subsistence farming",
+      "A decrease in transportation networks"
+    ],
+    answer:[0,1],
+    hint:"Think machines + raw materials."
+  },
+  {
+    id:4, type:"mcq", skill:"Policy Impact",
+    prompt:"Which law encouraged westward settlement by offering land to settlers who met conditions?",
+    choices:["Homestead Act","Dawes Act","Pendleton Act","Kellogg-Briand Pact"],
+    answer:[0],
+    hint:"It offered land to settlers who lived on and improved it."
+  },
+  {
+    id:5, type:"mcq", skill:"Turning Point",
+    stimulus:{kind:"passage", label:"Scenario",
+      html:`<p>A Supreme Court ruling overturns a long-standing policy and sparks new activism and federal laws.</p>`},
+    prompt:"Which example best fits this scenario?",
+    choices:[
+      "Brown v. Board of Education leading to civil rights legislation",
+      "Marbury v. Madison creating the Articles of Confederation",
+      "The Neutrality Acts causing U.S. entry into WWI",
+      "The Dawes Act ending the Great Depression"
+    ],
+    answer:[0],
+    hint:"Think: schools + desegregation + later federal laws."
+  },
+  {
+    id:6, type:"mcq", skill:"Reconstruction",
+    prompt:"Which amendment established citizenship and promised due process and equal protection?",
+    choices:["13th Amendment","14th Amendment","15th Amendment","19th Amendment"],
+    answer:[1],
+    hint:"It defines citizenship and includes due process/equal protection."
+  },
+  {
+    id:7, type:"select2", skill:"Evidence → Conclusion",
+    stimulus:{kind:"passage", label:"Primary Source (Short)",
+      html:`<p>“We hold these truths to be self-evident… that all men are created equal… endowed with certain unalienable Rights…”</p>`},
+    prompt:"Select TWO ideas directly supported by the excerpt.",
+    choices:[
+      "Natural rights exist before government.",
+      "Government can be changed if it violates rights.",
+      "States must surrender all powers to the national government.",
+      "A strong monarchy best protects liberty."
+    ],
+    answer:[0,1],
+    hint:"Declaration logic: rights exist, and people can alter a rights-violating government."
+  },
+  {
+    id:8, type:"mcq", skill:"Labor",
+    prompt:"Which action best describes a strike?",
+    choices:[
+      "Workers stop working to pressure employers",
+      "Workers move to cities for factory jobs",
+      "Businesses merge to form a trust",
+      "Congress passes a constitutional amendment"
+    ],
+    answer:[0],
+    hint:"It’s a work stoppage used as leverage."
+  },
+  {
+    id:9, type:"mcq", skill:"Progressivism",
+    prompt:"Which goal best matches Progressive Era reforms?",
+    choices:[
+      "Reduce corruption and improve consumer/worker protections",
+      "End all regulation of business",
+      "Restore slavery in former Confederate states",
+      "Create isolationism by joining the League of Nations"
+    ],
+    answer:[0],
+    hint:"Think: reforms to fix problems from industrial capitalism and corruption."
+  },
+  {
+    id:10, type:"mcq", skill:"WWI",
+    prompt:"Which event is most directly linked to U.S. entry into World War I?",
+    choices:[
+      "Unrestricted submarine warfare and threats to U.S. shipping",
+      "The Emancipation Proclamation",
+      "The Berlin Airlift",
+      "The Louisiana Purchase"
+    ],
+    answer:[0],
+    hint:"German naval policy threatened ships and U.S. interests."
+  },
+  {
+    id:11, type:"mcq", skill:"Isolationism",
+    prompt:"Which choice best explains why the U.S. did not join the League of Nations?",
+    choices:[
+      "Many senators feared foreign entanglements and loss of independence",
+      "The League required slavery in member nations",
+      "The League outlawed elections in member nations",
+      "The League controlled U.S. state governments directly"
+    ],
+    answer:[0],
+    hint:"Key concern: entangling alliances and sovereignty."
+  },
+  {
+    id:12, type:"mcq", skill:"Great Depression",
+    prompt:"Which factor contributed to the Great Depression?",
+    choices:[
+      "Stock market speculation and collapse",
+      "Massive increases in wages for all workers",
+      "Elimination of consumer debt",
+      "The end of international trade permanently"
+    ],
+    answer:[0],
+    hint:"Think: risky investing + crash."
+  },
+  {
+    id:13, type:"mcq", skill:"New Deal",
+    prompt:"Which statement best describes the long-term impact of the New Deal?",
+    choices:[
+      "It expanded the federal government’s role in the economy and social welfare",
+      "It eliminated all federal regulation of business",
+      "It ended the Constitution’s separation of powers",
+      "It abolished private property"
+    ],
+    answer:[0],
+    hint:"The federal government took a larger role during/after the crisis."
+  },
+  {
+    id:14, type:"mcq", skill:"WWII",
+    prompt:"Which event most directly caused the United States to enter World War II?",
+    choices:["Attack on Pearl Harbor","Sinking of the Lusitania","Treaty of Versailles","Spanish-American War"],
+    answer:[0],
+    hint:"This attack triggered a declaration of war."
+  },
+  {
+    id:15, type:"select2", skill:"Economic Mobilization",
+    prompt:"Select TWO examples of U.S. wartime mobilization during World War II.",
+    choices:[
+      "Factories converting to produce tanks/planes",
+      "Rationing consumer goods like gasoline and rubber",
+      "A return to cottage industry to reduce output",
+      "Ending all federal taxes"
+    ],
+    answer:[0,1],
+    hint:"Mobilization = production shift + conservation."
+  },
+  {
+    id:16, type:"mcq", skill:"Cold War",
+    prompt:"Which term describes the U.S. strategy to limit the spread of communism?",
+    choices:["Containment","Nativism","Appeasement","Secession"],
+    answer:[0],
+    hint:"It aimed to stop expansion without necessarily attacking directly."
+  },
+  {
+    id:17, type:"mcq", skill:"Civil Rights",
+    prompt:"Which law most directly targeted barriers to voting such as literacy tests?",
+    choices:["Voting Rights Act of 1965","Sherman Antitrust Act","Social Security Act","Neutrality Acts"],
+    answer:[0],
+    hint:"It strengthened enforcement of voting protections."
+  },
+  {
+    id:18, type:"mcq", skill:"Reconstruction Era",
+    prompt:"Which decision upheld the idea of “separate but equal” before later challenges?",
+    choices:["Plessy v. Ferguson","Brown v. Board","Gibbons v. Ogden","Dred Scott v. Sandford"],
+    answer:[0],
+    hint:"It approved segregation under the “separate but equal” doctrine."
+  },
+  {
+    id:19, type:"select2", skill:"Federalism",
+    prompt:"Select TWO statements that correctly describe federalism.",
+    choices:[
+      "Power is divided between national and state governments",
+      "Both levels can influence policy through funding and standards",
+      "All power is held only by the national government",
+      "States are banned from passing any laws"
+    ],
+    answer:[0,1],
+    hint:"Federalism = shared/dual power; overlap can create cooperation or conflict."
+  },
+  {
+    id:20, type:"mcq", skill:"Civics",
+    prompt:"Which branch of government is primarily responsible for interpreting laws and the Constitution?",
+    choices:["Judicial","Legislative","Executive","Bureaucratic"],
+    answer:[0],
+    hint:"Courts interpret and resolve constitutional disputes."
+  },
+  {
+    id:21, type:"mcq", skill:"Incorporation",
+    prompt:"The doctrine of incorporation most directly refers to what change in U.S. government?",
+    choices:[
+      "Applying parts of the Bill of Rights to state governments through the 14th Amendment",
+      "Removing the Bill of Rights from the Constitution",
+      "Allowing states to ignore federal court rulings",
+      "Ending elections for federal offices"
+    ],
+    answer:[0],
+    hint:"Think: 14th Amendment + rights applied to the states over time."
+  },
+  {
+    id:22, type:"mcq", skill:"Amendments",
+    prompt:"Which amendment limits a president to two elected terms?",
+    choices:["22nd Amendment","23rd Amendment","24th Amendment","25th Amendment"],
+    answer:[0],
+    hint:"It was adopted after concerns about multiple-term presidencies."
+  },
+  {
+    id:23, type:"mcq", skill:"Amendments",
+    prompt:"Which amendment granted Washington, D.C. electors in presidential elections?",
+    choices:["23rd Amendment","22nd Amendment","19th Amendment","26th Amendment"],
+    answer:[0],
+    hint:"D.C. gains Electoral College participation."
+  },
+  {
+    id:24, type:"mcq", skill:"Amendments",
+    prompt:"Which amendment establishes procedures for presidential succession and disability?",
+    choices:["25th Amendment","24th Amendment","10th Amendment","15th Amendment"],
+    answer:[0],
+    hint:"It clarifies replacement and temporary transfer of power."
+  },
+  {
+    id:25, type:"mcq", skill:"10th Amendment",
+    prompt:"The 10th Amendment is best described as:",
+    choices:[
+      "Reserving powers not delegated to the federal government to the states or the people",
+      "Creating the Electoral College",
+      "Guaranteeing freedom of speech",
+      "Establishing the Supreme Court"
+    ],
+    answer:[0],
+    hint:"If it’s not given to the national government, it’s reserved."
+  },
+  {
+    id:26, type:"mcq", skill:"Necessary & Proper",
+    prompt:"The Necessary and Proper Clause is significant because it:",
+    choices:[
+      "Allows Congress to pass laws needed to carry out its enumerated powers",
+      "Eliminates the need for Congress to follow the Constitution",
+      "Gives states complete control over foreign policy",
+      "Ends judicial review"
+    ],
+    answer:[0],
+    hint:"It supports implied powers used to execute listed powers."
+  },
+  {
+    id:27, type:"mcq", skill:"Native Policy",
+    prompt:"Which policy attempted to break up tribal lands into individual allotments and sell “surplus” land?",
+    choices:["Dawes Act","Homestead Act","GI Bill","Monroe Doctrine"],
+    answer:[0],
+    hint:"Allotment policy tied to assimilation."
+  },
+  {
+    id:28, type:"mcq", skill:"Industrial Tech",
+    stimulus:{kind:"table", label:"Mini-Chart",
+      html:`
+        <table class="miniTable">
+          <tr><th>Innovation</th><th>Most Direct Impact</th></tr>
+          <tr><td>Telephone</td><td>Faster long-distance communication</td></tr>
+          <tr><td>Automobile</td><td>Greater personal mobility + new industries</td></tr>
+          <tr><td>Assembly line</td><td>Mass production at lower cost</td></tr>
+        </table>
+      `},
+    prompt:"Which innovation is most directly linked to mass production at lower cost?",
+    choices:["Telephone","Assembly line","Automobile","Skyscraper"],
+    answer:[1],
+    hint:"Look for the row describing mass production."
+  },
+  {
+    id:29, type:"select2", skill:"Cause → Outcome",
+    stimulus:{kind:"passage", label:"Short Passage",
+      html:`<p>In the early Cold War, both superpowers built more powerful weapons and competed in technology. Fear of conflict shaped domestic and foreign policy.</p>`},
+    prompt:"Select TWO outcomes most consistent with the passage.",
+    choices:[
+      "An arms race and competition in science/technology",
+      "Alliance-building and military preparedness",
+      "The end of all international alliances",
+      "A complete return to isolationism with no overseas involvement"
+    ],
+    answer:[0,1],
+    hint:"Cold War rivalry = arms + alliances, not withdrawal from the world."
+  },
+  {
+    id:30, type:"mcq", skill:"Synthesis",
+    prompt:"Which statement best connects industrialization to the growth of labor unions?",
+    choices:[
+      "Factory work conditions and low wages encouraged workers to organize for bargaining power",
+      "Industrialization eliminated the need for workers, so unions disappeared",
+      "Labor unions formed primarily to expand U.S. territory overseas",
+      "Unions developed to end the Constitution’s separation of powers"
+    ],
+    answer:[0],
+    hint:"Think: working conditions + wages + collective bargaining leverage."
+  }
+];
+
+/* =========================
+   ENGINE — Auto-submit MCQ + Select2
+   Wrong = miss + hint, retry same item.
+   Correct = auto-advance.
+   ========================= */
+const $ = (id)=>document.getElementById(id);
+
+let studentName = "";
+let startedAt = null;
+let endedAt = null;
+let timer = null;
+
+let order = [];
+let i = 0;
+let correct = 0;
+let misses = 0;
+
+let selectMode = "mcq";
+let selected = []; // indices picked (for select2)
+let locked = false;
+
+function fmt(d){
+  if(!d) return "—";
+  const pad = (n)=>String(n).padStart(2,"0");
+  const mm = pad(d.getMonth()+1);
+  const dd = pad(d.getDate());
+  const yy = d.getFullYear();
+  let h = d.getHours(); const ampm = h>=12 ? "PM":"AM";
+  h = h%12; if(h===0) h=12;
+  const mi = pad(d.getMinutes());
+  const se = pad(d.getSeconds());
+  return `${mm}/${dd}/${yy} ${h}:${mi}:${se} ${ampm}`;
+}
+function durMS(a,b){
+  const ms = Math.max(0, b-a);
+  const s = Math.floor(ms/1000);
+  const hh = Math.floor(s/3600);
+  const mm = Math.floor((s%3600)/60);
+  const ss = s%60;
+  const pad = (n)=>String(n).padStart(2,"0");
+  return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let k=a.length-1;k>0;k--){
+    const j = Math.floor(Math.random()*(k+1));
+    [a[k],a[j]]=[a[j],a[k]];
+  }
+  return a;
+}
+function computeAcc(){
+  const total = correct + misses;
+  if(total === 0) return 100;
+  return (correct / total) * 100;
+}
+function setStats(){
+  $("acc").textContent = `${computeAcc().toFixed(1)}%`;
+  $("correct").textContent = String(correct);
+  $("misses").textContent = String(misses);
+}
+function tickNow(){ $("now").textContent = fmt(new Date()); }
+
+function startGame(){
+  order = shuffle(QUESTIONS.map((_,idx)=>idx));
+  i = 0; correct = 0; misses = 0;
+  startedAt = new Date(); endedAt = null;
+
+  $("student").textContent = studentName;
+  $("start").textContent = fmt(startedAt);
+
+  $("ticket").style.display = "none";
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+
+  setStats();
+  renderItem();
+  tickNow();
+  if(timer) clearInterval(timer);
+  timer = setInterval(tickNow, 500);
+}
+
+function renderStim(stim){
+  const wrap = $("stimWrap");
+  if(!stim){
+    wrap.style.display = "none";
+    wrap.innerHTML = "";
+    return;
+  }
+  wrap.style.display = "block";
+  wrap.innerHTML = `<div class="label">${stim.label || "Stimulus"}</div>${stim.html || ""}`;
+}
+
+function renderItem(){
+  locked = false;
+  selected = [];
+
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+
+  const q = QUESTIONS[order[i]];
+  $("qnum").textContent = `Item ${i+1} / ${QUESTIONS.length}`;
+  $("skill").textContent = q.skill || "OST Mixer";
+  $("prompt").textContent = q.prompt;
+  $("pbar").style.width = `${(i / QUESTIONS.length) * 100}%`;
+
+  selectMode = q.type;
+
+  $("rule").textContent = (q.type === "select2")
+    ? "Select-Two: choose TWO answers. Auto-check after the second selection."
+    : "MCQ: click ONE answer. Auto-check immediately.";
+
+  renderStim(q.stimulus || null);
+
+  // Build choices (shuffle each item, but keep answer mapping)
+  const indices = q.choices.map((_, idx)=>idx);
+  const shuffledIdx = shuffle(indices);
+
+  // Map original answer indices -> shuffled positions
+  const ansSet = new Set(q.answer);
+  const correctPositions = shuffledIdx
+    .map((origIdx, pos)=> ansSet.has(origIdx) ? pos : null)
+    .filter(v=>v!==null);
+
+  q.__shuffledIdx = shuffledIdx;
+  q.__correctPos = correctPositions;
+
+  const letters = ["A","B","C","D","E","F"];
+  const box = $("choices");
+  box.innerHTML = "";
+
+  shuffledIdx.forEach((origIdx, pos)=>{
+    const div = document.createElement("div");
+    div.className = "choice";
+    div.dataset.pos = String(pos);
+    div.innerHTML = `<div class="badge">${letters[pos] || "•"}</div><div>${q.choices[origIdx]}</div>`;
+    div.addEventListener("click", ()=>onPick(pos, div));
+    box.appendChild(div);
+  });
+}
+
+function clearChoiceHighlights(){
+  [...$("choices").children].forEach(el=>{
+    el.classList.remove("selected","correctFlash","wrongFlash");
+  });
+}
+
+function onPick(pos, el){
+  if(locked) return;
+
+  const q = QUESTIONS[order[i]];
+  const correctPos = q.__correctPos.slice().sort((a,b)=>a-b);
+
+  if(selectMode === "mcq"){
+    locked = true;
+    const ok = (correctPos.length === 1 && correctPos[0] === pos);
+    flash(el, ok);
+    if(ok){
+      correct++;
+      setStats();
+      showGood();
+      setTimeout(nextItem, 700);
+    }else{
+      misses++;
+      setStats();
+      showBad(q.hint || "Use the stimulus and eliminate distractors. Try again.");
+      locked = false;
+    }
+    return;
+  }
+
+  // select2
+  // toggle selection
+  const idx = selected.indexOf(pos);
+  if(idx >= 0){
+    selected.splice(idx,1);
+    el.classList.remove("selected");
+  }else{
+    selected.push(pos);
+    el.classList.add("selected");
+  }
+
+  if(selected.length === 2){
+    locked = true;
+    const pick = selected.slice().sort((a,b)=>a-b);
+    const ok = (pick.length===2 && pick[0]===correctPos[0] && pick[1]===correctPos[1]);
+
+    // flash both selected
+    const els = [...$("choices").children].filter(n=>pick.includes(Number(n.dataset.pos)));
+    els.forEach(n=>flash(n, ok));
+
+    if(ok){
+      correct++;
+      setStats();
+      showGood();
+      setTimeout(nextItem, 750);
+    }else{
+      misses++;
+      setStats();
+      showBad(q.hint || "Two correct choices are required. Try again.");
+      // reset selection after a brief moment
+      setTimeout(()=>{
+        selected = [];
+        locked = false;
+        clearChoiceHighlights();
+      }, 650);
+    }
+  }
+}
+
+function flash(el, ok){
+  el.classList.remove("correctFlash","wrongFlash");
+  el.classList.add(ok ? "correctFlash" : "wrongFlash");
+  setTimeout(()=> el.classList.remove("wrongFlash","correctFlash"), 550);
+}
+
+function showBad(text){
+  $("hint").textContent = text;
+  $("badMsg").style.display = "block";
+  $("goodMsg").style.display = "none";
+}
+function showGood(){
+  $("goodText").textContent = "Correct. Auto-advancing…";
+  $("goodMsg").style.display = "block";
+  $("badMsg").style.display = "none";
+}
+
+function nextItem(){
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+  i++;
+  if(i >= QUESTIONS.length) finish();
+  else renderItem();
+}
+
+function finish(){
+  endedAt = new Date();
+  if(timer) clearInterval(timer);
+  $("pbar").style.width = "100%";
+
+  const acc = computeAcc();
+  const passed = (misses === 0);
+
+  const ticket =
+`AMERICAN STUDIES — OST MASTERY HUB
+Game: AmStud 7 — OST Simulation Mixer (Mastery)
+
+Student: ${studentName}
+Passed: ${passed ? "YES (Mastery)" : "NO"}
+Accuracy: ${acc.toFixed(1)}%
+Correct Items: ${correct}
+Misses: ${misses}
+
+Start: ${fmt(startedAt)}
+End:   ${fmt(endedAt)}
+Duration: ${durMS(startedAt, endedAt)}
+
+Reminder: Mastery requires 0 misses.`;
+
+  $("ticketText").textContent = ticket;
+  $("ticket").style.display = "block";
+
+  $("goodMsg").style.display = "block";
+  $("badMsg").style.display = "none";
+  $("goodText").textContent = passed
+    ? "Mastery earned. Screenshot your ticket."
+    : "Not mastery. Hit Restart and go again for 100%.";
+}
+
+/* Buttons */
+$("restartBtn").addEventListener("click", ()=>startGame());
+
+$("copyBtn").addEventListener("click", async ()=>{
+  try{
+    await navigator.clipboard.writeText($("ticketText").textContent);
+    $("copyBtn").textContent = "Copied!";
+    setTimeout(()=>$("copyBtn").textContent="Copy Ticket", 900);
+  }catch(e){
+    alert("Copy blocked by browser. Please screenshot instead.");
+  }
+});
+
+/* Name gate */
+const gate = $("gate");
+const nameInput = $("nameInput");
+const beginBtn = $("beginBtn");
+
+function begin(){
+  const v = (nameInput.value || "").trim();
+  if(!v){ nameInput.focus(); return; }
+  studentName = v;
+  localStorage.setItem("legend_amstud_student_name", studentName);
+  gate.style.display = "none";
+  startGame();
+}
+beginBtn.addEventListener("click", begin);
+nameInput.addEventListener("keydown", (e)=>{ if(e.key === "Enter") begin(); });
+
+const saved = localStorage.getItem("legend_amstud_student_name");
+if(saved){
+  nameInput.value = saved;
+  nameInput.select();
+}
+
+/* Clock */
+(function bootClock(){
+  $("now").textContent = fmt(new Date());
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=> $("now").textContent = fmt(new Date()), 500);
+})();
+</script>
+</body>
+</html>
