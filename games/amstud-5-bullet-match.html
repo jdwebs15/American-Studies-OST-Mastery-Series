@@ -4,266 +4,520 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>AmStud Game 5 — Bullet Match (Mastery)</title>
-  <link rel="stylesheet" href="../styles.css"/>
-
   <style>
     :root{
       --bg:#0b1220;
-      --card:#111a2f;
+      --panel:#111a2f;
       --text:#e7eefc;
       --muted:#a8b4cf;
       --line:rgba(255,255,255,.12);
+      --shadow:0 18px 55px rgba(0,0,0,.40);
+      --radius:18px;
       --good:#2bd576;
       --bad:#ff5c7a;
       --warn:#ffd166;
       --accent:#7aa2ff;
       --chip:rgba(122,162,255,.14);
       --chipLine:rgba(122,162,255,.28);
-      --radius:18px;
-      --shadow:0 18px 55px rgba(0,0,0,.40);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      background:linear-gradient(180deg,#0b1220,#070b14);
+      background:radial-gradient(1200px 700px at 20% -10%, rgba(122,162,255,.22), transparent 55%),
+                 radial-gradient(900px 600px at 90% 0%, rgba(43,213,118,.10), transparent 55%),
+                 linear-gradient(180deg,#0b1220,#070b14);
       color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
     }
-    .wrap{width:min(1100px,92vw);margin:28px auto 60px;}
+    .wrap{width:min(1100px,92vw);margin:28px auto 40px;}
+    .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+    h1{font-size:22px;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:13px;line-height:1.35}
     .panel{
-      background:var(--card);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:18px;
+      padding:16px;
     }
-    .topbar{
-      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
-      margin-bottom:14px;
+    .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .chip{
+      border:1px solid var(--chipLine);
+      background:var(--chip);
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;color:var(--text);white-space:nowrap
     }
-    .title{display:flex;flex-direction:column;gap:4px;}
-    .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
-    h1{margin:0;font-size:20px}
-    .meta{
-      display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;
-    }
-    .pill{
-      display:inline-flex;gap:8px;align-items:center;
-      padding:8px 10px;border-radius:999px;
-      background:rgba(255,255,255,.04);
+    .chip strong{font-weight:800}
+    .row{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;align-items:stretch}
+    @media (max-width:980px){.row{grid-template-columns:1fr}}
+    .stats{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+    .stat{
+      background:rgba(0,0,0,.18);
       border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .stat .k{color:var(--muted);font-size:12px;margin-bottom:4px}
+    .stat .v{font-family:var(--mono);font-size:13px}
+    .bar{
+      height:10px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;border:1px solid var(--line);
+      margin-top:8px;
+    }
+    .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),rgba(43,213,118,.9))}
+    .qhead{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .qnum{font-family:var(--mono);font-size:13px;color:var(--muted)}
+    .skill{font-size:12px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.18)}
+    .prompt{font-size:16px;line-height:1.35;margin:10px 0 8px}
+    .rule{
       font-size:12px;color:var(--muted);
-    }
-    .pill b{color:var(--text);font-weight:650}
-    .pill .dot{width:8px;height:8px;border-radius:99px;background:var(--accent);display:inline-block}
-    .row2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
-      margin-top:12px;
-    }
-    @media (max-width: 820px){ .row2{grid-template-columns:1fr} }
-    .box{
-      background:rgba(255,255,255,.03);
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:14px;
-    }
-    .boxtitle{
-      display:flex;align-items:center;justify-content:space-between;
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:14px;padding:8px 10px;background:rgba(0,0,0,.14);
       margin-bottom:10px;
     }
-    .boxtitle .tag{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:6px 10px;border-radius:999px;
-      background:var(--chip);
-      border:1px solid var(--chipLine);
-      color:var(--text);
-      font-size:12px;
+
+    /* Bullet Match UI */
+    .bmGrid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:10px;
     }
-    .boxtitle .tag small{color:var(--muted)}
-    .list{display:flex;flex-direction:column;gap:10px}
+    @media (max-width:980px){ .bmGrid{grid-template-columns:1fr} }
+
+    .card{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.16);
+      border-radius:16px;
+      padding:12px;
+    }
+    .cardTitle{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-bottom:10px;
+    }
+    .cardTitle .t{font-weight:900}
+    .pill{
+      font-size:12px;color:var(--muted);
+      border:1px solid var(--line);
+      padding:4px 8px;border-radius:999px;
+      background:rgba(0,0,0,.18);
+      font-family:var(--mono);
+    }
+    .list{display:grid;gap:10px}
     .item{
       border:1px solid var(--line);
-      background:rgba(255,255,255,.02);
+      background:rgba(0,0,0,.14);
+      border-radius:14px;
+      padding:10px 10px;
+      cursor:pointer;
+      transition:transform .05s ease, border-color .15s ease, background .15s ease;
+      user-select:none;
+    }
+    .item:hover{border-color:rgba(122,162,255,.6);transform:translateY(-1px)}
+    .item.selL{border-color:rgba(255,209,102,.75);background:rgba(255,209,102,.08)}
+    .item.selR{border-color:rgba(122,162,255,.75);background:rgba(122,162,255,.10)}
+    .item.locked{cursor:not-allowed;opacity:.92}
+
+    .pairLine{
+      margin-top:10px;
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:14px;
+      padding:10px;
+      background:rgba(0,0,0,.12);
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .pairLine strong{color:var(--text)}
+    .miniBtn{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-weight:900;
+      font-size:12px;
+    }
+    .miniBtn:hover{border-color:rgba(122,162,255,.6)}
+    .miniBtn.danger{border-color:rgba(255,92,122,.55);background:rgba(255,92,122,.10)}
+    .miniBtn.ok{border-color:rgba(43,213,118,.55);background:rgba(43,213,118,.10)}
+    .miniBtn:disabled{opacity:.55;cursor:not-allowed}
+
+    .msg{
+      margin-top:12px;border-radius:14px;border:1px solid var(--line);
+      padding:10px 12px;display:none;
+    }
+    .msg.bad{display:block;background:rgba(255,92,122,.10)}
+    .msg.good{display:block;background:rgba(43,213,118,.10)}
+    .msg .t{font-weight:900;margin-bottom:4px}
+
+    .footer{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:14px}
+    .btn{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
       border-radius:14px;
       padding:10px 12px;
       cursor:pointer;
-      user-select:none;
-      transition:transform .06s ease, border-color .12s ease, background .12s ease;
+      font-weight:900;
     }
-    .item:hover{border-color:rgba(122,162,255,.55)}
-    .item:active{transform:scale(.995)}
-    .item.lock{cursor:not-allowed;opacity:.72}
-    .item.sel{
-      border-color:rgba(122,162,255,.75);
-      box-shadow:0 0 0 2px rgba(122,162,255,.18) inset;
-      background:rgba(122,162,255,.08);
-    }
-    .item.good{
-      border-color:rgba(43,213,118,.75);
-      background:rgba(43,213,118,.10);
-    }
-    .item.bad{
-      border-color:rgba(255,92,122,.75);
-      background:rgba(255,92,122,.10);
-    }
-    .msg{
-      margin-top:12px;
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:10px 12px;
-      background:rgba(255,255,255,.03);
-      color:var(--text);
-      display:none;
-    }
-    .msg.show{display:block}
-    .msg .hint{color:var(--warn);font-weight:700}
-    .footerbar{
-      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
-      margin-top:14px;
-    }
-    .btn{
-      appearance:none;border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      padding:10px 12px;border-radius:14px;
-      cursor:pointer;font-weight:650;
-    }
-    .btn:hover{border-color:rgba(122,162,255,.55)}
-    .btn.danger:hover{border-color:rgba(255,92,122,.55)}
-    .gate{display:block;padding:20px;}
-    .gate .inner{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
-    .input{
-      width:100%;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.18);
-      color:var(--text);
-      font-size:16px;
-      outline:none;
-    }
-    .fine{color:var(--muted);font-size:13px;line-height:1.4}
-    .finish{display:none;margin-top:14px;}
+    .btn:hover{border-color:rgba(122,162,255,.6)}
+    .btn.primary{border-color:rgba(122,162,255,.65);background:rgba(122,162,255,.16)}
     .ticket{
-      margin-top:12px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px dashed rgba(255,255,255,.22);
+      margin-top:14px;border:1px solid var(--line);
       background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;display:none;
+    }
+    pre{
+      margin:10px 0 0;
+      white-space:pre-wrap;
+      background:rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px;
       font-family:var(--mono);
       font-size:12px;
-      white-space:pre-wrap;
+      line-height:1.35;
     }
+
+    /* Name gate */
+    .gate{position:fixed;inset:0;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:20px}
+    .gateCard{
+      width:min(560px,94vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .gateCard h2{margin:0 0 8px;font-size:18px}
+    .gateCard p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.35}
+    .inrow{display:flex;gap:10px;flex-wrap:wrap}
+    input{
+      flex:1;min-width:240px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px 12px;
+      outline:none;font-size:14px;
+    }
+    input:focus{border-color:rgba(122,162,255,.7)}
   </style>
-
-  <script src="../amstud_bank.js"></script>
 </head>
-
 <body>
   <div class="wrap">
-    <div class="panel">
-      <div class="topbar">
-        <div class="title">
-          <div class="kicker">LEGEND MASTERY SERIES</div>
-          <h1>AmStud Game 5 — Bullet Match</h1>
-          <div class="fine">Mastery = <b>0 misses</b>. Click a left bullet, then click the matching right term.</div>
+    <div class="top">
+      <div>
+        <h1>AmStud Game 5 — Bullet Match (Mastery)</h1>
+        <div class="sub">
+          Match the evidence/bullets to the correct term, policy, movement, event, or concept.
+          Auto-check when you complete all matches. Mastery requires <strong>0 misses</strong>.
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><strong>LIVE</strong></div>
+        <div class="chip">Evidence → Term</div>
+        <div class="chip">Auto-check</div>
+        <div class="chip">Retry on miss</div>
+        <div class="chip">Ticket: Name/Times/Accuracy</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="panel">
+        <div class="qhead">
+          <div class="qnum" id="qnum">Round —</div>
+          <div class="skill" id="skill">Bullet Match</div>
         </div>
 
-        <div class="meta">
-          <div class="pill"><span class="dot"></span> Player: <b id="playerName">—</b></div>
-          <div class="pill">Date: <b id="dateStamp">—</b></div>
-          <div class="pill">Start: <b id="startStamp">—</b></div>
-          <div class="pill">End: <b id="endStamp">—</b></div>
-          <div class="pill">Elapsed: <b id="elapsed">—</b></div>
-          <div class="pill">Progress: <b id="prog">—</b></div>
-          <div class="pill">Accuracy: <b id="acc">—</b></div>
-          <div class="pill">Misses: <b id="misses">0</b></div>
+        <div class="bar" aria-label="progress"><div id="pbar"></div></div>
+
+        <div class="prompt" id="prompt">—</div>
+        <div class="rule" id="rule">
+          Click one bullet on the left, then click the matching term on the right.
+          Complete all pairs to auto-check. Wrong pair = 1 miss, then retry.
+        </div>
+
+        <div class="bmGrid">
+          <div class="card">
+            <div class="cardTitle">
+              <div class="t">Bullets / Evidence</div>
+              <div class="pill" id="leftCount">0</div>
+            </div>
+            <div class="list" id="leftList"></div>
+          </div>
+
+          <div class="card">
+            <div class="cardTitle">
+              <div class="t">Terms / Concepts</div>
+              <div class="pill" id="rightCount">0</div>
+            </div>
+            <div class="list" id="rightList"></div>
+          </div>
+        </div>
+
+        <div class="pairLine">
+          <div>
+            Selected: <strong id="selLeft">—</strong> → <strong id="selRight">—</strong>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="miniBtn" id="clearSelBtn" type="button">Clear Selection</button>
+            <button class="miniBtn ok" id="undoBtn" type="button" disabled>Undo Last Pair</button>
+          </div>
+        </div>
+
+        <div class="msg bad" id="badMsg">
+          <div class="t">Not yet.</div>
+          <div id="hint">—</div>
+        </div>
+        <div class="msg good" id="goodMsg">
+          <div class="t">Correct.</div>
+          <div id="goodText">Auto-advancing…</div>
+        </div>
+
+        <div class="footer">
+          <button class="btn" id="restartBtn" type="button">Restart</button>
+          <div class="qnum" id="note">Tip: one miss breaks Mastery. Restart and go again for 100%.</div>
+        </div>
+
+        <div class="ticket" id="ticket">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+            <div><strong>Submit Ticket</strong> (screenshot this)</div>
+            <button class="btn primary" id="copyBtn" type="button">Copy Ticket</button>
+          </div>
+          <pre id="ticketText"></pre>
         </div>
       </div>
 
-      <div id="gate" class="gate">
-        <div class="inner">
-          <div class="fine"><b>Name required</b> to start and to generate the submit ticket.</div>
-          <input id="nameInput" class="input" placeholder="Type your name (first + last)..." autocomplete="name"/>
-          <button id="startBtn" class="btn" type="button">Start Game</button>
-          <div class="fine">If a student closes a laptop mid-game, this restores from local storage (including name).</div>
-        </div>
-      </div>
-
-      <div id="game" style="display:none;">
-        <div class="row2">
-          <div class="box">
-            <div class="boxtitle">
-              <div class="tag">Left Bullets <small>(pick one)</small></div>
-              <div class="tag"><span id="csTag">CS —</span></div>
-            </div>
-            <div id="leftList" class="list"></div>
-          </div>
-
-          <div class="box">
-            <div class="boxtitle">
-              <div class="tag">Right Terms <small>(match it)</small></div>
-              <div class="tag">Set: <b id="setId">—</b></div>
-            </div>
-            <div id="rightList" class="list"></div>
-          </div>
+      <div class="panel">
+        <div class="stats">
+          <div class="stat"><div class="k">Student</div><div class="v" id="student">—</div></div>
+          <div class="stat"><div class="k">Accuracy</div><div class="v" id="acc">100.0%</div></div>
+          <div class="stat"><div class="k">Start</div><div class="v" id="start">—</div></div>
+          <div class="stat"><div class="k">Now</div><div class="v" id="now">—</div></div>
+          <div class="stat"><div class="k">Correct Rounds</div><div class="v" id="correct">0</div></div>
+          <div class="stat"><div class="k">Misses</div><div class="v" id="misses">0</div></div>
         </div>
 
-        <div id="msg" class="msg"></div>
-
-        <div class="footerbar">
-          <button id="restartBtn" class="btn danger" type="button">Restart Game</button>
-        </div>
-
-        <div id="finish" class="finish">
-          <div class="msg show" id="finishLine"></div>
-          <div class="ticket" id="ticket"></div>
-          <div class="footerbar">
-            <button id="copyTicket" class="btn" type="button">Copy Ticket</button>
-            <button id="printTicket" class="btn" type="button">Print Ticket</button>
-          </div>
+        <div style="margin-top:12px;color:var(--muted);font-size:12px;line-height:1.35">
+          <strong>How scoring works:</strong><br/>
+          • Each round is one “question.”<br/>
+          • When you complete all pairs, the round auto-checks.<br/>
+          • If any pair is wrong, that’s <strong>1 miss</strong>, you get a hint, and you retry the round.
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Name Gate -->
+  <div class="gate" id="gate" role="dialog" aria-modal="true">
+    <div class="gateCard">
+      <h2>Enter your name to begin</h2>
+      <p>Your name + timestamps + accuracy will appear on the final submit ticket.</p>
+      <div class="inrow">
+        <input id="nameInput" type="text" placeholder="First and last name" autocomplete="name"/>
+        <button class="btn primary" id="beginBtn" type="button">Begin</button>
+      </div>
+      <p style="margin-top:10px;color:var(--muted);font-size:12px">
+        (If you close your device, refresh to restart clean.)
+      </p>
+    </div>
+  </div>
+
 <script>
 /* =========================
-   CONFIG
-========================= */
-const GAME_ID = "amstud-g5-bullet-match";
-const ADVANCE_MS = 650;
-const SESSION_KEY = GAME_ID + "::session";
+   ROUNDS (Embedded) — Bullet Match
+   Each round: 4 pairs (bullets -> terms)
+   12 rounds = 48 pairs total (fast but thorough).
+   ========================= */
+const ROUNDS = [
+  {
+    id:1, topic:"Founding Principles",
+    prompt:"Match each bullet to the correct constitutional principle.",
+    hint:"Look for: people as source (popular sovereignty), shared power (federalism), split branches (separation), branch restraints (checks).",
+    pairs:[
+      {bullet:"Power comes from the people; elections legitimize government", term:"Popular sovereignty"},
+      {bullet:"Power is divided between national and state governments", term:"Federalism"},
+      {bullet:"Legislative, executive, and judicial branches have different roles", term:"Separation of powers"},
+      {bullet:"Each branch can limit the others (veto, judicial review, confirmations)", term:"Checks and balances"}
+    ]
+  },
+  {
+    id:2, topic:"Declaration of Independence",
+    prompt:"Match each bullet to the correct idea from the Declaration of Independence.",
+    hint:"Unalienable rights, consent, grievances, right to alter/abolish.",
+    pairs:[
+      {bullet:"Life, liberty, and the pursuit of happiness are natural rights", term:"Unalienable rights"},
+      {bullet:"Government is legitimate only when people agree to it", term:"Consent of the governed"},
+      {bullet:"List of abuses used to justify separation from Britain", term:"Grievances"},
+      {bullet:"People may change or replace a government that violates rights", term:"Right to alter or abolish"}
+    ]
+  },
+  {
+    id:3, topic:"Westward Expansion & Native Policy",
+    prompt:"Match each bullet to the correct policy/event.",
+    hint:"Homesteading, allotment, reservations/assimilation, Plains conflicts.",
+    pairs:[
+      {bullet:"Promised land to settlers who lived on and improved it", term:"Homestead Act"},
+      {bullet:"Divided tribal lands into individual plots; 'surplus' sold to settlers", term:"Dawes Act"},
+      {bullet:"Forced relocation to limited lands; federal agents controlled movement/resources", term:"Reservation system"},
+      {bullet:"Armed conflicts over land and sovereignty in the Great Plains", term:"Plains Wars"}
+    ]
+  },
+  {
+    id:4, topic:"Reconstruction & Jim Crow",
+    prompt:"Match each bullet to the correct amendment or outcome.",
+    hint:"13th = ends slavery; 14th = citizenship/protection; 15th = voting; Jim Crow = segregation.",
+    pairs:[
+      {bullet:"Abolished slavery in the United States", term:"13th Amendment"},
+      {bullet:"Defined citizenship and promised due process/equal protection", term:"14th Amendment"},
+      {bullet:"Prohibited denying the vote based on race (in law)", term:"15th Amendment"},
+      {bullet:"State/local laws that enforced segregation and discrimination", term:"Jim Crow laws"}
+    ]
+  },
+  {
+    id:5, topic:"Industrialization",
+    prompt:"Match each bullet to the correct industrial-era concept.",
+    hint:"Trusts/monopolies, laissez-faire, urbanization, mechanized farming.",
+    pairs:[
+      {bullet:"Large business combinations that reduced competition", term:"Trusts/monopolies"},
+      {bullet:"Minimal government regulation of business", term:"Laissez-faire"},
+      {bullet:"Rapid city growth; overcrowding and sanitation problems", term:"Urbanization"},
+      {bullet:"Machines increased farm output and reduced need for labor", term:"Mechanized farming"}
+    ]
+  },
+  {
+    id:6, topic:"Labor & Reform",
+    prompt:"Match each bullet to the correct labor/reform idea.",
+    hint:"Unions bargain; strike is work stoppage; collective bargaining; Progressive reforms.",
+    pairs:[
+      {bullet:"Workers organized to negotiate wages/hours/safety", term:"Labor unions"},
+      {bullet:"Workers stop working to pressure employers", term:"Strike"},
+      {bullet:"Negotiations between workers (or unions) and employers", term:"Collective bargaining"},
+      {bullet:"Reforms aimed at corruption, consumer safety, and working conditions", term:"Progressivism"}
+    ]
+  },
+  {
+    id:7, topic:"World War I & Aftermath",
+    prompt:"Match each bullet to the correct WWI-era development.",
+    hint:"Triggers for entry, Versailles, League debate, isolationism mood.",
+    pairs:[
+      {bullet:"German policy that threatened ships and U.S. interests", term:"Unrestricted submarine warfare"},
+      {bullet:"Proposal to Mexico about attacking the U.S.", term:"Zimmermann Telegram"},
+      {bullet:"Peace settlement that punished Germany and redrew borders", term:"Treaty of Versailles"},
+      {bullet:"U.S. reluctance to join international commitments after WWI", term:"Isolationism"}
+    ]
+  },
+  {
+    id:8, topic:"Great Depression & New Deal",
+    prompt:"Match each bullet to the correct cause/effect/policy.",
+    hint:"Speculation, bank failures, relief/reform, expanded federal role.",
+    pairs:[
+      {bullet:"Risky investing that inflated stock prices and increased instability", term:"Stock market speculation"},
+      {bullet:"Closures wiped out savings and restricted credit", term:"Bank failures"},
+      {bullet:"Programs that provided jobs/aid to reduce suffering", term:"Relief"},
+      {bullet:"Expanded government regulation/oversight of the economy", term:"New Deal reforms"}
+    ]
+  },
+  {
+    id:9, topic:"WWII — U.S. Entry & Mobilization",
+    prompt:"Match each bullet to the correct WWII term/event.",
+    hint:"Pearl Harbor, rationing/production, Lend-Lease, victory gardens.",
+    pairs:[
+      {bullet:"Attack that directly triggered U.S. entry into WWII", term:"Pearl Harbor"},
+      {bullet:"U.S. policy sending supplies to Allies before direct entry", term:"Lend-Lease"},
+      {bullet:"Conserving scarce materials through limits and coupons", term:"Rationing"},
+      {bullet:"Factories shift to wartime production, boosting jobs and output", term:"War mobilization"}
+    ]
+  },
+  {
+    id:10, topic:"Cold War",
+    prompt:"Match each bullet to the correct Cold War concept/event.",
+    hint:"Containment, NATO, arms race, Cuban Missile Crisis.",
+    pairs:[
+      {bullet:"Strategy to limit spread of communism", term:"Containment"},
+      {bullet:"Military alliance formed to deter Soviet aggression", term:"NATO"},
+      {bullet:"Competition to build more powerful weapons", term:"Arms race"},
+      {bullet:"Nuclear standoff that pushed diplomacy and crisis management", term:"Cuban Missile Crisis"}
+    ]
+  },
+  {
+    id:11, topic:"Civil Rights Era",
+    prompt:"Match each bullet to the correct law/case/outcome.",
+    hint:"Brown (schools), CRA (discrimination), VRA (voting barriers), segregation doctrine.",
+    pairs:[
+      {bullet:"Declared school segregation unconstitutional", term:"Brown v. Board of Education"},
+      {bullet:"Banned segregation/discrimination in many public settings and jobs", term:"Civil Rights Act of 1964"},
+      {bullet:"Targeted barriers like literacy tests; strengthened voting enforcement", term:"Voting Rights Act of 1965"},
+      {bullet:"Upheld 'separate but equal' before later challenges", term:"Plessy v. Ferguson"}
+    ]
+  },
+  {
+    id:12, topic:"Civics — Law & Public Policy",
+    prompt:"Match each bullet to the correct branch role.",
+    hint:"Legislative makes laws, executive enforces, judicial interprets, oversight checks.",
+    pairs:[
+      {bullet:"Writes and passes laws; controls taxation and budgets", term:"Legislative branch"},
+      {bullet:"Enforces laws and leads federal agencies", term:"Executive branch"},
+      {bullet:"Interprets laws and resolves constitutional disputes", term:"Judicial branch"},
+      {bullet:"Investigates agencies and monitors implementation of laws", term:"Legislative oversight"}
+    ]
+  }
+];
 
 /* =========================
-   UTIL
-========================= */
-function pad(n){ return String(n).padStart(2,"0"); }
-function dateOnly(ts=Date.now()){
-  const d = new Date(ts);
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+   ENGINE — Bullet Match
+   - Each round must be perfect to advance.
+   - Wrong match increments misses and resets pairs for retry.
+   ========================= */
+const $ = (id)=>document.getElementById(id);
+
+let studentName = "";
+let startedAt = null;
+let endedAt = null;
+let timer = null;
+
+let idx = 0;
+let correctRounds = 0;
+let misses = 0;
+
+let lock = false;
+
+let order = [];
+let leftItems = [];   // shuffled bullets
+let rightItems = [];  // shuffled terms
+let selLeft = null;
+let selRight = null;
+
+let pairsChosen = new Map(); // bullet -> term
+let history = [];            // stack of {bullet, term}
+
+function fmt(d){
+  if(!d) return "—";
+  const pad = (n)=>String(n).padStart(2,"0");
+  const mm = pad(d.getMonth()+1);
+  const dd = pad(d.getDate());
+  const yy = d.getFullYear();
+  let h = d.getHours(); const ampm = h>=12 ? "PM":"AM";
+  h = h%12; if(h===0) h=12;
+  const mi = pad(d.getMinutes());
+  const se = pad(d.getSeconds());
+  return `${mm}/${dd}/${yy} ${h}:${mi}:${se} ${ampm}`;
 }
-function timeOnly(ts=Date.now()){
-  const d = new Date(ts);
-  let h = d.getHours();
-  const m = pad(d.getMinutes());
-  const s = pad(d.getSeconds());
-  const ap = h >= 12 ? "PM" : "AM";
-  h = h % 12; if(h===0) h=12;
-  return `${h}:${m}:${s} ${ap}`;
+function durMS(a,b){
+  const ms = Math.max(0, b-a);
+  const s = Math.floor(ms/1000);
+  const hh = Math.floor(s/3600);
+  const mm = Math.floor((s%3600)/60);
+  const ss = s%60;
+  const pad = (n)=>String(n).padStart(2,"0");
+  return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
 }
-function fmtElapsed(ms){
-  const sec = Math.max(0, Math.floor(ms/1000));
-  const h = Math.floor(sec/3600);
-  const m = Math.floor((sec%3600)/60);
-  const s = sec%60;
-  if(h>0) return `${h}:${pad(m)}:${pad(s)}`;
-  return `${m}:${pad(s)}`;
-}
-function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
 function shuffle(arr){
   const a = arr.slice();
   for(let i=a.length-1;i>0;i--){
@@ -272,439 +526,336 @@ function shuffle(arr){
   }
   return a;
 }
-function safeText(s){ return String(s ?? "").replace(/[<>]/g, ""); }
+function computeAcc(){
+  const total = correctRounds + misses;
+  if(total === 0) return 100;
+  return (correctRounds / total) * 100;
+}
+function setAccUI(){
+  $("acc").textContent = `${computeAcc().toFixed(1)}%`;
+  $("correct").textContent = String(correctRounds);
+  $("misses").textContent = String(misses);
+}
+function tickNow(){ $("now").textContent = fmt(new Date()); }
 
-/* ✅ NEW: display helper for object-based bank items */
-function itemText(x){
-  if (typeof x === "string") return x;
-  if (x && typeof x === "object"){
-    // common key names your bank might use
-    return x.text ?? x.term ?? x.label ?? x.answer ?? x.value ?? x.name ?? "";
-  }
-  return String(x ?? "");
+function setLocked(locked){
+  lock = locked;
+  [...$("leftList").children].forEach(el=>locked ? el.classList.add("locked") : el.classList.remove("locked"));
+  [...$("rightList").children].forEach(el=>locked ? el.classList.add("locked") : el.classList.remove("locked"));
 }
 
-/* ✅ NEW: match helper for object-based right items */
-function rightToLeftIndex(working, rightIndex){
-  // Preferred: explicit matchIndex array
-  if (Array.isArray(working.matchIndex)) return working.matchIndex[rightIndex];
-
-  // Otherwise: right item object carries its own match pointer
-  const r = working.right?.[rightIndex];
-  if (r && typeof r === "object"){
-    return r.matchIndex ?? r.leftIndex ?? r.matchLeft ?? r.left ?? r.correctLeft ?? null;
-  }
-  return null;
+function resetSelectionUI(){
+  selLeft = null; selRight = null;
+  $("selLeft").textContent = "—";
+  $("selRight").textContent = "—";
+  [...$("leftList").children].forEach(el=>el.classList.remove("selL"));
+  [...$("rightList").children].forEach(el=>el.classList.remove("selR"));
 }
 
-/* =========================
-   LOAD BANK
-========================= */
-function getBank(){
-  const bank = (window.AMSTUD_BANK || []);
-  return bank.filter(x =>
-    x && (x.type === "bullet-match") &&
-    Array.isArray(x.tags) && x.tags.includes("G5")
-  );
-}
+function startGame(){
+  order = shuffle(ROUNDS.map((_,i)=>i));
+  idx = 0; correctRounds = 0; misses = 0;
+  startedAt = new Date(); endedAt = null;
 
-/* =========================
-   STATE
-========================= */
-let deck = [];
-let idx = 0;
+  $("student").textContent = studentName;
+  $("start").textContent = fmt(startedAt);
 
-let state = {
-  name: "",
-  date: "",
-  startAt: null,
-  endAt: null,
-  correct: 0,
-  wrong: 0,
-  finished: false
-};
+  $("ticket").style.display = "none";
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
 
-let timer = null;
-
-/* =========================
-   UI HOOKS
-========================= */
-const elPlayerName = document.getElementById('playerName');
-const elDateStamp = document.getElementById('dateStamp');
-const elStartStamp = document.getElementById('startStamp');
-const elEndStamp = document.getElementById('endStamp');
-const elElapsed = document.getElementById('elapsed');
-const elProg = document.getElementById('prog');
-const elAcc = document.getElementById('acc');
-const elMisses = document.getElementById('misses');
-
-const gate = document.getElementById('gate');
-const game = document.getElementById('game');
-const nameInput = document.getElementById('nameInput');
-const startBtn = document.getElementById('startBtn');
-
-const csTag = document.getElementById('csTag');
-const setIdEl = document.getElementById('setId');
-const leftList = document.getElementById('leftList');
-const rightList = document.getElementById('rightList');
-const msgEl = document.getElementById('msg');
-
-const restartBtn = document.getElementById('restartBtn');
-
-const finishBox = document.getElementById('finish');
-const finishLine = document.getElementById('finishLine');
-const ticketEl = document.getElementById('ticket');
-const copyTicket = document.getElementById('copyTicket');
-const printTicket = document.getElementById('printTicket');
-
-/* =========================
-   SESSION SAVE/LOAD
-========================= */
-function saveSession(){
-  localStorage.setItem(SESSION_KEY, JSON.stringify({state, idx, deck}));
-}
-function loadSession(){
-  try{
-    const raw = localStorage.getItem(SESSION_KEY);
-    if(!raw) return null;
-    return JSON.parse(raw);
-  }catch(_){ return null; }
-}
-function clearSession(){ localStorage.removeItem(SESSION_KEY); }
-
-/* =========================
-   TOP RENDER
-========================= */
-function renderTop(){
-  elPlayerName.textContent = state.name || "—";
-  elDateStamp.textContent = state.date || dateOnly();
-  elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
-  elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
-  elMisses.textContent = String(state.wrong);
-
-  const totalAttempts = state.correct + state.wrong;
-  const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
-  elAcc.textContent = totalAttempts ? `${acc}%` : "—";
-
-  elProg.textContent = `${clamp(idx,0,deck.length)}/${deck.length || 0}`;
-}
-
-/* =========================
-   MESSAGES
-========================= */
-function showMsg(html){
-  msgEl.className = "msg show";
-  msgEl.innerHTML = html;
-}
-function clearMsg(){
-  msgEl.className = "msg";
-  msgEl.innerHTML = "";
-}
-
-/* =========================
-   TIMER
-========================= */
-function startTimer(){
+  setAccUI();
+  renderRound();
+  tickNow();
   if(timer) clearInterval(timer);
-  timer = setInterval(()=>{
-    if(!state.startAt) return;
-    const now = Date.now();
-    elElapsed.textContent = fmtElapsed(now - state.startAt);
-  }, 250);
+  timer = setInterval(tickNow, 500);
 }
 
-/* =========================
-   GAME MECHANICS
-========================= */
-let working = null;
-let leftOrder = [];
-let rightOrder = [];
-let leftSel = null;
-let matchedLeft = new Set();
-let matchedRight = new Set();
+function renderRound(){
+  setLocked(false);
+  pairsChosen.clear();
+  history = [];
+  $("undoBtn").disabled = true;
+  resetSelectionUI();
 
-function makeItem(text, onClick){
-  const d = document.createElement('div');
-  d.className = "item";
-  d.textContent = text;
-  d.addEventListener('click', onClick);
-  return d;
-}
-function setLocked(el, locked=true){
-  if(locked) el.classList.add('lock');
-  else el.classList.remove('lock');
-}
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
 
-function renderSet(){
-  clearMsg();
-  finishBox.style.display = "none";
+  const rIndex = order[idx];
+  const r = ROUNDS[rIndex];
 
-  working = deck[idx];
-  if(!working){ finish(); return; }
+  $("qnum").textContent = `Round ${idx+1} / ${ROUNDS.length}`;
+  $("skill").textContent = r.topic || "Bullet Match";
+  $("prompt").textContent = r.prompt;
 
-  leftSel = null;
-  matchedLeft = new Set();
-  matchedRight = new Set();
+  $("pbar").style.width = `${(idx / ROUNDS.length) * 100}%`;
 
-  // ✅ object-safe: left/right can be strings OR objects
-  const leftRaw = Array.isArray(working.left) ? working.left.slice(0,4) : [];
-  const rightRaw = Array.isArray(working.right) ? working.right.slice(0,4) : [];
+  // Prepare lists
+  leftItems = shuffle(r.pairs.map(p=>p.bullet));
+  rightItems = shuffle(r.pairs.map(p=>p.term));
 
-  // Convert display text safely
-  const left = leftRaw.map(itemText);
-  const right = rightRaw.map(itemText);
+  $("leftCount").textContent = `${leftItems.length} bullets`;
+  $("rightCount").textContent = `${rightItems.length} terms`;
 
-  leftOrder = shuffle([0,1,2,3]);
-  rightOrder = shuffle([0,1,2,3]);
+  const left = $("leftList");
+  const right = $("rightList");
+  left.innerHTML = "";
+  right.innerHTML = "";
 
-  csTag.textContent = working.cs || "CS —";
-  setIdEl.textContent = safeText(working.id || `G5-${idx+1}`);
-
-  leftList.innerHTML = "";
-  rightList.innerHTML = "";
-
-  leftOrder.forEach((li)=>{
-    const el = makeItem(left[li] || "(missing left text)", ()=>{
-      if(state.finished) return;
-      if(matchedLeft.has(li)) return;
-
-      leftSel = li;
-      leftList.querySelectorAll('.item').forEach(x=>x.classList.remove('sel'));
-      el.classList.add('sel');
-    });
-    el.dataset.leftIndex = String(li);
-    leftList.appendChild(el);
+  leftItems.forEach((txt)=>{
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = "• " + txt;
+    div.addEventListener("click", ()=>pickLeft(div, txt));
+    left.appendChild(div);
   });
 
-  rightOrder.forEach((ri)=>{
-    const el = makeItem(right[ri] || "(missing right text)", ()=>{
-      if(state.finished) return;
-      if(matchedRight.has(ri)) return;
-
-      if(leftSel === null){
-        showMsg(`Pick a <b>left bullet</b> first, then select the matching term.`);
-        return;
-      }
-
-      // ✅ robust match lookup
-      const correctLeftForThisRight = rightToLeftIndex(working, ri);
-
-      if(correctLeftForThisRight === leftSel){
-        matchedLeft.add(leftSel);
-        matchedRight.add(ri);
-
-        leftList.querySelectorAll('.item').forEach(x=>{
-          if(x.dataset.leftIndex === String(leftSel)){
-            x.classList.remove('sel');
-            x.classList.add('good');
-            setLocked(x, true);
-          }
-        });
-
-        el.classList.add('good');
-        setLocked(el, true);
-
-        leftSel = null;
-        leftList.querySelectorAll('.item').forEach(x=>x.classList.remove('sel'));
-        clearMsg();
-
-        if(matchedLeft.size === 4 && matchedRight.size === 4){
-          state.correct++;
-          renderTop();
-          saveSession();
-
-          setTimeout(()=>{
-            idx++;
-            if(idx >= deck.length) finish();
-            else renderSet();
-          }, ADVANCE_MS);
-        }else{
-          renderTop();
-          saveSession();
-        }
-      }else{
-        state.wrong++;
-        renderTop();
-        saveSession();
-
-        el.classList.add('bad');
-        setTimeout(()=>el.classList.remove('bad'), 350);
-
-        const hint = working.hint ? `<div class="hint">Hint:</div> <b>${safeText(working.hint)}</b>` : "";
-        const explain = working.explain ? `<div style="color:var(--muted);margin-top:6px;">${safeText(working.explain)}</div>` : "";
-        showMsg(`<b>Not a match.</b> ${hint}${explain}<div style="margin-top:6px;"><b>Try again:</b> pick the correct term for that bullet.</div>`);
-      }
-    });
-
-    el.dataset.rightIndex = String(ri);
-    rightList.appendChild(el);
+  rightItems.forEach((txt)=>{
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = txt;
+    div.addEventListener("click", ()=>pickRight(div, txt));
+    right.appendChild(div);
   });
-
-  renderTop();
-  saveSession();
 }
 
-/* =========================
-   FINISH / TICKET
-========================= */
-function buildTicket(passed, acc, elapsedMs){
-  const lines = [];
-  lines.push("LEGEND MASTERY — SUBMIT TICKET");
-  lines.push("--------------------------------");
-  lines.push(`Game: ${GAME_ID}`);
-  lines.push(`Name: ${state.name || "—"}`);
-  lines.push(`Date: ${state.date || "—"}`);
-  lines.push(`Start: ${state.startAt ? timeOnly(state.startAt) : "—"}`);
-  lines.push(`End: ${state.endAt ? timeOnly(state.endAt) : "—"}`);
-  lines.push(`Elapsed: ${fmtElapsed(elapsedMs)}`);
-  lines.push("--------------------------------");
-  lines.push(`Sets Completed: ${state.correct}/${deck.length}`);
-  lines.push(`Misses: ${state.wrong}`);
-  lines.push(`Accuracy: ${acc}%`);
-  lines.push(`Passed: ${passed ? "YES ✅" : "NO ❌"}`);
-  lines.push("--------------------------------");
-  lines.push(`Bank Version: ${window.AMSTUD_BANK_VERSION || "unknown"}`);
-  return lines.join("\n");
+function pickLeft(el, txt){
+  if(lock) return;
+  // ignore if already paired
+  if(pairsChosen.has(txt)) return;
+
+  [...$("leftList").children].forEach(n=>n.classList.remove("selL"));
+  el.classList.add("selL");
+  selLeft = txt;
+  $("selLeft").textContent = txt;
+
+  tryPair();
+}
+
+function pickRight(el, txt){
+  if(lock) return;
+  // ignore if already used as a match
+  if([...pairsChosen.values()].includes(txt)) return;
+
+  [...$("rightList").children].forEach(n=>n.classList.remove("selR"));
+  el.classList.add("selR");
+  selRight = txt;
+  $("selRight").textContent = txt;
+
+  tryPair();
+}
+
+function tryPair(){
+  if(lock) return;
+  if(!selLeft || !selRight) return;
+
+  // record pair
+  pairsChosen.set(selLeft, selRight);
+  history.push({ bullet: selLeft, term: selRight });
+  $("undoBtn").disabled = history.length === 0;
+
+  // visually lock the paired items
+  [...$("leftList").children].forEach(el=>{
+    const t = el.textContent.replace(/^•\s*/,"");
+    if(t === selLeft){
+      el.classList.remove("selL");
+      el.classList.add("locked");
+      el.style.opacity = ".55";
+      el.style.cursor = "not-allowed";
+    }
+  });
+  [...$("rightList").children].forEach(el=>{
+    const t = el.textContent;
+    if(t === selRight){
+      el.classList.remove("selR");
+      el.classList.add("locked");
+      el.style.opacity = ".55";
+      el.style.cursor = "not-allowed";
+    }
+  });
+
+  // clear selection
+  selLeft = null; selRight = null;
+  $("selLeft").textContent = "—";
+  $("selRight").textContent = "—";
+
+  // if complete, auto-check
+  const r = ROUNDS[order[idx]];
+  if(pairsChosen.size === r.pairs.length){
+    autoCheckRound(r);
+  }
+}
+
+function autoCheckRound(r){
+  setLocked(true);
+
+  // Build answer key
+  const key = new Map(r.pairs.map(p=>[p.bullet, p.term]));
+  let wrong = 0;
+  let wrongBullets = [];
+
+  for(const [b,t] of pairsChosen.entries()){
+    if(key.get(b) !== t){
+      wrong++;
+      wrongBullets.push(b);
+    }
+  }
+
+  if(wrong === 0){
+    correctRounds++;
+    setAccUI();
+    $("goodMsg").style.display = "block";
+    $("badMsg").style.display = "none";
+    $("goodText").textContent = "Round perfect. Auto-advancing…";
+
+    setTimeout(()=>{
+      idx++;
+      if(idx >= ROUNDS.length) finish();
+      else renderRound();
+    }, 800);
+  }else{
+    misses++;
+    setAccUI();
+    $("badMsg").style.display = "block";
+    $("goodMsg").style.display = "none";
+
+    const showTwo = wrongBullets.slice(0,2).map(b=>"• "+b).join("\n");
+    $("hint").textContent =
+      (r.hint ? r.hint + " " : "") +
+      `Mismatch detected. Focus especially on:\n${showTwo}${wrongBullets.length>2 ? "\n• (and others)" : ""}`;
+
+    // reset round for retry after short pause
+    setTimeout(()=>renderRound(), 1200);
+  }
+}
+
+function undoLast(){
+  if(lock) return;
+  if(history.length === 0) return;
+  const last = history.pop();
+  pairsChosen.delete(last.bullet);
+
+  // rebuild UI from scratch for accuracy
+  const r = ROUNDS[order[idx]];
+  leftItems = leftItems.slice();
+  rightItems = rightItems.slice();
+
+  // re-render lists preserving remaining pairs
+  const left = $("leftList");
+  const right = $("rightList");
+  left.innerHTML = "";
+  right.innerHTML = "";
+
+  leftItems.forEach((txt)=>{
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = "• " + txt;
+    div.addEventListener("click", ()=>pickLeft(div, txt));
+
+    if(pairsChosen.has(txt)){
+      div.classList.add("locked");
+      div.style.opacity = ".55";
+      div.style.cursor = "not-allowed";
+    }
+    left.appendChild(div);
+  });
+
+  rightItems.forEach((txt)=>{
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = txt;
+    div.addEventListener("click", ()=>pickRight(div, txt));
+
+    if([...pairsChosen.values()].includes(txt)){
+      div.classList.add("locked");
+      div.style.opacity = ".55";
+      div.style.cursor = "not-allowed";
+    }
+    right.appendChild(div);
+  });
+
+  $("undoBtn").disabled = history.length === 0;
+  resetSelectionUI();
+}
+
+function clearSelection(){
+  if(lock) return;
+  resetSelectionUI();
 }
 
 function finish(){
-  state.finished = true;
-  state.endAt = Date.now();
+  setLocked(true);
+  endedAt = new Date();
   if(timer) clearInterval(timer);
-  timer = null;
 
-  const totalAttempts = state.correct + state.wrong;
-  const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
-  const elapsedMs = (state.startAt && state.endAt) ? (state.endAt - state.startAt) : 0;
-  const passed = (state.wrong === 0) && (state.correct === deck.length);
+  $("pbar").style.width = "100%";
 
-  renderTop();
-  elElapsed.textContent = fmtElapsed(elapsedMs);
+  const acc = computeAcc();
+  const passed = (misses === 0);
 
-  finishBox.style.display = "block";
-  finishLine.innerHTML =
-    `Result: <b>${passed ? "MASTERED ✅" : "NOT MASTERED ❌"}</b> · ` +
-    `Accuracy: <b>${acc}%</b> · Misses: <b>${state.wrong}</b> · ` +
-    `Elapsed: <b>${fmtElapsed(elapsedMs)}</b>`;
+  const ticket =
+`AMERICAN STUDIES — OST MASTERY HUB
+Game: AmStud 5 — Bullet Match (Mastery)
 
-  ticketEl.textContent = buildTicket(passed, acc, elapsedMs);
-  saveSession();
+Student: ${studentName}
+Passed: ${passed ? "YES (Mastery)" : "NO"}
+Accuracy: ${acc.toFixed(1)}%
+Correct Rounds: ${correctRounds}
+Misses: ${misses}
+
+Start: ${fmt(startedAt)}
+End:   ${fmt(endedAt)}
+Duration: ${durMS(startedAt, endedAt)}
+
+Reminder: Mastery requires 0 misses.`;
+
+  $("ticketText").textContent = ticket;
+  $("ticket").style.display = "block";
+
+  $("goodMsg").style.display = "block";
+  $("badMsg").style.display = "none";
+  $("goodText").textContent = passed
+    ? "Mastery earned. Screenshot your ticket."
+    : "Not mastery. Hit Restart and go again for 100%.";
 }
 
-/* =========================
-   START / RESTART
-========================= */
-function startNew(name){
-  deck = getBank().slice();
-  if(deck.length < 28){
-    alert(`Bank does not have 28 bullet-match (G5) sets.\nFound: ${deck.length}\nFix amstud_bank.js first.`);
-    return;
-  }
-  deck = deck.slice(0, 28);
+function restart(){ startGame(); }
 
-  idx = 0;
-  state = {
-    name,
-    date: dateOnly(),
-    startAt: Date.now(),
-    endAt: null,
-    correct: 0,
-    wrong: 0,
-    finished: false
-  };
+$("restartBtn").addEventListener("click", restart);
+$("undoBtn").addEventListener("click", undoLast);
+$("clearSelBtn").addEventListener("click", clearSelection);
 
-  gate.style.display = "none";
-  game.style.display = "block";
-
-  renderTop();
-  startTimer();
-  renderSet();
-}
-
-function hardRestart(){
-  if(!confirm("Restart the entire game? This clears progress and the submit ticket.")) return;
-  clearSession();
-  if(timer) clearInterval(timer);
-  timer = null;
-
-  deck = [];
-  idx = 0;
-  state = {name:"",date:"",startAt:null,endAt:null,correct:0,wrong:0,finished:false};
-
-  elElapsed.textContent = "—";
-  finishBox.style.display = "none";
-  clearMsg();
-
-  gate.style.display = "block";
-  game.style.display = "none";
-
-  nameInput.value = "";
-  renderTop();
-}
-
-/* =========================
-   EVENTS
-========================= */
-startBtn.addEventListener('click', ()=>{
-  const name = (nameInput.value || "").trim();
-  if(!name){ alert("Name is required."); nameInput.focus(); return; }
-  startNew(name);
-});
-nameInput.addEventListener('keydown', (e)=>{ if(e.key === "Enter") startBtn.click(); });
-restartBtn.addEventListener('click', hardRestart);
-
-copyTicket.addEventListener('click', async ()=>{
+$("copyBtn").addEventListener("click", async ()=>{
   try{
-    await navigator.clipboard.writeText(ticketEl.textContent || "");
-    showMsg("<b>Ticket copied.</b>");
-    setTimeout(clearMsg, 900);
-  }catch(_){
-    showMsg("<b>Copy failed.</b> Manually select and copy the ticket text.");
+    await navigator.clipboard.writeText($("ticketText").textContent);
+    $("copyBtn").textContent = "Copied!";
+    setTimeout(()=>$("copyBtn").textContent="Copy Ticket", 900);
+  }catch(e){
+    alert("Copy blocked by browser. Please screenshot instead.");
   }
 });
-printTicket.addEventListener('click', ()=>window.print());
 
-/* =========================
-   RESUME IF POSSIBLE
-========================= */
-(function boot(){
-  const saved = (()=>{
-    try{
-      const raw = localStorage.getItem(SESSION_KEY);
-      return raw ? JSON.parse(raw) : null;
-    }catch(_){ return null; }
-  })();
+// Name gate
+const gate = $("gate");
+const nameInput = $("nameInput");
+const beginBtn = $("beginBtn");
 
-  if(saved && saved.state && saved.deck && Array.isArray(saved.deck) && saved.deck.length){
-    state = saved.state;
-    deck = saved.deck;
-    idx = saved.idx ?? 0;
+function begin(){
+  const v = (nameInput.value || "").trim();
+  if(!v){ nameInput.focus(); return; }
+  studentName = v;
+  localStorage.setItem("legend_amstud_student_name", studentName);
+  gate.style.display = "none";
+  startGame();
+}
+beginBtn.addEventListener("click", begin);
+nameInput.addEventListener("keydown", (e)=>{ if(e.key === "Enter") begin(); });
 
-    if(!state.name){
-      localStorage.removeItem(SESSION_KEY);
-      renderTop();
-      return;
-    }
-
-    gate.style.display = "none";
-    game.style.display = "block";
-
-    renderTop();
-    if(state.startAt && !state.finished){
-      startTimer();
-      renderSet();
-    }else if(state.finished){
-      const elapsedMs = (state.startAt && state.endAt) ? (state.endAt - state.startAt) : 0;
-      elElapsed.textContent = fmtElapsed(elapsedMs);
-      finishBox.style.display = "block";
-      const totalAttempts = state.correct + state.wrong;
-      const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
-      ticketEl.textContent = buildTicket((state.wrong===0 && state.correct===deck.length), acc, elapsedMs);
-    }
-  }else{
-    renderTop();
-  }
-})();
+const saved = localStorage.getItem("legend_amstud_student_name");
+if(saved){
+  nameInput.value = saved;
+  nameInput.select();
+}
 </script>
 </body>
 </html>
