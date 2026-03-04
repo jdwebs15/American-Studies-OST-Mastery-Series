@@ -4,314 +4,579 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>AmStud Game 6 — Cause & Effect Chain (Mastery)</title>
-  <link rel="stylesheet" href="../styles.css"/>
-
   <style>
     :root{
       --bg:#0b1220;
-      --card:#111a2f;
+      --panel:#111a2f;
       --text:#e7eefc;
       --muted:#a8b4cf;
       --line:rgba(255,255,255,.12);
+      --shadow:0 18px 55px rgba(0,0,0,.40);
+      --radius:18px;
       --good:#2bd576;
       --bad:#ff5c7a;
       --warn:#ffd166;
       --accent:#7aa2ff;
       --chip:rgba(122,162,255,.14);
       --chipLine:rgba(122,162,255,.28);
-      --radius:18px;
-      --shadow:0 18px 55px rgba(0,0,0,.40);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      background:linear-gradient(180deg,#0b1220,#070b14);
+      background:radial-gradient(1200px 700px at 20% -10%, rgba(122,162,255,.22), transparent 55%),
+                 radial-gradient(900px 600px at 90% 0%, rgba(43,213,118,.10), transparent 55%),
+                 linear-gradient(180deg,#0b1220,#070b14);
       color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
     }
-    .wrap{width:min(1100px,92vw);margin:28px auto 60px;}
+    .wrap{width:min(1100px,92vw);margin:28px auto 40px;}
+    .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+    h1{font-size:22px;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:13px;line-height:1.35}
     .panel{
-      background:var(--card);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:18px;
+      padding:16px;
     }
-    .topbar{
-      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
-      margin-bottom:14px;
-    }
-    .title{display:flex;flex-direction:column;gap:4px;}
-    .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
-    h1{margin:0;font-size:20px}
-    .fine{color:var(--muted);font-size:13px;line-height:1.35}
-
-    .meta{
-      display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;
-    }
-    .pill{
-      display:inline-flex;gap:8px;align-items:center;
-      padding:8px 10px;border-radius:999px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      font-size:12px;color:var(--muted);
-    }
-    .pill b{color:var(--text);font-weight:650}
-    .pill .dot{width:8px;height:8px;border-radius:99px;background:var(--accent);display:inline-block}
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap:14px;
-      margin-top:12px;
-    }
-    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
-
-    .box{
-      background:rgba(255,255,255,.03);
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:14px;
-    }
-    .boxtitle{
-      display:flex;align-items:center;justify-content:space-between;
-      margin-bottom:10px;
-    }
-    .tag{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:6px 10px;border-radius:999px;
-      background:var(--chip);
+    .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .chip{
       border:1px solid var(--chipLine);
-      color:var(--text);
-      font-size:12px;
+      background:var(--chip);
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;color:var(--text);white-space:nowrap
     }
-    .tag small{color:var(--muted)}
+    .chip strong{font-weight:800}
 
-    .prompt{
+    .row{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;align-items:stretch}
+    @media (max-width:980px){.row{grid-template-columns:1fr}}
+
+    .stats{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+    .stat{
+      background:rgba(0,0,0,.18);
       border:1px solid var(--line);
       border-radius:14px;
       padding:10px 12px;
+    }
+    .stat .k{color:var(--muted);font-size:12px;margin-bottom:4px}
+    .stat .v{font-family:var(--mono);font-size:13px}
+
+    .bar{
+      height:10px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;border:1px solid var(--line);
+      margin-top:8px;
+    }
+    .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),rgba(43,213,118,.9))}
+
+    .qhead{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .qnum{font-family:var(--mono);font-size:13px;color:var(--muted)}
+    .skill{font-size:12px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.18)}
+    .prompt{font-size:16px;line-height:1.35;margin:10px 0 8px}
+    .rule{
+      font-size:12px;color:var(--muted);
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:14px;padding:8px 10px;background:rgba(0,0,0,.14);
+      margin-bottom:10px;
+    }
+
+    /* Chain UI */
+    .chain{
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(0,0,0,.14);
+      padding:12px;
+    }
+    .slots{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+    @media (max-width:980px){ .slots{grid-template-columns:1fr 1fr} }
+    @media (max-width:520px){ .slots{grid-template-columns:1fr} }
+
+    .slot{
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:14px;
+      padding:10px;
+      background:rgba(0,0,0,.10);
+      min-height:68px;
+      display:flex;flex-direction:column;gap:6px;
+    }
+    .slot .lbl{font-size:12px;color:var(--muted);font-family:var(--mono)}
+    .slot .txt{font-size:13px;line-height:1.25}
+    .slot.filled{border-style:solid;background:rgba(122,162,255,.10);border-color:rgba(122,162,255,.35)}
+    .slot.correct{background:rgba(43,213,118,.10);border-color:rgba(43,213,118,.55)}
+    .slot.wrong{background:rgba(255,92,122,.10);border-color:rgba(255,92,122,.55)}
+
+    .poolWrap{margin-top:12px}
+    .poolTitle{display:flex;gap:10px;align-items:center;justify-content:space-between}
+    .poolTitle .t{font-weight:900}
+    .poolTitle .pill{
+      font-size:12px;color:var(--muted);
+      border:1px solid var(--line);
+      padding:4px 8px;border-radius:999px;
+      background:rgba(0,0,0,.18);
+      font-family:var(--mono);
+    }
+    .pool{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width:720px){ .pool{grid-template-columns:1fr} }
+
+    .card{
+      border:1px solid var(--line);
       background:rgba(0,0,0,.16);
-      margin-bottom:12px;
+      border-radius:14px;
+      padding:10px;
+      cursor:pointer;
+      user-select:none;
+      transition:transform .05s ease, border-color .15s ease, background .15s ease;
+      display:flex;gap:10px;align-items:flex-start;
+    }
+    .card:hover{border-color:rgba(122,162,255,.6);transform:translateY(-1px)}
+    .card.locked{cursor:not-allowed;opacity:.55}
+    .card.sel{border-color:rgba(255,209,102,.85);background:rgba(255,209,102,.10)}
+    .badge{
+      width:24px;height:24px;border-radius:8px;
+      border:1px solid var(--line);
+      display:grid;place-items:center;
+      font-family:var(--mono);font-size:12px;color:var(--muted);
+      flex:0 0 auto;
+      background:rgba(0,0,0,.18);
+    }
+
+    .controls{
+      margin-top:12px;
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    }
+    .btn{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .btn:hover{border-color:rgba(122,162,255,.6)}
+    .btn.primary{border-color:rgba(122,162,255,.65);background:rgba(122,162,255,.16)}
+    .btn.small{padding:8px 10px;font-size:12px;border-radius:12px}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .msg{
+      margin-top:12px;border-radius:14px;border:1px solid var(--line);
+      padding:10px 12px;display:none;
+    }
+    .msg.bad{display:block;background:rgba(255,92,122,.10)}
+    .msg.good{display:block;background:rgba(43,213,118,.10)}
+    .msg .t{font-weight:900;margin-bottom:4px}
+
+    .ticket{
+      margin-top:14px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;display:none;
+    }
+    pre{
+      margin:10px 0 0;
+      white-space:pre-wrap;
+      background:rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px;
+      font-family:var(--mono);
+      font-size:12px;
       line-height:1.35;
     }
 
-    .list{display:flex;flex-direction:column;gap:10px}
-    .item{
+    /* Name gate */
+    .gate{position:fixed;inset:0;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:20px}
+    .gateCard{
+      width:min(560px,94vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
       border:1px solid var(--line);
-      background:rgba(255,255,255,.02);
-      border-radius:14px;
-      padding:10px 12px;
-      cursor:pointer;
-      user-select:none;
-      transition:transform .06s ease, border-color .12s ease, background .12s ease;
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:18px;
     }
-    .item:hover{border-color:rgba(122,162,255,.55)}
-    .item:active{transform:scale(.995)}
-    .item.lock{cursor:not-allowed;opacity:.72}
-    .item.sel{
-      border-color:rgba(122,162,255,.75);
-      box-shadow:0 0 0 2px rgba(122,162,255,.18) inset;
-      background:rgba(122,162,255,.08);
-    }
-    .item.good{
-      border-color:rgba(43,213,118,.75);
-      background:rgba(43,213,118,.10);
-    }
-    .item.bad{
-      border-color:rgba(255,92,122,.75);
-      background:rgba(255,92,122,.10);
-    }
-
-    .slots{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:10px;
-    }
-    .slot{
-      border:1px dashed rgba(255,255,255,.22);
-      background:rgba(0,0,0,.14);
-      border-radius:14px;
-      padding:10px 12px;
-      min-height:44px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      cursor:pointer;
-    }
-    .slot .label{color:var(--muted);font-size:12px}
-    .slot .value{color:var(--text);font-weight:650}
-    .slot.filled{
-      border-style:solid;
-      border-color:rgba(122,162,255,.35);
-      background:rgba(122,162,255,.06);
-    }
-
-    .msg{
-      margin-top:12px;
+    .gateCard h2{margin:0 0 8px;font-size:18px}
+    .gateCard p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.35}
+    .inrow{display:flex;gap:10px;flex-wrap:wrap}
+    input{
+      flex:1;min-width:240px;
       border:1px solid var(--line);
+      background:rgba(0,0,0,.22);
+      color:var(--text);
       border-radius:14px;
-      padding:10px 12px;
-      background:rgba(255,255,255,.03);
-      color:var(--text);
-      display:none;
-    }
-    .msg.show{display:block}
-    .msg .hint{color:var(--warn);font-weight:800}
-
-    .footerbar{
-      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
-      margin-top:14px;
-    }
-    .btn{
-      appearance:none;border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      padding:10px 12px;border-radius:14px;
-      cursor:pointer;font-weight:650;
-    }
-    .btn:hover{border-color:rgba(122,162,255,.55)}
-    .btn.danger:hover{border-color:rgba(255,92,122,.55)}
-
-    .gate{display:block;padding:20px;}
-    .gate .inner{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
-    .input{
-      width:100%;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.18);
-      color:var(--text);
-      font-size:16px;
-      outline:none;
-    }
-
-    .finish{display:none;margin-top:14px;}
-    .ticket{
-      margin-top:12px;
       padding:12px 12px;
-      border-radius:14px;
-      border:1px dashed rgba(255,255,255,.22);
-      background:rgba(0,0,0,.18);
-      font-family:var(--mono);
-      font-size:12px;
-      white-space:pre-wrap;
+      outline:none;font-size:14px;
     }
+    input:focus{border-color:rgba(122,162,255,.7)}
   </style>
-
-  <script src="../amstud_bank.js"></script>
 </head>
-
 <body>
   <div class="wrap">
-    <div class="panel">
-      <div class="topbar">
-        <div class="title">
-          <div class="kicker">LEGEND MASTERY SERIES</div>
-          <h1>AmStud Game 6 — Cause & Effect Chain</h1>
-          <div class="fine">
-            Build the chain from earliest cause → later effects. Mastery = <b>0 misses</b>.
-            Click options to fill the next slot. Click a filled slot to “rewind” from there.
-          </div>
+    <div class="top">
+      <div>
+        <h1>AmStud Game 6 — Cause & Effect Chain (Mastery)</h1>
+        <div class="sub">
+          Build the correct cause → effect chain. Click a card, then click a slot (1–4).
+          Auto-check when all slots are filled. Mastery requires <strong>0 misses</strong>.
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><strong>LIVE</strong></div>
+        <div class="chip">Cause → Effect</div>
+        <div class="chip">Chain building</div>
+        <div class="chip">Auto-check</div>
+        <div class="chip">Ticket: Name/Times/Accuracy</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="panel">
+        <div class="qhead">
+          <div class="qnum" id="qnum">Chain —</div>
+          <div class="skill" id="skill">Cause & Effect Chain</div>
         </div>
 
-        <div class="meta">
-          <div class="pill"><span class="dot"></span> Player: <b id="playerName">—</b></div>
-          <div class="pill">Date: <b id="dateStamp">—</b></div>
-          <div class="pill">Start: <b id="startStamp">—</b></div>
-          <div class="pill">End: <b id="endStamp">—</b></div>
-          <div class="pill">Elapsed: <b id="elapsed">—</b></div>
-          <div class="pill">Progress: <b id="prog">—</b></div>
-          <div class="pill">Accuracy: <b id="acc">—</b></div>
-          <div class="pill">Misses: <b id="misses">0</b></div>
+        <div class="bar" aria-label="progress"><div id="pbar"></div></div>
+
+        <div class="prompt" id="prompt">—</div>
+        <div class="rule" id="rule">
+          Step 1: click a card in the pool. Step 2: click a slot (1–4) to place it.
+          Fill all slots to auto-check. Wrong chain = 1 miss, then retry.
+        </div>
+
+        <div class="chain">
+          <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+            <div style="font-weight:900">Your Chain</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn small" id="clearBtn" type="button">Clear Slots</button>
+              <button class="btn small" id="undoBtn" type="button" disabled>Undo</button>
+            </div>
+          </div>
+
+          <div class="slots" id="slots"></div>
+        </div>
+
+        <div class="poolWrap">
+          <div class="poolTitle">
+            <div class="t">Card Pool</div>
+            <div class="pill" id="poolCount">0 cards</div>
+          </div>
+          <div class="pool" id="pool"></div>
+        </div>
+
+        <div class="msg bad" id="badMsg">
+          <div class="t">Not yet.</div>
+          <div id="hint">—</div>
+        </div>
+        <div class="msg good" id="goodMsg">
+          <div class="t">Correct.</div>
+          <div id="goodText">Auto-advancing…</div>
+        </div>
+
+        <div class="controls">
+          <button class="btn" id="restartBtn" type="button">Restart</button>
+          <div class="qnum" id="note">Tip: one miss breaks Mastery. Restart and go again for 100%.</div>
+        </div>
+
+        <div class="ticket" id="ticket">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+            <div><strong>Submit Ticket</strong> (screenshot this)</div>
+            <button class="btn primary" id="copyBtn" type="button">Copy Ticket</button>
+          </div>
+          <pre id="ticketText"></pre>
         </div>
       </div>
 
-      <div id="gate" class="gate">
-        <div class="inner">
-          <div class="fine"><b>Name required</b> to start and generate the submit ticket.</div>
-          <input id="nameInput" class="input" placeholder="Type your name (first + last)..." autocomplete="name"/>
-          <button id="startBtn" class="btn" type="button">Start Game</button>
-          <div class="fine">If a student closes the laptop, progress restores from local storage (including name).</div>
-        </div>
-      </div>
-
-      <div id="game" style="display:none;">
-        <div class="grid">
-          <div class="box">
-            <div class="boxtitle">
-              <div class="tag">Options <small>(click to add)</small></div>
-              <div class="tag"><span id="csTag">CS —</span></div>
-            </div>
-
-            <div id="prompt" class="prompt">—</div>
-            <div id="options" class="list"></div>
-          </div>
-
-          <div class="box">
-            <div class="boxtitle">
-              <div class="tag">Chain <small>(earliest → latest)</small></div>
-              <div class="tag">Set: <b id="setId">—</b></div>
-            </div>
-
-            <div class="slots" id="slots"></div>
-          </div>
+      <div class="panel">
+        <div class="stats">
+          <div class="stat"><div class="k">Student</div><div class="v" id="student">—</div></div>
+          <div class="stat"><div class="k">Accuracy</div><div class="v" id="acc">100.0%</div></div>
+          <div class="stat"><div class="k">Start</div><div class="v" id="start">—</div></div>
+          <div class="stat"><div class="k">Now</div><div class="v" id="now">—</div></div>
+          <div class="stat"><div class="k">Correct Chains</div><div class="v" id="correct">0</div></div>
+          <div class="stat"><div class="k">Misses</div><div class="v" id="misses">0</div></div>
         </div>
 
-        <div id="msg" class="msg"></div>
-
-        <div class="footerbar">
-          <button id="restartBtn" class="btn danger" type="button">Restart Game</button>
-        </div>
-
-        <div id="finish" class="finish">
-          <div class="msg show" id="finishLine"></div>
-          <div class="ticket" id="ticket"></div>
-          <div class="footerbar">
-            <button id="copyTicket" class="btn" type="button">Copy Ticket</button>
-            <button id="printTicket" class="btn" type="button">Print Ticket</button>
-          </div>
+        <div style="margin-top:12px;color:var(--muted);font-size:12px;line-height:1.35">
+          <strong>How it works:</strong><br/>
+          • Each chain is one “question.”<br/>
+          • Complete the 4-step chain and it auto-checks.<br/>
+          • If incorrect, that’s <strong>1 miss</strong> and you retry with a hint.
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Name Gate -->
+  <div class="gate" id="gate" role="dialog" aria-modal="true">
+    <div class="gateCard">
+      <h2>Enter your name to begin</h2>
+      <p>Your name + timestamps + accuracy will appear on the final submit ticket.</p>
+      <div class="inrow">
+        <input id="nameInput" type="text" placeholder="First and last name" autocomplete="name"/>
+        <button class="btn primary" id="beginBtn" type="button">Begin</button>
+      </div>
+      <p style="margin-top:10px;color:var(--muted);font-size:12px">
+        (If you close your device, refresh to restart clean.)
+      </p>
+    </div>
+  </div>
+
 <script>
 /* =========================
-   CONFIG
-========================= */
-const GAME_ID = "amstud-g6-cause-effect-chain";
-const SESSION_KEY = GAME_ID + "::session";
-const ADVANCE_MS = 700; // delay after correct chain
+   CHAINS (Embedded) — Cause & Effect Chain
+   Each chain has 4 steps (cause -> effect -> effect -> outcome)
+   Includes civics + AmHist spiral and your requested items:
+   Federalism, Necessary & Proper, 10th, Incorporation, 22nd/23rd/25th
+   ========================= */
+const CHAINS = [
+  {
+    id:1, topic:"Industrialization → Urban problems",
+    prompt:"Build the chain that best explains how industrial growth reshaped American cities.",
+    hint:"Factory jobs pull workers in; infrastructure struggles; public health and housing problems grow.",
+    steps:[
+      "Factories expand and create more wage jobs",
+      "People migrate from rural areas (and abroad) to cities for work",
+      "Cities grow faster than housing and sanitation systems",
+      "Overcrowding, tenements, and disease become major urban problems"
+    ]
+  },
+  {
+    id:2, topic:"Mechanized farming → Urbanization",
+    prompt:"Build the chain that best explains how mechanized farming contributed to urban growth.",
+    hint:"Machines reduce farm labor needs; people move to find work; factories absorb labor.",
+    steps:[
+      "New machines increase farm efficiency and output",
+      "Farms need fewer workers to produce the same (or more) food",
+      "Many rural workers leave farms to seek wages elsewhere",
+      "Urban factory work grows and cities expand"
+    ]
+  },
+  {
+    id:3, topic:"Laissez-faire → Monopolies",
+    prompt:"Build the chain that best explains how laissez-faire policies helped create monopolies.",
+    hint:"Less regulation lets big firms consolidate; competition shrinks; prices/wages can be controlled.",
+    steps:[
+      "Government regulates big business less (laissez-faire)",
+      "Large companies consolidate through mergers and trusts",
+      "Competition decreases in key industries",
+      "Monopolies gain power to influence prices, wages, and politics"
+    ]
+  },
+  {
+    id:4, topic:"Muckrakers → Reform laws",
+    prompt:"Build the chain that best explains how muckrakers contributed to Progressive reforms.",
+    hint:"Expose problems → public pressure → political action → laws/regulation.",
+    steps:[
+      "Journalists expose corruption and unsafe conditions",
+      "Public outrage and demand for change increase",
+      "Reform leaders gain support to act",
+      "New laws and regulations expand consumer and worker protections"
+    ]
+  },
+  {
+    id:5, topic:"WWI → Isolationism",
+    prompt:"Build the chain that best explains how WWI contributed to U.S. isolationism in the 1920s–1930s.",
+    hint:"War costs → disillusionment → treaty/League rejection → avoid entanglements.",
+    steps:[
+      "WWI causes heavy casualties and economic disruption",
+      "Many Americans become disillusioned with foreign conflicts",
+      "The U.S. Senate rejects joining the League of Nations",
+      "Public and political pressure favors isolationist policies"
+    ]
+  },
+  {
+    id:6, topic:"Stock market crash → Depression",
+    prompt:"Build the chain that best explains how the stock market crash worsened the Great Depression.",
+    hint:"Wealth/confidence falls → spending drops → business layoffs → deeper downturn.",
+    steps:[
+      "Stock market crash destroys wealth and confidence",
+      "Consumers and investors cut spending and investment",
+      "Businesses reduce production and lay off workers",
+      "Unemployment rises and the economic downturn deepens"
+    ]
+  },
+  {
+    id:7, topic:"New Deal → Expanded federal role",
+    prompt:"Build the chain that best explains how the New Deal expanded the role of the federal government.",
+    hint:"Crisis → programs/regulation → new expectations → long-term federal involvement.",
+    steps:[
+      "Economic crisis creates demand for government action",
+      "Federal relief, recovery, and reform programs expand",
+      "Government increases regulation and oversight of parts of the economy",
+      "Americans expect a larger federal role during economic hardship"
+    ]
+  },
+  {
+    id:8, topic:"Pearl Harbor → Mobilization",
+    prompt:"Build the chain that best explains how Pearl Harbor led to major economic mobilization.",
+    hint:"Attack → war entry → production shift → jobs/output rise.",
+    steps:[
+      "Japan attacks Pearl Harbor",
+      "The United States declares war and enters WWII",
+      "Factories shift to producing wartime supplies",
+      "Production and employment increase through war mobilization"
+    ]
+  },
+  {
+    id:9, topic:"Cold War → Containment actions",
+    prompt:"Build the chain that best explains how Cold War tensions produced U.S. containment policies.",
+    hint:"Ideological rivalry → fear of spread → strategy → alliances/aid.",
+    steps:[
+      "Post-WWII rivalry grows between the U.S. and the USSR",
+      "U.S. leaders fear the spread of communism",
+      "The U.S. adopts a containment strategy",
+      "Alliances and aid are used to resist communist expansion"
+    ]
+  },
+  {
+    id:10, topic:"Brown → Civil Rights laws",
+    prompt:"Build the chain that best explains how legal victories helped lead to major civil rights legislation.",
+    hint:"Court ruling → activism pressure → federal action → laws enforcing rights.",
+    steps:[
+      "Brown v. Board rules school segregation unconstitutional",
+      "Civil rights activism increases pressure for broader change",
+      "Federal leaders respond to growing demand for equal rights",
+      "Civil Rights Act (1964) and Voting Rights Act (1965) expand protections"
+    ]
+  },
+
+  // CIVICS CHAINS — REQUIRED ITEMS INCLUDED
+  {
+    id:11, topic:"Federalism (structure) → policy conflict",
+    prompt:"Build the chain that best explains how federalism can create conflict and cooperation between levels of government.",
+    hint:"Shared power + divided responsibilities can lead to overlap, disputes, and cooperation on funding/enforcement.",
+    steps:[
+      "The Constitution divides power between national and state governments",
+      "Both levels have responsibilities that can overlap in practice",
+      "Disputes can arise about who has authority in certain areas",
+      "Cooperation often occurs through funding, standards, and shared enforcement"
+    ]
+  },
+  {
+    id:12, topic:"Necessary & Proper → expanded congressional power",
+    prompt:"Build the chain that best explains how the Necessary and Proper Clause can expand federal power.",
+    hint:"Enumerated powers + implied means → laws to carry out duties → broader authority.",
+    steps:[
+      "The Constitution lists Congress’s enumerated powers",
+      "Congress needs practical ways to carry out those powers",
+      "Necessary and Proper Clause allows laws to execute powers",
+      "Congress gains implied powers beyond what is explicitly listed"
+    ]
+  },
+  {
+    id:13, topic:"10th Amendment → reserved powers",
+    prompt:"Build the chain that best explains the purpose and effect of the 10th Amendment.",
+    hint:"If not given to federal gov, it stays with states/people; helps limit national reach.",
+    steps:[
+      "The Constitution grants specific powers to the federal government",
+      "Some powers are not delegated to the national government",
+      "The 10th Amendment reserves those powers to states or the people",
+      "States retain broad authority over many local issues"
+    ]
+  },
+  {
+    id:14, topic:"Incorporation → rights applied to states",
+    prompt:"Build the chain that best explains how incorporation expanded individual rights against state governments.",
+    hint:"14th Amendment → due process → Supreme Court applies Bill of Rights → states limited too.",
+    steps:[
+      "14th Amendment promises due process and equal protection",
+      "People challenge state laws that restrict individual rights",
+      "Supreme Court applies Bill of Rights protections to states over time",
+      "State governments are more limited by individual rights (incorporation)"
+    ]
+  },
+  {
+    id:15, topic:"22nd Amendment → presidential term limits",
+    prompt:"Build the chain that best explains why the 22nd Amendment was adopted.",
+    hint:"Concern after FDR’s 4 terms → fear of too much executive power → limit → two terms.",
+    steps:[
+      "A president serves more than two terms (FDR served four)",
+      "Concerns grow about concentrated executive power over time",
+      "Congress and states support a formal constitutional limit",
+      "22nd Amendment limits presidents to two elected terms"
+    ]
+  },
+  {
+    id:16, topic:"23rd Amendment → DC electors",
+    prompt:"Build the chain that best explains the impact of the 23rd Amendment.",
+    hint:"DC residents lacked presidential vote → amendment grants electors → participation expands.",
+    steps:[
+      "Residents of Washington, D.C. lack votes in the Electoral College",
+      "Pressure grows to expand political participation for DC residents",
+      "23rd Amendment grants D.C. electors for president/vice president",
+      "D.C. gains limited representation in presidential elections"
+    ]
+  },
+  {
+    id:17, topic:"25th Amendment → continuity of government",
+    prompt:"Build the chain that best explains why the 25th Amendment matters for stability.",
+    hint:"Unclear succession/disability rules → need procedure → VP/continuity → stable transition.",
+    steps:[
+      "Illness or death can suddenly remove a president from duty",
+      "Ambiguity about succession and disability creates uncertainty",
+      "25th Amendment sets procedures for replacement and temporary transfer",
+      "Continuity of government is strengthened during crises"
+    ]
+  }
+];
 
 /* =========================
-   UTIL
-========================= */
-function pad(n){ return String(n).padStart(2,"0"); }
-function dateOnly(ts=Date.now()){
-  const d = new Date(ts);
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+   ENGINE — Cause & Effect Chain
+   - Each chain is one “question.”
+   - Students place cards into slots 1–4.
+   - Auto-check when all filled.
+   - Wrong chain increments misses and resets chain for retry.
+   ========================= */
+const $ = (id)=>document.getElementById(id);
+
+let studentName = "";
+let startedAt = null;
+let endedAt = null;
+let timer = null;
+
+let idx = 0;
+let correctChains = 0;
+let misses = 0;
+
+let order = [];
+let selectedCardId = null;
+let placed = [null,null,null,null]; // card text
+let used = new Set();
+let history = []; // {slotIndex, cardId}
+
+function fmt(d){
+  if(!d) return "—";
+  const pad = (n)=>String(n).padStart(2,"0");
+  const mm = pad(d.getMonth()+1);
+  const dd = pad(d.getDate());
+  const yy = d.getFullYear();
+  let h = d.getHours(); const ampm = h>=12 ? "PM":"AM";
+  h = h%12; if(h===0) h=12;
+  const mi = pad(d.getMinutes());
+  const se = pad(d.getSeconds());
+  return `${mm}/${dd}/${yy} ${h}:${mi}:${se} ${ampm}`;
 }
-function timeOnly(ts=Date.now()){
-  const d = new Date(ts);
-  let h = d.getHours();
-  const m = pad(d.getMinutes());
-  const s = pad(d.getSeconds());
-  const ap = h >= 12 ? "PM" : "AM";
-  h = h % 12; if(h===0) h=12;
-  return `${h}:${m}:${s} ${ap}`;
+function durMS(a,b){
+  const ms = Math.max(0, b-a);
+  const s = Math.floor(ms/1000);
+  const hh = Math.floor(s/3600);
+  const mm = Math.floor((s%3600)/60);
+  const ss = s%60;
+  const pad = (n)=>String(n).padStart(2,"0");
+  return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
 }
-function fmtElapsed(ms){
-  const sec = Math.max(0, Math.floor(ms/1000));
-  const h = Math.floor(sec/3600);
-  const m = Math.floor((sec%3600)/60);
-  const s = sec%60;
-  if(h>0) return `${h}:${pad(m)}:${pad(s)}`;
-  return `${m}:${pad(s)}`;
-}
-function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
 function shuffle(arr){
   const a = arr.slice();
   for(let i=a.length-1;i>0;i--){
@@ -320,486 +585,342 @@ function shuffle(arr){
   }
   return a;
 }
-function safeText(s){ return String(s ?? "").replace(/[<>]/g, ""); }
-function itemText(x){
-  if (typeof x === "string") return x;
-  if (x && typeof x === "object"){
-    return x.text ?? x.term ?? x.label ?? x.answer ?? x.value ?? x.name ?? "";
-  }
-  return String(x ?? "");
+function computeAcc(){
+  const total = correctChains + misses;
+  if(total === 0) return 100;
+  return (correctChains / total) * 100;
 }
-
-/* =========================
-   LOAD BANK
-========================= */
-function getDeck(){
-  const bank = (window.AMSTUD_BANK || []);
-  return bank.filter(x =>
-    x && (x.type === "cause-effect-chain") &&
-    Array.isArray(x.tags) && x.tags.includes("G6")
-  );
+function setAccUI(){
+  $("acc").textContent = `${computeAcc().toFixed(1)}%`;
+  $("correct").textContent = String(correctChains);
+  $("misses").textContent = String(misses);
 }
+function tickNow(){ $("now").textContent = fmt(new Date()); }
 
-/* =========================
-   STATE
-========================= */
-let deck = [];
-let idx = 0;
+function startGame(){
+  order = shuffle(CHAINS.map((_,i)=>i));
+  idx = 0; correctChains = 0; misses = 0;
+  startedAt = new Date(); endedAt = null;
 
-let state = {
-  name: "",
-  date: "",
-  startAt: null,
-  endAt: null,
-  correct: 0,
-  wrong: 0,
-  finished: false
-};
+  $("student").textContent = studentName;
+  $("start").textContent = fmt(startedAt);
 
-let timer = null;
+  $("ticket").style.display = "none";
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
 
-/* =========================
-   UI
-========================= */
-const elPlayerName = document.getElementById('playerName');
-const elDateStamp = document.getElementById('dateStamp');
-const elStartStamp = document.getElementById('startStamp');
-const elEndStamp = document.getElementById('endStamp');
-const elElapsed = document.getElementById('elapsed');
-const elProg = document.getElementById('prog');
-const elAcc = document.getElementById('acc');
-const elMisses = document.getElementById('misses');
-
-const gate = document.getElementById('gate');
-const game = document.getElementById('game');
-const nameInput = document.getElementById('nameInput');
-const startBtn = document.getElementById('startBtn');
-
-const csTag = document.getElementById('csTag');
-const setIdEl = document.getElementById('setId');
-const promptEl = document.getElementById('prompt');
-const optionsEl = document.getElementById('options');
-const slotsEl = document.getElementById('slots');
-const msgEl = document.getElementById('msg');
-
-const restartBtn = document.getElementById('restartBtn');
-const finishBox = document.getElementById('finish');
-const finishLine = document.getElementById('finishLine');
-const ticketEl = document.getElementById('ticket');
-const copyTicket = document.getElementById('copyTicket');
-const printTicket = document.getElementById('printTicket');
-
-/* =========================
-   SESSION SAVE/LOAD
-========================= */
-// ✅ FIX: JSON cannot serialize Set. Pack/unpack play safely.
-function packPlay(){
-  return {
-    steps: play.steps,
-    correct: play.correct,
-    picks: play.picks,
-    used: Array.from(play.used) // serialize Set -> Array
-  };
-}
-function unpackPlay(p){
-  return {
-    steps: p?.steps || [],
-    correct: p?.correct || [0,1,2,3],
-    picks: p?.picks || [],
-    used: new Set(Array.isArray(p?.used) ? p.used : []) // Array -> Set
-  };
-}
-
-function saveSession(){
-  try{
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ state, idx, deck, play: packPlay() })); // ✅ FIX
-  }catch(_){}
-}
-function loadSession(){
-  try{
-    const raw = localStorage.getItem(SESSION_KEY);
-    if(!raw) return null;
-    return JSON.parse(raw);
-  }catch(_){ return null; }
-}
-function clearSession(){ localStorage.removeItem(SESSION_KEY); }
-
-/* =========================
-   TOP RENDER
-========================= */
-function renderTop(){
-  elPlayerName.textContent = state.name || "—";
-  elDateStamp.textContent = state.date || dateOnly();
-  elStartStamp.textContent = state.startAt ? timeOnly(state.startAt) : "—";
-  elEndStamp.textContent = state.endAt ? timeOnly(state.endAt) : "—";
-  elMisses.textContent = String(state.wrong);
-
-  const totalAttempts = state.correct + state.wrong;
-  const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
-  elAcc.textContent = totalAttempts ? `${acc}%` : "—";
-
-  elProg.textContent = `${clamp(idx,0,deck.length)}/${deck.length || 0}`;
-}
-
-/* =========================
-   MESSAGES
-========================= */
-function showMsg(html){
-  msgEl.className = "msg show";
-  msgEl.innerHTML = html;
-}
-function clearMsg(){
-  msgEl.className = "msg";
-  msgEl.innerHTML = "";
-}
-
-/* =========================
-   TIMER
-========================= */
-function startTimer(){
+  setAccUI();
+  renderChain();
+  tickNow();
   if(timer) clearInterval(timer);
-  timer = setInterval(()=>{
-    if(!state.startAt) return;
-    elElapsed.textContent = fmtElapsed(Date.now() - state.startAt);
-  }, 250);
+  timer = setInterval(tickNow, 500);
 }
 
-/* =========================
-   PLAY STATE FOR CURRENT SET
-========================= */
-let working = null;
-let optionOrder = [];
-let play = {
-  steps: [],
-  correct: [0,1,2,3],
-  picks: [],
-  used: new Set()
-};
-
-function normalizeSet(x){
-  const stepsRaw =
-    x.chain ?? x.steps ?? x.events ?? x.items ?? x.effects ?? x.causes ?? [];
-
-  const steps = Array.isArray(stepsRaw) ? stepsRaw.slice(0,4).map(itemText) : [];
-  const correct = Array.isArray(x.correctOrder) ? x.correctOrder.slice(0,4)
-                : Array.isArray(x.order) ? x.order.slice(0,4)
-                : [0,1,2,3];
-
-  const prompt =
-    x.stem ?? x.prompt ?? x.question ??
-    "Build the cause → effect chain in the correct order.";
-
-  return { steps, correct, prompt };
-}
-
-function renderSet(){
-  clearMsg();
-  finishBox.style.display = "none";
-
-  working = deck[idx];
-  if(!working){ finish(); return; }
-
-  const norm = normalizeSet(working);
-  if(norm.steps.length < 4){
-    showMsg(`<b>Bank error:</b> This set does not contain 4 chain steps.`);
-    return;
-  }
-
-  play.steps = norm.steps;
-  play.correct = norm.correct;
-  play.picks = [];
-  play.used = new Set();
-
-  optionOrder = shuffle([0,1,2,3]);
-
-  csTag.textContent = working.cs || "CS —";
-  setIdEl.textContent = safeText(working.id || `G6-${idx+1}`);
-  promptEl.innerHTML = safeText(norm.prompt);
-
-  optionsEl.innerHTML = "";
-  slotsEl.innerHTML = "";
-
+function renderSlots(){
+  const slots = $("slots");
+  slots.innerHTML = "";
   for(let i=0;i<4;i++){
-    const s = document.createElement('div');
-    s.className = "slot";
-    s.dataset.slot = String(i);
-    s.innerHTML = `<div class="label">Step ${i+1}</div><div class="value">—</div>`;
-
-    s.addEventListener('click', ()=>{
-      if(state.finished) return;
-      const slotIndex = Number(s.dataset.slot);
-      if(play.picks.length === 0) return;
-      if(slotIndex >= play.picks.length) return;
-
-      const removed = play.picks.splice(slotIndex);
-      removed.forEach(ix => play.used.delete(ix));
-      renderChainOnly();
-      renderOptionsOnly();
-      clearMsg();
-      saveSession();
-    });
-
-    slotsEl.appendChild(s);
-  }
-
-  optionOrder.forEach((origIndex)=>{
-    const d = document.createElement('div');
-    d.className = "item";
-    d.dataset.orig = String(origIndex);
-    d.textContent = play.steps[origIndex];
-
-    d.addEventListener('click', ()=>{
-      if(state.finished) return;
-      if(play.used.has(origIndex)) return;
-
-      const nextSlot = play.picks.length;
-      if(nextSlot >= 4) return;
-
-      const expectedOrigIndex = play.correct[nextSlot];
-
-      if(origIndex === expectedOrigIndex){
-        play.picks.push(origIndex);
-        play.used.add(origIndex);
-
-        renderChainOnly();
-        renderOptionsOnly();
-        clearMsg();
-        saveSession();
-
-        if(play.picks.length === 4){
-          state.correct++;
-          renderTop();
-          saveSession();
-
-          setTimeout(()=>{
-            idx++;
-            if(idx >= deck.length) finish();
-            else renderSet();
-          }, ADVANCE_MS);
-        }
-      }else{
-        state.wrong++;
-        renderTop();
-        saveSession();
-
-        d.classList.add('bad');
-        setTimeout(()=>d.classList.remove('bad'), 350);
-
-        const hint = working.hint ? `<div class="hint">Hint:</div> <b>${safeText(working.hint)}</b>` : "";
-        const explain = working.explain ? `<div style="color:var(--muted);margin-top:6px;">${safeText(working.explain)}</div>` : "";
-        showMsg(`<b>Not the next step.</b> ${hint}${explain}<div style="margin-top:6px;"><b>Try again:</b> pick the correct next cause/effect in the chain.</div>`);
-      }
-    });
-
-    optionsEl.appendChild(d);
-  });
-
-  renderTop();
-  saveSession();
-}
-
-function renderChainOnly(){
-  const slots = Array.from(slotsEl.querySelectorAll('.slot'));
-  for(let i=0;i<4;i++){
-    const s = slots[i];
-    const v = s.querySelector('.value');
-    if(i < play.picks.length){
-      const orig = play.picks[i];
-      s.classList.add('filled');
-      v.textContent = play.steps[orig];
-    }else{
-      s.classList.remove('filled');
-      v.textContent = "—";
-    }
+    const div = document.createElement("div");
+    div.className = "slot" + (placed[i] ? " filled" : "");
+    div.dataset.slot = String(i);
+    div.innerHTML = `
+      <div class="lbl">Step ${i+1}</div>
+      <div class="txt">${placed[i] ? placed[i] : "<span style='color:var(--muted)'>Click a card, then click here…</span>"}</div>
+    `;
+    div.addEventListener("click", ()=>placeIntoSlot(i));
+    slots.appendChild(div);
   }
 }
 
-function renderOptionsOnly(){
-  const items = Array.from(optionsEl.querySelectorAll('.item'));
-  items.forEach(el=>{
-    const orig = Number(el.dataset.orig);
-    if(play.used.has(orig)){
-      el.classList.add('lock','good');
-    }else{
-      el.classList.remove('lock','good');
-    }
+function renderPool(cards){
+  const pool = $("pool");
+  pool.innerHTML = "";
+  $("poolCount").textContent = `${cards.length} cards`;
+
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  cards.forEach((c, i)=>{
+    const div = document.createElement("div");
+    div.className = "card";
+    div.dataset.id = c.id;
+
+    const b = document.createElement("div");
+    b.className = "badge";
+    b.textContent = letters[i] || "•";
+
+    const t = document.createElement("div");
+    t.textContent = c.text;
+
+    div.appendChild(b);
+    div.appendChild(t);
+
+    div.addEventListener("click", ()=>selectCard(c.id));
+
+    pool.appendChild(div);
   });
 }
 
-/* =========================
-   FINISH / TICKET
-========================= */
-function buildTicket(passed, acc, elapsedMs){
-  const lines = [];
-  lines.push("LEGEND MASTERY — SUBMIT TICKET");
-  lines.push("--------------------------------");
-  lines.push(`Game: ${GAME_ID}`);
-  lines.push(`Name: ${state.name || "—"}`);
-  lines.push(`Date: ${state.date || "—"}`);
-  lines.push(`Start: ${state.startAt ? timeOnly(state.startAt) : "—"}`);
-  lines.push(`End: ${state.endAt ? timeOnly(state.endAt) : "—"}`);
-  lines.push(`Elapsed: ${fmtElapsed(elapsedMs)}`);
-  lines.push("--------------------------------");
-  lines.push(`Sets Completed: ${state.correct}/${deck.length}`);
-  lines.push(`Misses: ${state.wrong}`);
-  lines.push(`Accuracy: ${acc}%`);
-  lines.push(`Passed: ${passed ? "YES ✅" : "NO ❌"}`);
-  lines.push("--------------------------------");
-  lines.push(`Bank Version: ${window.AMSTUD_BANK_VERSION || "unknown"}`);
-  return lines.join("\n");
+function clearSelectionsUI(){
+  selectedCardId = null;
+  [...$("pool").children].forEach(el=>el.classList.remove("sel"));
+}
+
+function setUndoState(){
+  $("undoBtn").disabled = history.length === 0;
+}
+
+function renderChain(){
+  // reset state for current chain
+  placed = [null,null,null,null];
+  used = new Set();
+  history = [];
+  clearSelectionsUI();
+  setUndoState();
+
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+
+  const cIndex = order[idx];
+  const chain = CHAINS[cIndex];
+
+  $("qnum").textContent = `Chain ${idx+1} / ${CHAINS.length}`;
+  $("skill").textContent = chain.topic || "Cause & Effect Chain";
+  $("prompt").textContent = chain.prompt;
+
+  $("pbar").style.width = `${(idx / CHAINS.length) * 100}%`;
+
+  // build cards: 4 correct steps + 2 plausible distractors
+  const distractors = buildDistractors(chain);
+  const cards = shuffle([
+    ...chain.steps.map((text, i)=>({ id:`S${i}`, text, correctIndex:i })),
+    ...distractors
+  ]).map((c, i)=>({ ...c, poolIndex:i }));
+
+  window.__current = { chain, cards };
+
+  renderSlots();
+  renderPool(cards);
+}
+
+function buildDistractors(chain){
+  // small bank of generic-but-plausible distractors; filtered for variety
+  const bank = [
+    "Congress immediately abolishes state governments",
+    "Courts eliminate elections to speed decisions",
+    "Cities become less crowded as people return to farms",
+    "Businesses raise wages for all workers without pressure",
+    "Government ends immigration entirely by constitutional amendment",
+    "All conflicts end because both sides agree to share power",
+    "Federal power disappears and states act independently",
+    "The economy improves instantly with no job losses",
+    "The policy has no effect on society or government",
+    "Technology reduces production and closes factories"
+  ];
+  const s = new Set(chain.steps);
+  const picks = shuffle(bank.filter(x=>!s.has(x))).slice(0,2);
+  return picks.map((text, i)=>({ id:`D${i}`, text, correctIndex:null }));
+}
+
+function selectCard(id){
+  // ignore locked cards
+  const { cards } = window.__current;
+  const card = cards.find(c=>c.id===id);
+  if(!card) return;
+  if(used.has(id)) return;
+
+  clearSelectionsUI();
+  selectedCardId = id;
+
+  const el = [...$("pool").children].find(n=>n.dataset.id===id);
+  if(el) el.classList.add("sel");
+}
+
+function placeIntoSlot(slotIndex){
+  const { cards } = window.__current;
+  if(!selectedCardId) return;
+  if(placed[slotIndex]) return; // don't overwrite; use Clear/Undo
+
+  const card = cards.find(c=>c.id===selectedCardId);
+  if(!card) return;
+
+  placed[slotIndex] = card.text;
+  used.add(card.id);
+  history.push({ slotIndex, cardId: card.id });
+
+  // lock card
+  const el = [...$("pool").children].find(n=>n.dataset.id===card.id);
+  if(el){
+    el.classList.remove("sel");
+    el.classList.add("locked");
+  }
+
+  clearSelectionsUI();
+  renderSlots();
+  setUndoState();
+
+  // auto-check when all slots filled
+  if(placed.every(Boolean)){
+    autoCheck();
+  }
+}
+
+function undo(){
+  if(history.length === 0) return;
+  const { cards } = window.__current;
+  const last = history.pop();
+  const card = cards.find(c=>c.id===last.cardId);
+
+  placed[last.slotIndex] = null;
+  used.delete(last.cardId);
+
+  // unlock card
+  const el = [...$("pool").children].find(n=>n.dataset.id===last.cardId);
+  if(el){
+    el.classList.remove("locked");
+    el.style.opacity = "";
+    el.style.cursor = "";
+  }
+
+  renderSlots();
+  setUndoState();
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+}
+
+function clearSlots(){
+  const { cards } = window.__current;
+  placed = [null,null,null,null];
+  used = new Set();
+  history = [];
+  selectedCardId = null;
+
+  // unlock all cards
+  [...$("pool").children].forEach(el=>{
+    el.classList.remove("locked","sel");
+    el.style.opacity = "";
+    el.style.cursor = "";
+  });
+
+  renderSlots();
+  setUndoState();
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+}
+
+function autoCheck(){
+  const { chain } = window.__current;
+
+  // compare placed steps to correct steps in order
+  const ok = placed.every((txt, i)=>txt === chain.steps[i]);
+
+  // mark slots
+  [...$("slots").children].forEach((el, i)=>{
+    el.classList.remove("correct","wrong");
+    el.classList.add(ok ? "correct" : "wrong");
+  });
+
+  if(ok){
+    correctChains++;
+    setAccUI();
+    $("goodMsg").style.display = "block";
+    $("badMsg").style.display = "none";
+    $("goodText").textContent = "Chain perfect. Auto-advancing…";
+
+    setTimeout(()=>{
+      idx++;
+      if(idx >= CHAINS.length) finish();
+      else renderChain();
+    }, 900);
+  }else{
+    misses++;
+    setAccUI();
+    $("badMsg").style.display = "block";
+    $("goodMsg").style.display = "none";
+    $("hint").textContent = chain.hint || "Think: what starts the chain, what is the immediate effect, what happens next, and what is the larger outcome?";
+    setTimeout(()=>renderChain(), 1400);
+  }
 }
 
 function finish(){
-  state.finished = true;
-  state.endAt = Date.now();
+  endedAt = new Date();
   if(timer) clearInterval(timer);
-  timer = null;
 
-  const totalAttempts = state.correct + state.wrong;
-  const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
-  const elapsedMs = (state.startAt && state.endAt) ? (state.endAt - state.startAt) : 0;
-  const passed = (state.wrong === 0) && (state.correct === deck.length);
+  $("pbar").style.width = "100%";
 
-  renderTop();
-  elElapsed.textContent = fmtElapsed(elapsedMs);
+  const acc = computeAcc();
+  const passed = (misses === 0);
 
-  finishBox.style.display = "block";
-  finishLine.innerHTML =
-    `Result: <b>${passed ? "MASTERED ✅" : "NOT MASTERED ❌"}</b> · ` +
-    `Accuracy: <b>${acc}%</b> · Misses: <b>${state.wrong}</b> · ` +
-    `Elapsed: <b>${fmtElapsed(elapsedMs)}</b>`;
+  const ticket =
+`AMERICAN STUDIES — OST MASTERY HUB
+Game: AmStud 6 — Cause & Effect Chain (Mastery)
 
-  ticketEl.textContent = buildTicket(passed, acc, elapsedMs);
-  saveSession();
+Student: ${studentName}
+Passed: ${passed ? "YES (Mastery)" : "NO"}
+Accuracy: ${acc.toFixed(1)}%
+Correct Chains: ${correctChains}
+Misses: ${misses}
+
+Start: ${fmt(startedAt)}
+End:   ${fmt(endedAt)}
+Duration: ${durMS(startedAt, endedAt)}
+
+Reminder: Mastery requires 0 misses.`;
+
+  $("ticketText").textContent = ticket;
+  $("ticket").style.display = "block";
+
+  $("goodMsg").style.display = "block";
+  $("badMsg").style.display = "none";
+  $("goodText").textContent = passed
+    ? "Mastery earned. Screenshot your ticket."
+    : "Not mastery. Hit Restart and go again for 100%.";
 }
 
-/* =========================
-   START / RESTART
-========================= */
-function startNew(name){
-  deck = getDeck().slice();
+function restart(){ startGame(); }
 
-  if(deck.length < 28){
-    alert(`Bank does not have 28 cause-effect-chain (G6) sets.\nFound: ${deck.length}\nFix amstud_bank.js first.`);
-    return;
-  }
+/* Buttons */
+$("restartBtn").addEventListener("click", restart);
+$("undoBtn").addEventListener("click", undo);
+$("clearBtn").addEventListener("click", clearSlots);
 
-  deck = deck.slice(0, 28);
-
-  idx = 0;
-  state = {
-    name,
-    date: dateOnly(),
-    startAt: Date.now(),
-    endAt: null,
-    correct: 0,
-    wrong: 0,
-    finished: false
-  };
-
-  gate.style.display = "none";
-  game.style.display = "block";
-
-  renderTop();
-  startTimer();
-  renderSet();
-}
-
-function hardRestart(){
-  if(!confirm("Restart the entire game? This clears progress and the submit ticket.")) return;
-  clearSession();
-  if(timer) clearInterval(timer);
-  timer = null;
-
-  deck = [];
-  idx = 0;
-  state = {name:"",date:"",startAt:null,endAt:null,correct:0,wrong:0,finished:false};
-  play = {steps:[],correct:[0,1,2,3],picks:[],used:new Set()};
-
-  elElapsed.textContent = "—";
-  finishBox.style.display = "none";
-  clearMsg();
-
-  gate.style.display = "block";
-  game.style.display = "none";
-
-  nameInput.value = "";
-  renderTop();
-}
-
-/* =========================
-   EVENTS
-========================= */
-startBtn.addEventListener('click', ()=>{
-  const name = (nameInput.value || "").trim();
-  if(!name){ alert("Name is required."); nameInput.focus(); return; }
-  startNew(name);
-});
-nameInput.addEventListener('keydown', (e)=>{ if(e.key === "Enter") startBtn.click(); });
-
-restartBtn.addEventListener('click', hardRestart);
-
-copyTicket.addEventListener('click', async ()=>{
+$("copyBtn").addEventListener("click", async ()=>{
   try{
-    await navigator.clipboard.writeText(ticketEl.textContent || "");
-    showMsg("<b>Ticket copied.</b>");
-    setTimeout(clearMsg, 900);
-  }catch(_){
-    showMsg("<b>Copy failed.</b> Manually select and copy the ticket text.");
+    await navigator.clipboard.writeText($("ticketText").textContent);
+    $("copyBtn").textContent = "Copied!";
+    setTimeout(()=>$("copyBtn").textContent="Copy Ticket", 900);
+  }catch(e){
+    alert("Copy blocked by browser. Please screenshot instead.");
   }
 });
-printTicket.addEventListener('click', ()=>window.print());
 
-/* =========================
-   RESUME IF POSSIBLE
-========================= */
-(function boot(){
-  const saved = loadSession();
-  if(saved && saved.state && saved.deck && Array.isArray(saved.deck) && saved.deck.length){
-    state = saved.state;
-    deck = saved.deck;
-    idx = saved.idx ?? 0;
+/* Name gate */
+const gate = $("gate");
+const nameInput = $("nameInput");
+const beginBtn = $("beginBtn");
 
-    // ✅ FIX: restore play via unpacker (rebuild Set)
-    play = unpackPlay(saved.play);
+function begin(){
+  const v = (nameInput.value || "").trim();
+  if(!v){ nameInput.focus(); return; }
+  studentName = v;
+  localStorage.setItem("legend_amstud_student_name", studentName);
+  gate.style.display = "none";
+  startGame();
+}
+beginBtn.addEventListener("click", begin);
+nameInput.addEventListener("keydown", (e)=>{ if(e.key === "Enter") begin(); });
 
-    if(!state.name){
-      clearSession();
-      renderTop();
-      return;
-    }
+const saved = localStorage.getItem("legend_amstud_student_name");
+if(saved){
+  nameInput.value = saved;
+  nameInput.select();
+}
 
-    gate.style.display = "none";
-    game.style.display = "block";
-    renderTop();
-
-    if(state.startAt && !state.finished){
-      startTimer();
-      renderSet();
-
-      // Restore picks if same steps
-      if(saved.play && Array.isArray(saved.play.steps) && saved.play.steps.length === 4){
-        const currentNorm = normalizeSet(deck[idx] || {});
-        const currentSteps = currentNorm.steps.join("||");
-        const savedSteps = saved.play.steps.join("||");
-        if(currentSteps === savedSteps){
-          play = unpackPlay(saved.play); // ✅ FIX: rebuild Set again from saved snapshot
-          renderChainOnly();
-          renderOptionsOnly();
-        }
-      }
-    }else if(state.finished){
-      const elapsedMs = (state.startAt && state.endAt) ? (state.endAt - state.startAt) : 0;
-      elElapsed.textContent = fmtElapsed(elapsedMs);
-      finishBox.style.display = "block";
-      const totalAttempts = state.correct + state.wrong;
-      const acc = totalAttempts ? Math.round((state.correct/totalAttempts)*100) : 0;
-      ticketEl.textContent = buildTicket((state.wrong===0 && state.correct===deck.length), acc, elapsedMs);
-    }
-  }else{
-    renderTop();
-  }
-})();
+/* Clock */
+function bootClock(){
+  $("now").textContent = fmt(new Date());
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=> $("now").textContent = fmt(new Date()), 500);
+}
+bootClock();
 </script>
 </body>
 </html>
