@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AmStud Game 8 — Primary Source Snapshot (Mastery)</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#111a2f;
+      --panel2:#0f1730;
+      --text:#e7eefc;
+      --muted:#a8b4cf;
+      --line:rgba(255,255,255,.12);
+      --shadow:0 18px 55px rgba(0,0,0,.40);
+      --radius:18px;
+      --good:#2bd576;
+      --bad:#ff5c7a;
+      --warn:#ffd166;
+      --accent:#7aa2ff;
+      --chip:rgba(122,162,255,.14);
+      --chipLine:rgba(122,162,255,.28);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:radial-gradient(1200px 700px at 20% -10%, rgba(122,162,255,.22), transparent 55%),
+                 radial-gradient(900px 600px at 90% 0%, rgba(43,213,118,.10), transparent 55%),
+                 linear-gradient(180deg,#0b1220,#070b14);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    .wrap{width:min(1100px,92vw);margin:28px auto 40px;}
+    .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+    h1{font-size:22px;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:13px;line-height:1.35}
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .chip{
+      border:1px solid var(--chipLine);
+      background:var(--chip);
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;color:var(--text);white-space:nowrap
+    }
+    .chip strong{font-weight:800}
+    .row{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;align-items:stretch}
+    @media (max-width:980px){.row{grid-template-columns:1fr}}
+
+    .stats{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+    .stat{
+      background:rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .stat .k{color:var(--muted);font-size:12px;margin-bottom:4px}
+    .stat .v{font-family:var(--mono);font-size:13px}
+
+    .bar{
+      height:10px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;border:1px solid var(--line);
+      margin-top:8px;
+    }
+    .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),rgba(43,213,118,.9))}
+
+    .qhead{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .qnum{font-family:var(--mono);font-size:13px;color:var(--muted)}
+    .skill{font-size:12px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.18)}
+
+    .stim{
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background:linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
+      border-radius:16px;
+      padding:12px;
+    }
+    .stim .label{
+      display:inline-flex;gap:8px;align-items:center;
+      font-size:12px;color:var(--muted);
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      padding:4px 8px;border-radius:999px;
+      font-family:var(--mono);
+      margin-bottom:10px;
+    }
+    .meta{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      margin-top:8px;
+      font-size:13px;
+    }
+    .meta td{
+      padding:9px 10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      border-right:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.14);
+      vertical-align:top;
+    }
+    .meta tr:last-child td{border-bottom:none}
+    .meta td:last-child{border-right:none}
+    .meta .k{
+      width:180px;
+      color:var(--muted);
+      font-weight:900;
+      background:rgba(0,0,0,.20);
+      font-family:var(--mono);
+      font-size:12px;
+    }
+    .excerpt{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.16);
+      background:rgba(0,0,0,.12);
+      color:var(--text);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .prompt{font-size:16px;line-height:1.35;margin:12px 0 8px}
+    .rule{
+      font-size:12px;color:var(--muted);
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:14px;padding:8px 10px;background:rgba(0,0,0,.14);
+      margin-bottom:10px;
+    }
+
+    .choices{display:grid;gap:10px;margin-top:10px}
+    .choice{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.16);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      transition:transform .05s ease, border-color .15s ease, background .15s ease;
+      user-select:none;
+      display:flex;gap:10px;align-items:flex-start;
+    }
+    .choice:hover{border-color:rgba(122,162,255,.6);transform:translateY(-1px)}
+    .choice .badge{
+      width:26px;height:26px;border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      display:grid;place-items:center;
+      font-family:var(--mono);font-size:12px;color:var(--muted);
+      background:rgba(0,0,0,.18);
+      flex:0 0 auto;
+    }
+    .choice.selected{
+      border-color:rgba(255,209,102,.85);
+      background:rgba(255,209,102,.10);
+    }
+    .choice.correctFlash{
+      border-color:rgba(43,213,118,.70);
+      background:rgba(43,213,118,.10);
+    }
+    .choice.wrongFlash{
+      border-color:rgba(255,92,122,.70);
+      background:rgba(255,92,122,.10);
+    }
+
+    .msg{
+      margin-top:12px;border-radius:14px;border:1px solid var(--line);
+      padding:10px 12px;display:none;
+    }
+    .msg.bad{display:block;background:rgba(255,92,122,.10)}
+    .msg.good{display:block;background:rgba(43,213,118,.10)}
+    .msg .t{font-weight:900;margin-bottom:4px}
+
+    .controls{
+      margin-top:12px;
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    }
+    .btn{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .btn:hover{border-color:rgba(122,162,255,.6)}
+    .btn.primary{border-color:rgba(122,162,255,.65);background:rgba(122,162,255,.16)}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .ticket{
+      margin-top:14px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;display:none;
+    }
+    pre{
+      margin:10px 0 0;
+      white-space:pre-wrap;
+      background:rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px;
+      font-family:var(--mono);
+      font-size:12px;
+      line-height:1.35;
+    }
+
+    /* Name gate */
+    .gate{position:fixed;inset:0;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:20px}
+    .gateCard{
+      width:min(560px,94vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .gateCard h2{margin:0 0 8px;font-size:18px}
+    .gateCard p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.35}
+    .inrow{display:flex;gap:10px;flex-wrap:wrap}
+    input{
+      flex:1;min-width:240px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px 12px;
+      outline:none;font-size:14px;
+    }
+    input:focus{border-color:rgba(122,162,255,.7)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>AmStud Game 8 — Primary Source Snapshot (Mastery)</h1>
+        <div class="sub">
+          Short excerpts + sourcing questions (author/purpose/audience/context), credibility checks, and corroboration moves.
+          Auto-submit on selection. Mastery requires <strong>0 misses</strong>.
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><strong>LIVE</strong></div>
+        <div class="chip">Primary source</div>
+        <div class="chip">Corroboration</div>
+        <div class="chip">Credibility</div>
+        <div class="chip">100% required</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="panel">
+        <div class="qhead">
+          <div class="qnum" id="qnum">Item —</div>
+          <div class="skill" id="skill">Primary Source Snapshot</div>
+        </div>
+        <div class="bar"><div id="pbar"></div></div>
+
+        <div id="stimWrap" class="stim" style="display:none"></div>
+
+        <div class="prompt" id="prompt">—</div>
+        <div class="rule" id="rule">MCQ: click ONE answer. Auto-check immediately. Wrong = hint + retry.</div>
+
+        <div class="choices" id="choices"></div>
+
+        <div class="msg bad" id="badMsg">
+          <div class="t">Not yet.</div>
+          <div id="hint">—</div>
+        </div>
+        <div class="msg good" id="goodMsg">
+          <div class="t">Correct.</div>
+          <div id="goodText">Auto-advancing…</div>
+        </div>
+
+        <div class="controls">
+          <button class="btn" id="restartBtn" type="button">Restart</button>
+          <div class="qnum" id="note">Tip: one miss breaks Mastery. Restart and go again for 100%.</div>
+        </div>
+
+        <div class="ticket" id="ticket">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+            <div><strong>Submit Ticket</strong> (screenshot this)</div>
+            <button class="btn primary" id="copyBtn" type="button">Copy Ticket</button>
+          </div>
+          <pre id="ticketText"></pre>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="stats">
+          <div class="stat"><div class="k">Student</div><div class="v" id="student">—</div></div>
+          <div class="stat"><div class="k">Accuracy</div><div class="v" id="acc">100.0%</div></div>
+          <div class="stat"><div class="k">Start</div><div class="v" id="start">—</div></div>
+          <div class="stat"><div class="k">Now</div><div class="v" id="now">—</div></div>
+          <div class="stat"><div class="k">Correct Items</div><div class="v" id="correct">0</div></div>
+          <div class="stat"><div class="k">Misses</div><div class="v" id="misses">0</div></div>
+        </div>
+
+        <div style="margin-top:12px;color:var(--muted);font-size:12px;line-height:1.35">
+          <strong>What you’re practicing:</strong><br/>
+          • Sourcing (author, audience, purpose, context)<br/>
+          • Credibility (bias, limitations, reliability)<br/>
+          • Corroboration (what extra source would confirm?)<br/>
+          • Claim vs evidence (what’s supported by the excerpt?)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Name Gate -->
+  <div class="gate" id="gate" role="dialog" aria-modal="true">
+    <div class="gateCard">
+      <h2>Enter your name to begin</h2>
+      <p>Your name + timestamps + accuracy will appear on the final submit ticket.</p>
+      <div class="inrow">
+        <input id="nameInput" type="text" placeholder="First and last name" autocomplete="name"/>
+        <button class="btn primary" id="beginBtn" type="button">Begin</button>
+      </div>
+      <p style="margin-top:10px;color:var(--muted);font-size:12px">
+        (If you close your device, refresh to restart clean.)
+      </p>
+    </div>
+  </div>
+
+<script>
+/* =========================================================
+   ITEMS (Embedded) — Primary Source Snapshot
+   NOTE: Excerpts are paraphrased/short to keep them classroom-safe.
+   Type: "mcq" only (Primary Source Snapshot focus).
+   ========================================================= */
+const QUESTIONS = [
+  // 1–6 Industrialization / Labor / Urbanization
+  {
+    id:1, skill:"Sourcing (purpose)",
+    stim:{
+      label:"Source A — Reform Pamphlet",
+      meta:{
+        "Date":"c. 1905",
+        "Author":"City reform group",
+        "Audience":"Urban voters",
+        "Purpose":"Persuade the public to support sanitation funding",
+        "Context":"Rapid urban growth + crowded housing"
+      },
+      excerpt:"The pamphlet describes overflowing trash, unsafe water, and sickness in crowded neighborhoods. It urges voters to demand new sewers and inspections."
+    },
+    prompt:"Which detail best supports the purpose of the source?",
+    choices:[
+      "It urges voters to demand new sewers and inspections.",
+      "It lists names of famous industrialists and their profits.",
+      "It explains how to build a factory assembly line.",
+      "It praises political bosses for keeping cities orderly."
+    ],
+    answer:[0],
+    hint:"Purpose = persuade action. Look for a call to voters."
+  },
+  {
+    id:2, skill:"Credibility (bias)",
+    stim:{
+      label:"Source A — Factory Owner Letter",
+      meta:{
+        "Date":"1892",
+        "Author":"Factory owner",
+        "Audience":"State legislator",
+        "Purpose":"Oppose limits on work hours",
+        "Context":"Debates over labor regulation"
+      },
+      excerpt:"The writer argues that limiting hours would ‘hurt families’ because workers would earn less, and claims conditions are already safe."
+    },
+    prompt:"Which factor most limits the credibility of the claim that conditions are already safe?",
+    choices:[
+      "The author may have a financial incentive to downplay unsafe conditions.",
+      "The author wrote the letter during the industrial era.",
+      "The audience is a state legislator rather than workers.",
+      "The source is a letter instead of a newspaper."
+    ],
+    answer:[0],
+    hint:"Bias/incentive matters: who benefits if no regulation passes?"
+  },
+  {
+    id:3, skill:"Corroboration",
+    stim:{
+      label:"Source A — Newspaper Summary",
+      meta:{
+        "Date":"1911",
+        "Author":"Local newspaper reporter",
+        "Audience":"General public",
+        "Purpose":"Inform about a workplace disaster",
+        "Context":"Growing calls for safety laws"
+      },
+      excerpt:"The report describes locked exits and crowded work floors during a factory fire, and mentions multiple injuries."
+    },
+    prompt:"Which additional source would BEST corroborate the report’s key details?",
+    choices:[
+      "Fire department incident reports and inspection records",
+      "A novel set in the same city decades later",
+      "A modern opinion blog about government regulation",
+      "A sports score recap from that week"
+    ],
+    answer:[0],
+    hint:"Corroboration = independent official records that match specifics."
+  },
+  {
+    id:4, skill:"Claim vs Evidence",
+    stim:{
+      label:"Source A — Immigrant Diary Entry",
+      meta:{
+        "Date":"c. 1900",
+        "Author":"Recent immigrant",
+        "Audience":"Personal diary",
+        "Purpose":"Record experiences",
+        "Context":"Mass immigration + urban tenements"
+      },
+      excerpt:"The writer describes sharing a small room with several others, frequent sickness, and difficulty finding steady work."
+    },
+    prompt:"Which statement is BEST supported by the excerpt?",
+    choices:[
+      "Some immigrants experienced overcrowded housing and health challenges in cities.",
+      "All immigrants immediately became wealthy after arriving in the U.S.",
+      "City governments always provided clean housing to new arrivals.",
+      "Most immigrants refused factory work because wages were too high."
+    ],
+    answer:[0],
+    hint:"Don’t overgeneralize from one diary; choose the cautious claim."
+  },
+  {
+    id:5, skill:"Sourcing (audience)",
+    stim:{
+      label:"Source A — Union Flyer",
+      meta:{
+        "Date":"1894",
+        "Author":"Labor union organizer",
+        "Audience":"Factory workers",
+        "Purpose":"Encourage workers to join a strike",
+        "Context":"Low wages + long hours"
+      },
+      excerpt:"The flyer calls workers to meet after shift, promises strength in unity, and warns that accepting low wages will keep families in poverty."
+    },
+    prompt:"Which clue most clearly identifies the intended audience?",
+    choices:[
+      "It calls workers to meet after shift.",
+      "It references the U.S. Constitution by name.",
+      "It describes foreign policy decisions.",
+      "It provides a timeline of ancient history."
+    ],
+    answer:[0],
+    hint:"Audience = who is being addressed directly."
+  },
+  {
+    id:6, skill:"Credibility (limitations)",
+    stim:{
+      label:"Source A — Photograph Caption",
+      meta:{
+        "Date":"1908",
+        "Author":"Unknown photographer",
+        "Audience":"Magazine readers",
+        "Purpose":"Show living conditions",
+        "Context":"Public debate over tenements"
+      },
+      excerpt:"A caption claims the image shows ‘typical’ tenement life and suggests all city housing looks like this."
+    },
+    prompt:"What is the BEST reason to be cautious about the claim ‘all city housing looks like this’?",
+    choices:[
+      "A single image may not represent all housing conditions across the city.",
+      "Photographs are never useful for historians.",
+      "Magazines cannot include any truthful information.",
+      "Tenements did not exist during this time."
+    ],
+    answer:[0],
+    hint:"Representativeness: one example ≠ the whole."
+  },
+
+  // 7–12 Reconstruction / Jim Crow / Civil Rights
+  {
+    id:7, skill:"Sourcing (context)",
+    stim:{
+      label:"Source A — State Law Excerpt (Summary)",
+      meta:{
+        "Date":"c. 1890s",
+        "Author":"State legislature",
+        "Audience":"Local officials",
+        "Purpose":"Regulate public spaces",
+        "Context":"Post-Reconstruction segregation"
+      },
+      excerpt:"The law requires separate facilities in public settings and sets penalties for violating separation rules."
+    },
+    prompt:"Which historical context best explains why this law was written?",
+    choices:[
+      "The rise of Jim Crow segregation after federal troops left the South",
+      "The push to ratify the 19th Amendment",
+      "The start of the Cold War against the USSR",
+      "The adoption of the Lend-Lease program"
+    ],
+    answer:[0],
+    hint:"Time period + separate facilities points to Jim Crow."
+  },
+  {
+    id:8, skill:"Corroboration",
+    stim:{
+      label:"Source A — Civil Rights Speech (Paraphrase)",
+      meta:{
+        "Date":"1963",
+        "Author":"Civil rights leader",
+        "Audience":"National public",
+        "Purpose":"Mobilize support for equal rights laws",
+        "Context":"Mass protests + segregation"
+      },
+      excerpt:"The speaker describes unequal schooling and voting barriers and calls for federal action to enforce equal protection."
+    },
+    prompt:"Which source would BEST corroborate the claim about voting barriers?",
+    choices:[
+      "Voter registration records and literacy test documentation",
+      "A fashion advertisement from the same year",
+      "A weather report from a different decade",
+      "A recipe book written for tourists"
+    ],
+    answer:[0],
+    hint:"Look for records showing who was blocked and how."
+  },
+  {
+    id:9, skill:"Credibility (point of view)",
+    stim:{
+      label:"Source A — Editorial",
+      meta:{
+        "Date":"1955",
+        "Author":"Newspaper editorial board",
+        "Audience":"Local readers",
+        "Purpose":"Argue against desegregation",
+        "Context":"Reaction to court rulings"
+      },
+      excerpt:"The editorial claims desegregation will ‘destroy community traditions’ and calls court decisions ‘outside interference.’"
+    },
+    prompt:"Which is the BEST evaluation of the source?",
+    choices:[
+      "It reflects a particular viewpoint and may be biased; it is still useful for understanding opposition.",
+      "It is fully neutral and therefore proves desegregation was unnecessary.",
+      "It is a private diary, so it cannot show public opinion.",
+      "It is a law, so it automatically reflects constitutional truth."
+    ],
+    answer:[0],
+    hint:"Biased sources can still be valuable for POV—not for objective proof."
+  },
+  {
+    id:10, skill:"Claim vs Evidence",
+    stim:{
+      label:"Source A — Court Decision Summary",
+      meta:{
+        "Date":"1954",
+        "Author":"Supreme Court (summary)",
+        "Audience":"Courts + public",
+        "Purpose":"Explain constitutional reasoning",
+        "Context":"School segregation challenged"
+      },
+      excerpt:"The summary states that separating students by race in public schools is inconsistent with equal protection."
+    },
+    prompt:"Which conclusion is BEST supported?",
+    choices:[
+      "The Court ruled that school segregation violates equal protection.",
+      "The Court required segregation in every public school.",
+      "The Court ended all discrimination in every area immediately.",
+      "The Court abolished the 14th Amendment."
+    ],
+    answer:[0],
+    hint:"Stick to what the decision says—don’t add extra effects."
+  },
+  {
+    id:11, skill:"Sourcing (purpose)",
+    stim:{
+      label:"Source A — Voter Guide",
+      meta:{
+        "Date":"1965",
+        "Author":"Civic organization",
+        "Audience":"Newly eligible voters",
+        "Purpose":"Explain how to register and vote",
+        "Context":"Voting Rights Act enforcement"
+      },
+      excerpt:"The guide lists steps for registration, explains where to vote, and encourages citizens to participate."
+    },
+    prompt:"What is the MOST likely purpose of the source?",
+    choices:[
+      "To increase voter participation by explaining procedures",
+      "To convince Congress to repeal the 13th Amendment",
+      "To train soldiers for military combat",
+      "To argue that elections should be cancelled"
+    ],
+    answer:[0],
+    hint:"It’s a how-to + encouragement document."
+  },
+  {
+    id:12, skill:"Credibility (best evidence)",
+    stim:{
+      label:"Source A — Personal Letter",
+      meta:{
+        "Date":"1870",
+        "Author":"Freedman writing to family",
+        "Audience":"Family member",
+        "Purpose":"Share experiences after emancipation",
+        "Context":"Reconstruction changes"
+      },
+      excerpt:"The letter describes attempting to vote and facing intimidation in the local area."
+    },
+    prompt:"Which evidence would BEST strengthen the letter’s claim about intimidation?",
+    choices:[
+      "Multiple independent letters/reports describing similar intimidation in the same county",
+      "A poem written about freedom with no location",
+      "A map of the United States with state borders",
+      "A painting created a century later"
+    ],
+    answer:[0],
+    hint:"Strongest support = independent corroboration in same place/time."
+  },
+
+  // 13–18 WWI / Interwar / WWII
+  {
+    id:13, skill:"Sourcing (audience)",
+    stim:{
+      label:"Source A — Government Poster (Summary)",
+      meta:{
+        "Date":"1917",
+        "Author":"U.S. government agency",
+        "Audience":"General public",
+        "Purpose":"Encourage support for war effort",
+        "Context":"U.S. entry into WWI"
+      },
+      excerpt:"The poster urges citizens to buy war bonds and frames the purchase as patriotic duty."
+    },
+    prompt:"Which detail best identifies the audience?",
+    choices:[
+      "It asks citizens to buy war bonds.",
+      "It includes footnotes to academic journals.",
+      "It is written in legal code for judges.",
+      "It is a private note between generals."
+    ],
+    answer:[0],
+    hint:"War bond posters target everyday citizens."
+  },
+  {
+    id:14, skill:"Credibility (purpose)",
+    stim:{
+      label:"Source A — War Bonds Advertisement",
+      meta:{
+        "Date":"1918",
+        "Author":"Bond campaign",
+        "Audience":"Potential buyers",
+        "Purpose":"Sell bonds",
+        "Context":"Funding wartime costs"
+      },
+      excerpt:"The ad claims buying bonds will quickly make investors rich and implies the war will end immediately."
+    },
+    prompt:"Why should a historian be cautious with the ad’s claims?",
+    choices:[
+      "Its purpose is persuasion/sales, so it may exaggerate benefits.",
+      "It is from the 1910s, so it must be false.",
+      "Advertisements cannot be used to study history at all.",
+      "Bond campaigns had no impact on the war effort."
+    ],
+    answer:[0],
+    hint:"Purpose-driven sources may exaggerate."
+  },
+  {
+    id:15, skill:"Corroboration",
+    stim:{
+      label:"Source A — Treaty Debate Speech (Paraphrase)",
+      meta:{
+        "Date":"1919",
+        "Author":"U.S. senator",
+        "Audience":"Senate + public",
+        "Purpose":"Oppose joining an international organization",
+        "Context":"Versailles/League debate"
+      },
+      excerpt:"The senator warns that membership could pull the U.S. into future wars without independent choice."
+    },
+    prompt:"Which source would BEST corroborate the senator’s argument about fear of entanglements?",
+    choices:[
+      "Other Senate speeches/votes showing similar concerns across multiple senators",
+      "A travel brochure about Europe in the 1990s",
+      "A menu from a restaurant in Washington, D.C.",
+      "A science textbook about electricity"
+    ],
+    answer:[0],
+    hint:"Corroboration = more evidence from the same debate."
+  },
+  {
+    id:16, skill:"Claim vs Evidence",
+    stim:{
+      label:"Source A — Newspaper Headline + Summary",
+      meta:{
+        "Date":"1941",
+        "Author":"Newspaper",
+        "Audience":"Public",
+        "Purpose":"Report major event",
+        "Context":"Japan expands in Pacific; U.S. tensions rise"
+      },
+      excerpt:"The summary reports an attack on a U.S. naval base and includes statements from government officials about war."
+    },
+    prompt:"Which conclusion is BEST supported?",
+    choices:[
+      "A major attack increased the likelihood of U.S. entry into WWII.",
+      "The U.S. immediately returned to isolationism after the attack.",
+      "The attack occurred during the Civil War.",
+      "The event proves the U.S. never used military force again."
+    ],
+    answer:[0],
+    hint:"Stick to the most direct consequence consistent with context."
+  },
+  {
+    id:17, skill:"Credibility (limitations)",
+    stim:{
+      label:"Source A — Soldier Memoir (Paraphrase)",
+      meta:{
+        "Date":"Written 1970s about WWII",
+        "Author":"WWII veteran",
+        "Audience":"General readers",
+        "Purpose":"Reflect on experience",
+        "Context":"Memoirs written long after events"
+      },
+      excerpt:"The author recalls rationing and describes it as ‘unbearable’ and claims everyone hated it."
+    },
+    prompt:"What is the BEST limitation of this source?",
+    choices:[
+      "It was written long after the events and may reflect memory/bias.",
+      "Rationing never happened during WWII.",
+      "Memoirs are illegal historical documents.",
+      "Veterans are always unreliable witnesses."
+    ],
+    answer:[0],
+    hint:"Time gap can distort memory; avoid absolute claims like “everyone.”"
+  },
+  {
+    id:18, skill:"Corroboration",
+    stim:{
+      label:"Source A — Factory Production Report (Summary)",
+      meta:{
+        "Date":"1943",
+        "Author":"Government statistician",
+        "Audience":"Policymakers",
+        "Purpose":"Track wartime output",
+        "Context":"War mobilization"
+      },
+      excerpt:"The report states aircraft production increased sharply from 1941 to 1943."
+    },
+    prompt:"Which additional source would BEST corroborate the production increase?",
+    choices:[
+      "Factory output records and shipment logs from multiple plants",
+      "A fictional movie set during WWII",
+      "A personal diary about gardening",
+      "A weather almanac from another country"
+    ],
+    answer:[0],
+    hint:"Corroborate statistics with independent records measuring the same thing."
+  },
+
+  // 19–24 Cold War / Postwar
+  {
+    id:19, skill:"Sourcing (purpose)",
+    stim:{
+      label:"Source A — Government Statement (Paraphrase)",
+      meta:{
+        "Date":"1947",
+        "Author":"U.S. official",
+        "Audience":"Congress",
+        "Purpose":"Request funding for foreign aid",
+        "Context":"Early Cold War containment"
+      },
+      excerpt:"The statement claims aid is necessary to prevent instability and political takeover by hostile ideologies."
+    },
+    prompt:"Which purpose best matches the source?",
+    choices:[
+      "To persuade Congress to fund foreign aid as part of containment",
+      "To argue for ending all alliances permanently",
+      "To describe daily life in tenements",
+      "To announce the 22nd Amendment"
+    ],
+    answer:[0],
+    hint:"Audience + funding request + ideology language = persuade for aid."
+  },
+  {
+    id:20, skill:"Credibility (bias)",
+    stim:{
+      label:"Source A — Political Cartoon (Description)",
+      meta:{
+        "Date":"1950s",
+        "Author":"Cartoonist",
+        "Audience":"Newspaper readers",
+        "Purpose":"Persuade/criticize",
+        "Context":"Cold War tensions"
+      },
+      excerpt:"The cartoon portrays one side as heroic and the other as a sneaky threat, using exaggeration and symbolism."
+    },
+    prompt:"Which is the BEST evaluation of the cartoon as evidence?",
+    choices:[
+      "It shows public attitudes/bias but is not neutral factual reporting.",
+      "It provides precise statistical proof about weapons counts.",
+      "It is an official law passed by Congress.",
+      "It is useless because it is visual rather than written."
+    ],
+    answer:[0],
+    hint:"Cartoons reveal perspective and persuasion, not measured data."
+  },
+  {
+    id:21, skill:"Corroboration",
+    stim:{
+      label:"Source A — News Report (Summary)",
+      meta:{
+        "Date":"1962",
+        "Author":"Reporter",
+        "Audience":"Public",
+        "Purpose":"Inform",
+        "Context":"Nuclear crisis"
+      },
+      excerpt:"The report claims leaders held emergency meetings and warned of serious consequences if weapons remained nearby."
+    },
+    prompt:"Which source would BEST corroborate the claim about emergency meetings?",
+    choices:[
+      "Declassified meeting notes, memos, or official schedules from multiple officials",
+      "A random internet comment posted decades later",
+      "A comic book about spies with no real names",
+      "A school yearbook"
+    ],
+    answer:[0],
+    hint:"Use primary administrative records from the time."
+  },
+  {
+    id:22, skill:"Claim vs Evidence",
+    stim:{
+      label:"Source A — Interview (Paraphrase)",
+      meta:{
+        "Date":"1989",
+        "Author":"Eastern European citizen",
+        "Audience":"TV audience",
+        "Purpose":"Describe personal experience",
+        "Context":"Communist governments weakening"
+      },
+      excerpt:"The interviewee says shortages and restrictions fueled protests and people demanded more freedom to travel and speak."
+    },
+    prompt:"Which claim is BEST supported?",
+    choices:[
+      "Economic hardship and restrictions contributed to protests for greater freedoms.",
+      "The interview proves every communist country collapsed the same day.",
+      "The interview shows the U.S. Constitution was written in 1989.",
+      "The interview confirms protests were caused only by weather."
+    ],
+    answer:[0],
+    hint:"Choose the supported, limited conclusion—avoid absolutes."
+  },
+  {
+    id:23, skill:"Credibility (best evidence)",
+    stim:{
+      label:"Source A — Government Statistic (Summary)",
+      meta:{
+        "Date":"1970s",
+        "Author":"Federal agency",
+        "Audience":"Public/policymakers",
+        "Purpose":"Report economic data",
+        "Context":"Inflation and economic change"
+      },
+      excerpt:"The statistic reports inflation rising over several years."
+    },
+    prompt:"Which is the BEST way to evaluate whether the statistic is reliable?",
+    choices:[
+      "Check the methodology and compare with independent data sources.",
+      "Assume it is true because it is a number.",
+      "Reject it because it comes from the government.",
+      "Only accept it if a novel mentions the same number."
+    ],
+    answer:[0],
+    hint:"Reliability comes from method + corroboration."
+  },
+  {
+    id:24, skill:"Sourcing (audience/purpose)",
+    stim:{
+      label:"Source A — Campaign Speech (Paraphrase)",
+      meta:{
+        "Date":"1932",
+        "Author":"Presidential candidate",
+        "Audience":"Voters",
+        "Purpose":"Win support",
+        "Context":"Great Depression"
+      },
+      excerpt:"The candidate promises bold action to reduce unemployment and restore confidence in banks."
+    },
+    prompt:"Which factor most shapes the tone and claims in this source?",
+    choices:[
+      "The author is seeking votes and may emphasize promises over details.",
+      "The author is writing a private diary with no audience.",
+      "The author is publishing a neutral scientific study.",
+      "The author is issuing a Supreme Court ruling."
+    ],
+    answer:[0],
+    hint:"Campaigns persuade; promises may be optimistic."
+  },
+
+  // 25–30 Civics / Amendments / Rights (sourcing + credibility + corroboration)
+  {
+    id:25, skill:"Sourcing (context)",
+    stim:{
+      label:"Source A — Amendment Summary",
+      meta:{
+        "Date":"1951",
+        "Author":"Civics textbook (summary)",
+        "Audience":"Students",
+        "Purpose":"Explain constitutional change",
+        "Context":"Concerns about long-term executive power"
+      },
+      excerpt:"The summary explains a change limiting presidents to two elected terms."
+    },
+    prompt:"Which amendment is being described?",
+    choices:["22nd Amendment","23rd Amendment","25th Amendment","10th Amendment"],
+    answer:[0],
+    hint:"Two elected terms = 22nd."
+  },
+  {
+    id:26, skill:"Claim vs Evidence",
+    stim:{
+      label:"Source A — Amendment Summary",
+      meta:{
+        "Date":"1961",
+        "Author":"Government publication (summary)",
+        "Audience":"Public",
+        "Purpose":"Explain change",
+        "Context":"Washington, D.C. participation"
+      },
+      excerpt:"The summary states that Washington, D.C. receives electors for president and vice president."
+    },
+    prompt:"Which conclusion is BEST supported?",
+    choices:[
+      "D.C. gained limited representation in presidential elections.",
+      "D.C. became a state with two senators.",
+      "D.C. gained control over all federal laws.",
+      "D.C. stopped participating in elections entirely."
+    ],
+    answer:[0],
+    hint:"Electors = presidential vote participation, not statehood."
+  },
+  {
+    id:27, skill:"Sourcing (purpose)",
+    stim:{
+      label:"Source A — Government Procedure Guide (Summary)",
+      meta:{
+        "Date":"1967",
+        "Author":"Federal publication",
+        "Audience":"Officials + public",
+        "Purpose":"Clarify succession/disability procedures",
+        "Context":"Continuity of government"
+      },
+      excerpt:"The guide explains steps for transferring power temporarily when a president cannot serve."
+    },
+    prompt:"Which amendment best matches the description?",
+    choices:["25th Amendment","24th Amendment","19th Amendment","15th Amendment"],
+    answer:[0],
+    hint:"Succession/disability procedures = 25th."
+  },
+  {
+    id:28, skill:"Credibility (limitations)",
+    stim:{
+      label:"Source A — Social Media Post (Modern)",
+      meta:{
+        "Date":"Recent",
+        "Author":"Anonymous user",
+        "Audience":"General public",
+        "Purpose":"Persuade",
+        "Context":"Debate over constitutional rights"
+      },
+      excerpt:"The post claims a specific amendment ‘does not exist’ and provides no citations or evidence."
+    },
+    prompt:"Which is the BEST reason to doubt the post’s claim?",
+    choices:[
+      "It provides no evidence/citations and the author is anonymous.",
+      "It is written online rather than on paper.",
+      "It uses modern language.",
+      "It discusses the Constitution."
+    ],
+    answer:[0],
+    hint:"Anonymous + no evidence = weak credibility."
+  },
+  {
+    id:29, skill:"Corroboration",
+    stim:{
+      label:"Source A — Student Claim (Scenario)",
+      meta:{
+        "Date":"Classroom scenario",
+        "Author":"Student",
+        "Audience":"Teacher",
+        "Purpose":"Explain a historical claim",
+        "Context":"Industrialization and labor"
+      },
+      excerpt:"A student claims that child labor was common in some factories and mines during the late 1800s."
+    },
+    prompt:"Which source would BEST corroborate the student’s claim?",
+    choices:[
+      "Factory inspection reports, photographs, and payroll records showing child workers",
+      "A fantasy novel about children in space",
+      "A modern song about working hard",
+      "A restaurant receipt from 2024"
+    ],
+    answer:[0],
+    hint:"Corroborate with records that directly show children working."
+  },
+  {
+    id:30, skill:"Synthesis (best next step)",
+    stim:{
+      label:"Source A — Diary (Paraphrase)",
+      meta:{
+        "Date":"c. 1930",
+        "Author":"Unemployed worker",
+        "Audience":"Personal diary",
+        "Purpose":"Record experiences",
+        "Context":"Great Depression"
+      },
+      excerpt:"The writer describes searching for work daily, standing in long lines for food, and losing savings after a bank closed."
+    },
+    prompt:"What is the BEST next step for a historian using this diary as evidence?",
+    choices:[
+      "Corroborate with other accounts and local records (bank closures, relief lines) from the same time/place",
+      "Assume the diary represents every American’s experience exactly",
+      "Reject the diary because it is subjective",
+      "Use the diary to calculate the national GDP"
+    ],
+    answer:[0],
+    hint:"Best practice = corroborate + contextualize, not overgeneralize."
+  }
+];
+
+/* =========================
+   ENGINE — Auto-submit MCQ
+   Wrong = miss + hint, retry same item.
+   Correct = auto-advance.
+   ========================= */
+const $ = (id)=>document.getElementById(id);
+
+let studentName = "";
+let startedAt = null;
+let endedAt = null;
+let timer = null;
+
+let order = [];
+let i = 0;
+let correct = 0;
+let misses = 0;
+let locked = false;
+
+function fmt(d){
+  if(!d) return "—";
+  const pad = (n)=>String(n).padStart(2,"0");
+  const mm = pad(d.getMonth()+1);
+  const dd = pad(d.getDate());
+  const yy = d.getFullYear();
+  let h = d.getHours(); const ampm = h>=12 ? "PM":"AM";
+  h = h%12; if(h===0) h=12;
+  const mi = pad(d.getMinutes());
+  const se = pad(d.getSeconds());
+  return `${mm}/${dd}/${yy} ${h}:${mi}:${se} ${ampm}`;
+}
+function durMS(a,b){
+  const ms = Math.max(0, b-a);
+  const s = Math.floor(ms/1000);
+  const hh = Math.floor(s/3600);
+  const mm = Math.floor((s%3600)/60);
+  const ss = s%60;
+  const pad = (n)=>String(n).padStart(2,"0");
+  return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let k=a.length-1;k>0;k--){
+    const j = Math.floor(Math.random()*(k+1));
+    [a[k],a[j]]=[a[j],a[k]];
+  }
+  return a;
+}
+function computeAcc(){
+  const total = correct + misses;
+  if(total === 0) return 100;
+  return (correct / total) * 100;
+}
+function setStats(){
+  $("acc").textContent = `${computeAcc().toFixed(1)}%`;
+  $("correct").textContent = String(correct);
+  $("misses").textContent = String(misses);
+}
+function tickNow(){ $("now").textContent = fmt(new Date()); }
+
+function renderStim(stim){
+  const wrap = $("stimWrap");
+  if(!stim){
+    wrap.style.display = "none";
+    wrap.innerHTML = "";
+    return;
+  }
+  wrap.style.display = "block";
+  const metaRows = Object.entries(stim.meta || {}).map(([k,v])=>
+    `<tr><td class="k">${k}</td><td>${v}</td></tr>`
+  ).join("");
+  wrap.innerHTML = `
+    <div class="label">${stim.label || "Source"}</div>
+    <table class="meta">${metaRows}</table>
+    <div class="excerpt">${stim.excerpt || ""}</div>
+  `;
+}
+
+function startGame(){
+  order = shuffle(QUESTIONS.map((_,idx)=>idx));
+  i = 0; correct = 0; misses = 0;
+  startedAt = new Date(); endedAt = null;
+
+  $("student").textContent = studentName;
+  $("start").textContent = fmt(startedAt);
+
+  $("ticket").style.display = "none";
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+
+  setStats();
+  renderItem();
+  tickNow();
+  if(timer) clearInterval(timer);
+  timer = setInterval(tickNow, 500);
+}
+
+function renderItem(){
+  locked = false;
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+
+  const q = QUESTIONS[order[i]];
+  $("qnum").textContent = `Item ${i+1} / ${QUESTIONS.length}`;
+  $("skill").textContent = q.skill || "Primary Source Snapshot";
+  $("prompt").textContent = q.prompt;
+  $("pbar").style.width = `${(i / QUESTIONS.length) * 100}%`;
+
+  renderStim(q.stim || null);
+
+  // shuffle choices + remap answer
+  const indices = q.choices.map((_, idx)=>idx);
+  const sh = shuffle(indices);
+
+  const ansSet = new Set(q.answer);
+  const correctPos = sh.map((orig, pos)=> ansSet.has(orig) ? pos : null).filter(v=>v!==null);
+
+  q.__sh = sh;
+  q.__correctPos = correctPos;
+
+  const letters = ["A","B","C","D","E","F"];
+  const box = $("choices");
+  box.innerHTML = "";
+
+  sh.forEach((origIdx, pos)=>{
+    const div = document.createElement("div");
+    div.className = "choice";
+    div.dataset.pos = String(pos);
+    div.innerHTML = `<div class="badge">${letters[pos] || "•"}</div><div>${q.choices[origIdx]}</div>`;
+    div.addEventListener("click", ()=>onPick(pos, div));
+    box.appendChild(div);
+  });
+}
+
+function flash(el, ok){
+  el.classList.remove("correctFlash","wrongFlash");
+  el.classList.add(ok ? "correctFlash" : "wrongFlash");
+  setTimeout(()=> el.classList.remove("wrongFlash","correctFlash"), 550);
+}
+function showBad(text){
+  $("hint").textContent = text;
+  $("badMsg").style.display = "block";
+  $("goodMsg").style.display = "none";
+}
+function showGood(){
+  $("goodText").textContent = "Correct. Auto-advancing…";
+  $("goodMsg").style.display = "block";
+  $("badMsg").style.display = "none";
+}
+
+function onPick(pos, el){
+  if(locked) return;
+  locked = true;
+
+  const q = QUESTIONS[order[i]];
+  const ok = (q.__correctPos.length === 1 && q.__correctPos[0] === pos);
+
+  flash(el, ok);
+
+  if(ok){
+    correct++;
+    setStats();
+    showGood();
+    setTimeout(nextItem, 700);
+  }else{
+    misses++;
+    setStats();
+    showBad(q.hint || "Use sourcing: author, audience, purpose, context. Then corroborate and evaluate bias.");
+    locked = false;
+  }
+}
+
+function nextItem(){
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+  i++;
+  if(i >= QUESTIONS.length) finish();
+  else renderItem();
+}
+
+function finish(){
+  endedAt = new Date();
+  if(timer) clearInterval(timer);
+  $("pbar").style.width = "100%";
+
+  const acc = computeAcc();
+  const passed = (misses === 0);
+
+  const ticket =
+`AMERICAN STUDIES — OST MASTERY HUB
+Game: AmStud 8 — Primary Source Snapshot (Mastery)
+
+Student: ${studentName}
+Passed: ${passed ? "YES (Mastery)" : "NO"}
+Accuracy: ${acc.toFixed(1)}%
+Correct Items: ${correct}
+Misses: ${misses}
+
+Start: ${fmt(startedAt)}
+End:   ${fmt(endedAt)}
+Duration: ${durMS(startedAt, endedAt)}
+
+Reminder: Mastery requires 0 misses.`;
+
+  $("ticketText").textContent = ticket;
+  $("ticket").style.display = "block";
+
+  $("goodMsg").style.display = "block";
+  $("badMsg").style.display = "none";
+  $("goodText").textContent = passed
+    ? "Mastery earned. Screenshot your ticket."
+    : "Not mastery. Hit Restart and go again for 100%.";
+}
+
+/* Buttons */
+$("restartBtn").addEventListener("click", ()=>startGame());
+$("copyBtn").addEventListener("click", async ()=>{
+  try{
+    await navigator.clipboard.writeText($("ticketText").textContent);
+    $("copyBtn").textContent = "Copied!";
+    setTimeout(()=>$("copyBtn").textContent="Copy Ticket", 900);
+  }catch(e){
+    alert("Copy blocked by browser. Please screenshot instead.");
+  }
+});
+
+/* Name gate */
+const gate = $("gate");
+const nameInput = $("nameInput");
+const beginBtn = $("beginBtn");
+
+function begin(){
+  const v = (nameInput.value || "").trim();
+  if(!v){ nameInput.focus(); return; }
+  studentName = v;
+  localStorage.setItem("legend_amstud_student_name", studentName);
+  gate.style.display = "none";
+  startGame();
+}
+beginBtn.addEventListener("click", begin);
+nameInput.addEventListener("keydown", (e)=>{ if(e.key === "Enter") begin(); });
+
+const saved = localStorage.getItem("legend_amstud_student_name");
+if(saved){
+  nameInput.value = saved;
+  nameInput.select();
+}
+
+/* Clock */
+(function bootClock(){
+  $("now").textContent = fmt(new Date());
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=> $("now").textContent = fmt(new Date()), 500);
+})();
+</script>
+</body>
+</html>
