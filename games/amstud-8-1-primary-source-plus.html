@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AmStud Game 8.1 — Primary Source PLUS (Mastery)</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#111a2f;
+      --text:#e7eefc;
+      --muted:#a8b4cf;
+      --line:rgba(255,255,255,.12);
+      --shadow:0 18px 55px rgba(0,0,0,.40);
+      --radius:18px;
+      --good:#2bd576;
+      --bad:#ff5c7a;
+      --warn:#ffd166;
+      --accent:#7aa2ff;
+      --chip:rgba(122,162,255,.14);
+      --chipLine:rgba(122,162,255,.28);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:radial-gradient(1200px 700px at 20% -10%, rgba(122,162,255,.22), transparent 55%),
+                 radial-gradient(900px 600px at 90% 0%, rgba(43,213,118,.10), transparent 55%),
+                 linear-gradient(180deg,#0b1220,#070b14);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    .wrap{width:min(1120px,92vw);margin:28px auto 40px;}
+    .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+    h1{font-size:22px;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:13px;line-height:1.35}
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .chip{
+      border:1px solid var(--chipLine);
+      background:var(--chip);
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;color:var(--text);white-space:nowrap
+    }
+    .chip strong{font-weight:800}
+    .grid{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;align-items:stretch}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .stats{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+    .stat{
+      background:rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .stat .k{color:var(--muted);font-size:12px;margin-bottom:4px}
+    .stat .v{font-family:var(--mono);font-size:13px}
+
+    .bar{
+      height:10px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;border:1px solid var(--line);
+      margin-top:8px;
+    }
+    .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),rgba(43,213,118,.9))}
+
+    .qhead{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .qnum{font-family:var(--mono);font-size:13px;color:var(--muted)}
+    .skill{font-size:12px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.18)}
+
+    /* stimulus block */
+    .stim{
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background:linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
+      border-radius:16px;
+      padding:12px;
+    }
+    .stim .label{
+      display:inline-flex;gap:8px;align-items:center;
+      font-size:12px;color:var(--muted);
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      padding:4px 8px;border-radius:999px;
+      font-family:var(--mono);
+      margin-bottom:10px;
+    }
+    .meta{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      margin-top:8px;
+      font-size:13px;
+    }
+    .meta td, .meta th{
+      padding:9px 10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      border-right:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.14);
+      vertical-align:top;
+      text-align:left;
+    }
+    .meta th{
+      color:var(--muted);
+      font-weight:900;
+      background:rgba(0,0,0,.20);
+      font-family:var(--mono);
+      font-size:12px;
+    }
+    .meta tr:last-child td,.meta tr:last-child th{border-bottom:none}
+    .meta td:last-child,.meta th:last-child{border-right:none}
+
+    .excerpt{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.16);
+      background:rgba(0,0,0,.12);
+      color:var(--text);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .pair{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:8px;
+    }
+    @media (max-width:900px){.pair{grid-template-columns:1fr}}
+
+    /* mini chart/table */
+    .miniTable{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      margin-top:10px;
+      font-size:13px;
+    }
+    .miniTable th,.miniTable td{
+      padding:10px 10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      border-right:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.14);
+      vertical-align:top;
+    }
+    .miniTable th{color:var(--muted);font-weight:900;background:rgba(0,0,0,.20)}
+    .miniTable tr:last-child td{border-bottom:none}
+    .miniTable td:last-child,.miniTable th:last-child{border-right:none}
+
+    .prompt{font-size:16px;line-height:1.35;margin:12px 0 8px}
+    .rule{
+      font-size:12px;color:var(--muted);
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:14px;padding:8px 10px;background:rgba(0,0,0,.14);
+      margin-bottom:10px;
+    }
+
+    .choices{display:grid;gap:10px;margin-top:10px}
+    .choice{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.16);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      transition:transform .05s ease, border-color .15s ease, background .15s ease;
+      user-select:none;
+      display:flex;gap:10px;align-items:flex-start;
+    }
+    .choice:hover{border-color:rgba(122,162,255,.6);transform:translateY(-1px)}
+    .choice .badge{
+      width:26px;height:26px;border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      display:grid;place-items:center;
+      font-family:var(--mono);font-size:12px;color:var(--muted);
+      background:rgba(0,0,0,.18);
+      flex:0 0 auto;
+    }
+    .choice.correctFlash{
+      border-color:rgba(43,213,118,.70);
+      background:rgba(43,213,118,.10);
+    }
+    .choice.wrongFlash{
+      border-color:rgba(255,92,122,.70);
+      background:rgba(255,92,122,.10);
+    }
+
+    .msg{
+      margin-top:12px;border-radius:14px;border:1px solid var(--line);
+      padding:10px 12px;display:none;
+    }
+    .msg.bad{display:block;background:rgba(255,92,122,.10)}
+    .msg.good{display:block;background:rgba(43,213,118,.10)}
+    .msg .t{font-weight:900;margin-bottom:4px}
+
+    .controls{
+      margin-top:12px;
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    }
+    .btn{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .btn:hover{border-color:rgba(122,162,255,.6)}
+    .btn.primary{border-color:rgba(122,162,255,.65);background:rgba(122,162,255,.16)}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .ticket{
+      margin-top:14px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;display:none;
+    }
+    pre{
+      margin:10px 0 0;
+      white-space:pre-wrap;
+      background:rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px;
+      font-family:var(--mono);
+      font-size:12px;
+      line-height:1.35;
+    }
+
+    /* Name gate */
+    .gate{position:fixed;inset:0;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:20px}
+    .gateCard{
+      width:min(560px,94vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .gateCard h2{margin:0 0 8px;font-size:18px}
+    .gateCard p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.35}
+    .inrow{display:flex;gap:10px;flex-wrap:wrap}
+    input{
+      flex:1;min-width:240px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px 12px;
+      outline:none;font-size:14px;
+    }
+    input:focus{border-color:rgba(122,162,255,.7)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>AmStud Game 8.1 — Primary Source PLUS (Mastery)</h1>
+        <div class="sub">
+          Released-item style stimulus sets (paired excerpts / mini-charts / short tables).
+          Practice sourcing + credibility + corroboration + claim/evidence. Auto-submit on selection.
+          Mastery requires <strong>0 misses</strong>.
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><strong>LIVE</strong></div>
+        <div class="chip">Paired sources</div>
+        <div class="chip">Mini-charts</div>
+        <div class="chip">Tables</div>
+        <div class="chip">100% required</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <div class="qhead">
+          <div class="qnum" id="qnum">Item —</div>
+          <div class="skill" id="skill">Primary Source PLUS</div>
+        </div>
+        <div class="bar"><div id="pbar"></div></div>
+
+        <div id="stimWrap" class="stim" style="display:none"></div>
+
+        <div class="prompt" id="prompt">—</div>
+        <div class="rule" id="rule">MCQ: click ONE answer. Auto-check immediately. Wrong = hint + retry.</div>
+
+        <div class="choices" id="choices"></div>
+
+        <div class="msg bad" id="badMsg">
+          <div class="t">Not yet.</div>
+          <div id="hint">—</div>
+        </div>
+        <div class="msg good" id="goodMsg">
+          <div class="t">Correct.</div>
+          <div id="goodText">Auto-advancing…</div>
+        </div>
+
+        <div class="controls">
+          <button class="btn" id="restartBtn" type="button">Restart</button>
+          <div class="qnum" id="note">Tip: one miss breaks Mastery. Restart and go again for 100%.</div>
+        </div>
+
+        <div class="ticket" id="ticket">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+            <div><strong>Submit Ticket</strong> (screenshot this)</div>
+            <button class="btn primary" id="copyBtn" type="button">Copy Ticket</button>
+          </div>
+          <pre id="ticketText"></pre>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="stats">
+          <div class="stat"><div class="k">Student</div><div class="v" id="student">—</div></div>
+          <div class="stat"><div class="k">Accuracy</div><div class="v" id="acc">100.0%</div></div>
+          <div class="stat"><div class="k">Start</div><div class="v" id="start">—</div></div>
+          <div class="stat"><div class="k">Now</div><div class="v" id="now">—</div></div>
+          <div class="stat"><div class="k">Correct Items</div><div class="v" id="correct">0</div></div>
+          <div class="stat"><div class="k">Misses</div><div class="v" id="misses">0</div></div>
+        </div>
+
+        <div style="margin-top:12px;color:var(--muted);font-size:12px;line-height:1.35">
+          <strong>PLUS move:</strong> When there are multiple sources, ask:<br/>
+          • Do the sources agree or conflict?<br/>
+          • Which is more reliable, and why?<br/>
+          • What additional evidence would settle the question?
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Name Gate -->
+  <div class="gate" id="gate" role="dialog" aria-modal="true">
+    <div class="gateCard">
+      <h2>Enter your name to begin</h2>
+      <p>Your name + timestamps + accuracy will appear on the final submit ticket.</p>
+      <div class="inrow">
+        <input id="nameInput" type="text" placeholder="First and last name" autocomplete="name"/>
+        <button class="btn primary" id="beginBtn" type="button">Begin</button>
+      </div>
+      <p style="margin-top:10px;color:var(--muted);font-size:12px">
+        (If you close your device, refresh to restart clean.)
+      </p>
+    </div>
+  </div>
+
+<script>
+/* =========================================================
+   ITEMS (Embedded) — Primary Source PLUS
+   Stimulus sets include:
+   - paired excerpts (Source A + Source B)
+   - mini-charts/tables
+   Excerpts are paraphrased/summarized for classroom-safe use.
+   ========================================================= */
+const QUESTIONS = [
+  {
+    id:1, skill:"Corroboration (paired sources)",
+    stim:{
+      kind:"paired",
+      labelA:"Source A — Worker Letter (summary)",
+      metaA:{ Date:"1890s", Author:"Factory worker", Audience:"Family", Purpose:"Describe conditions", Context:"Industrial work/long hours" },
+      excerptA:"The writer describes exhausting hours, frequent injuries, and pressure to keep working to avoid losing the job.",
+      labelB:"Source B — Company Statement (summary)",
+      metaB:{ Date:"1890s", Author:"Factory manager", Audience:"Newspaper readers", Purpose:"Defend business", Context:"Public criticism of conditions" },
+      excerptB:"The statement claims the factory is safe and says accidents are rare and caused by careless workers."
+    },
+    prompt:"What is the BEST next step to evaluate which claim is more accurate?",
+    choices:[
+      "Compare both claims to independent inspection reports and accident records from the same factory",
+      "Assume the manager is correct because he is in charge",
+      "Assume the worker is correct because the worker suffered",
+      "Ignore both sources because they disagree"
+    ],
+    answer:[0],
+    hint:"When sources conflict, look for independent records measuring the issue."
+  },
+  {
+    id:2, skill:"Credibility (bias & incentive)",
+    stim:{
+      kind:"paired",
+      labelA:"Source A — Political Cartoon (description)",
+      metaA:{ Date:"1906", Author:"Cartoonist", Audience:"Newspaper readers", Purpose:"Persuade/criticize", Context:"Progressive Era reforms" },
+      excerptA:"The cartoon shows a large ‘trust’ figure controlling prices while small consumers struggle.",
+      labelB:"Source B — Trust Advertisement (summary)",
+      metaB:{ Date:"1906", Author:"Large corporation", Audience:"Consumers", Purpose:"Improve image/sales", Context:"Antitrust scrutiny" },
+      excerptB:"The ad claims the corporation lowers prices and helps families live better."
+    },
+    prompt:"Which source is MOST likely to use exaggeration to influence opinion?",
+    choices:[
+      "Source A (cartoon), because cartoons often use symbolism and exaggeration",
+      "Source B (advertisement), because ads always include neutral data",
+      "Both are official government laws",
+      "Neither, because both are scientific studies"
+    ],
+    answer:[0],
+    hint:"Cartoons = persuasion through exaggeration/symbolism."
+  },
+  {
+    id:3, skill:"Claim vs Evidence (table)",
+    stim:{
+      kind:"table",
+      label:"Mini-Table — Urban Growth (illustrative)",
+      html:`
+        <table class="miniTable">
+          <tr><th>City</th><th>Population 1880</th><th>Population 1910</th></tr>
+          <tr><td>City X</td><td>120,000</td><td>420,000</td></tr>
+          <tr><td>City Y</td><td>80,000</td><td>260,000</td></tr>
+        </table>
+      `
+    },
+    prompt:"Which conclusion is BEST supported by the table?",
+    choices:[
+      "Rapid urban population growth occurred between 1880 and 1910",
+      "Cities stopped growing because factories closed",
+      "Most Americans moved from cities to farms during this period",
+      "Urban growth proves sanitation problems ended"
+    ],
+    answer:[0],
+    hint:"Stick to what the numbers show: population increase."
+  },
+  {
+    id:4, skill:"Sourcing (purpose) + evidence",
+    stim:{
+      kind:"paired",
+      labelA:"Source A — Reform Speech (summary)",
+      metaA:{ Date:"1912", Author:"Reform politician", Audience:"Voters", Purpose:"Win support for reforms", Context:"Corruption + political machines" },
+      excerptA:"The speaker promises civil service hiring and says jobs should be based on merit, not party loyalty.",
+      labelB:"Source B — Patronage Flyer (summary)",
+      metaB:{ Date:"1912", Author:"Party organizer", Audience:"Supporters", Purpose:"Maintain loyalty", Context:"Machine politics" },
+      excerptB:"The flyer suggests supporters will be ‘taken care of’ with city jobs if they help the party win."
+    },
+    prompt:"Which statement best explains why Source A emphasizes merit hiring?",
+    choices:[
+      "To reduce corruption by limiting patronage jobs tied to party loyalty",
+      "To increase political machines by expanding patronage",
+      "To eliminate elections and appoint leaders permanently",
+      "To end urbanization by moving people to farms"
+    ],
+    answer:[0],
+    hint:"Merit hiring is a reform response to patronage/corruption."
+  },
+  {
+    id:5, skill:"Credibility (representativeness)",
+    stim:{
+      kind:"paired",
+      labelA:"Source A — Single Photograph Caption (summary)",
+      metaA:{ Date:"1900", Author:"Unknown", Audience:"Magazine readers", Purpose:"Show hardship", Context:"Tenements" },
+      excerptA:"Caption says, ‘This is what every immigrant home looks like.’",
+      labelB:"Source B — City Health Report (summary)",
+      metaB:{ Date:"1900", Author:"City health department", Audience:"Officials/public", Purpose:"Report conditions", Context:"Sanitation and housing" },
+      excerptB:"Report lists multiple neighborhoods, noting some severe overcrowding and others with better ventilation and water access."
+    },
+    prompt:"Which statement is BEST supported by Source B?",
+    choices:[
+      "Housing conditions varied across neighborhoods; one image may not represent all situations",
+      "Every immigrant home was identical across the city",
+      "Tenements were the only housing type that existed",
+      "Housing conditions cannot be studied using any sources"
+    ],
+    answer:[0],
+    hint:"Source B gives broader coverage than a single photo."
+  },
+  {
+    id:6, skill:"Corroboration (paired) — Civil Rights",
+    stim:{
+      kind:"paired",
+      labelA:"Source A — Voter Testimony (summary)",
+      metaA:{ Date:"1964", Author:"Local resident", Audience:"Interviewer", Purpose:"Describe experience", Context:"Voting barriers" },
+      excerptA:"The resident says they were turned away from registration with confusing ‘tests’ and extra requirements.",
+      labelB:"Source B — County Records (summary)",
+      metaB:{ Date:"1964", Author:"County office", Audience:"Officials", Purpose:"Record registrations", Context:"Local election administration" },
+      excerptB:"Records show unusually low registration rates for certain groups compared to neighboring counties."
+    },
+    prompt:"Which additional evidence would BEST strengthen the claim that unfair tests were used?",
+    choices:[
+      "Copies of the tests, instructions given to applicants, and witness accounts from multiple applicants",
+      "A national sports recap from 1964",
+      "A modern meme about voting",
+      "A map showing the county’s borders"
+    ],
+    answer:[0],
+    hint:"You need direct evidence of the test + how it was applied."
+  },
+  {
+    id:7, skill:"Sourcing (context) — WWI/Interwar",
+    stim:{
+      kind:"paired",
+      labelA:"Source A — Senator Speech (summary)",
+      metaA:{ Date:"1919", Author:"U.S. senator", Audience:"Senate/public", Purpose:"Oppose League membership", Context:"Versailles debate" },
+      excerptA:"Warns alliances may draw the U.S. into wars without independent choice.",
+      labelB:"Source B — Newspaper Poll (summary)",
+      metaB:{ Date:"1919", Author:"Newspaper", Audience:"Readers", Purpose:"Report public opinion", Context:"Debate over isolationism" },
+      excerptB:"Poll shows many respondents prefer focusing on domestic issues rather than international commitments."
+    },
+    prompt:"Which historical idea is BEST supported by both sources together?",
+    choices:[
+      "A strong isolationist sentiment influenced opposition to international commitments after WWI",
+      "The U.S. immediately joined the League without debate",
+      "Most Americans wanted permanent military alliances in 1919",
+      "The debate centered on civil rights amendments only"
+    ],
+    answer:[0],
+    hint:"Both sources point to avoiding entanglements/foreign commitments."
+  },
+  {
+    id:8, skill:"Claim vs Evidence (mini-chart) — WWII Mobilization",
+    stim:{
+      kind:"table",
+      label:"Mini-Chart — Illustrative Output Change",
+      html:`
+        <table class="miniTable">
+          <tr><th>Category</th><th>1941</th><th>1944</th></tr>
+          <tr><td>Aircraft produced</td><td>Low</td><td>Very high</td></tr>
+          <tr><td>Consumer car production</td><td>High</td><td>Very low</td></tr>
+        </table>
+      `
+    },
+    prompt:"Which conclusion is BEST supported by the chart?",
+    choices:[
+      "The U.S. shifted production from consumer goods toward military needs during WWII",
+      "The U.S. produced more consumer cars in 1944 than 1941",
+      "WWII ended industrial production in the U.S.",
+      "The chart proves rationing never occurred"
+    ],
+    answer:[0],
+    hint:"Look at aircraft up while consumer cars down."
+  },
+  {
+    id:9, skill:"Credibility (time gap) — memoir vs record",
+    stim:{
+      kind:"paired",
+      labelA:"Source A — Memoir (summary)",
+      metaA:{ Date:"Written 1980s about 1940s", Author:"Veteran", Audience:"Readers", Purpose:"Reflect", Context:"Memory over time" },
+      excerptA:"Claims ‘everyone hated rationing’ and shortages were constant everywhere.",
+      labelB:"Source B — Ration Book/Notice (summary)",
+      metaB:{ Date:"1943", Author:"Government", Audience:"Public", Purpose:"Explain rules", Context:"Rationing program" },
+      excerptB:"Lists specific ration rules and explains which items are limited and why."
+    },
+    prompt:"Which statement is the BEST evaluation?",
+    choices:[
+      "Source B is more precise for specific rules; Source A may overgeneralize due to memory and personal perspective",
+      "Source A is automatically more accurate because it is a story",
+      "Source B is biased because governments always lie",
+      "Both prove rationing was voluntary and rare"
+    ],
+    answer:[0],
+    hint:"Memoirs can overgeneralize; official notices show exact rules."
+  },
+  {
+    id:10, skill:"Corroboration (Cold War) — best supporting source",
+    stim:{
+      kind:"paired",
+      labelA:"Source A — News Report (summary)",
+      metaA:{ Date:"1962", Author:"Reporter", Audience:"Public", Purpose:"Inform", Context:"Nuclear crisis" },
+      excerptA:"Says leaders held emergency meetings and demanded removal of weapons.",
+      labelB:"Source B — Declassified Memo (summary)",
+      metaB:{ Date:"1962", Author:"Advisor", Audience:"President", Purpose:"Inform leadership", Context:"Crisis decision-making" },
+      excerptB:"Lists meeting times, participants, and options discussed."
+    },
+    prompt:"Which is the STRONGEST evidence to confirm that emergency meetings occurred?",
+    choices:[
+      "Source B (declassified memo) because it records internal schedules and details",
+      "Source A (news) because reporters always have perfect information",
+      "Neither, because meetings cannot be documented",
+      "Only a modern social media post could confirm it"
+    ],
+    answer:[0],
+    hint:"Internal records with dates/participants are strongest for confirming meetings."
+  },
+  {
+    id:11, skill:"Synthesis — resolving conflict",
+    stim:{
+      kind:"paired",
+      labelA:"Source A — Interview (summary)",
+      metaA:{ Date:"1989", Author:"Citizen", Audience:"TV audience", Purpose:"Describe experiences", Context:"Communist systems weakening" },
+      excerptA:"Says shortages and restrictions fueled protests demanding more freedom.",
+      labelB:"Source B — Government Statement (summary)",
+      metaB:{ Date:"1989", Author:"Official", Audience:"Public", Purpose:"Maintain order", Context:"Protests rising" },
+      excerptB:"Claims protests are caused by ‘outside agitators’ and denies shortages are serious."
+    },
+    prompt:"Which approach best helps a historian evaluate these conflicting explanations?",
+    choices:[
+      "Compare both to independent economic data, multiple eyewitness accounts, and foreign reporting from the same period",
+      "Pick whichever source sounds more confident",
+      "Ignore all evidence because sources disagree",
+      "Use only the official statement because it is official"
+    ],
+    answer:[0],
+    hint:"Resolve conflict by triangulating with independent evidence."
+  },
+  {
+    id:12, skill:"Civics — sourcing (purpose) with short table",
+    stim:{
+      kind:"table",
+      label:"Mini-Table — Amendment Topics (Review)",
+      html:`
+        <table class="miniTable">
+          <tr><th>Amendment</th><th>Main Idea</th></tr>
+          <tr><td>22nd</td><td>Two-term limit for president</td></tr>
+          <tr><td>23rd</td><td>D.C. electors for president</td></tr>
+          <tr><td>25th</td><td>Succession/disability procedures</td></tr>
+        </table>
+      `
+    },
+    prompt:"Which amendment is most directly connected to presidential succession and disability procedures?",
+    choices:["22nd","23rd","25th","10th"],
+    answer:[2],
+    hint:"Look for the row describing succession/disability."
+  }
+];
+
+/* =========================
+   ENGINE — Auto-submit MCQ
+   Wrong = miss + hint, retry same item.
+   Correct = auto-advance.
+   ========================= */
+const $ = (id)=>document.getElementById(id);
+
+let studentName = "";
+let startedAt = null;
+let endedAt = null;
+let timer = null;
+
+let order = [];
+let i = 0;
+let correct = 0;
+let misses = 0;
+let locked = false;
+
+function fmt(d){
+  if(!d) return "—";
+  const pad = (n)=>String(n).padStart(2,"0");
+  const mm = pad(d.getMonth()+1);
+  const dd = pad(d.getDate());
+  const yy = d.getFullYear();
+  let h = d.getHours(); const ampm = h>=12 ? "PM":"AM";
+  h = h%12; if(h===0) h=12;
+  const mi = pad(d.getMinutes());
+  const se = pad(d.getSeconds());
+  return `${mm}/${dd}/${yy} ${h}:${mi}:${se} ${ampm}`;
+}
+function durMS(a,b){
+  const ms = Math.max(0, b-a);
+  const s = Math.floor(ms/1000);
+  const hh = Math.floor(s/3600);
+  const mm = Math.floor((s%3600)/60);
+  const ss = s%60;
+  const pad = (n)=>String(n).padStart(2,"0");
+  return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let k=a.length-1;k>0;k--){
+    const j = Math.floor(Math.random()*(k+1));
+    [a[k],a[j]]=[a[j],a[k]];
+  }
+  return a;
+}
+function computeAcc(){
+  const total = correct + misses;
+  if(total === 0) return 100;
+  return (correct / total) * 100;
+}
+function setStats(){
+  $("acc").textContent = `${computeAcc().toFixed(1)}%`;
+  $("correct").textContent = String(correct);
+  $("misses").textContent = String(misses);
+}
+function tickNow(){ $("now").textContent = fmt(new Date()); }
+
+function renderStim(stim){
+  const wrap = $("stimWrap");
+  if(!stim){
+    wrap.style.display = "none";
+    wrap.innerHTML = "";
+    return;
+  }
+  wrap.style.display = "block";
+
+  if(stim.kind === "table"){
+    wrap.innerHTML = `<div class="label">${stim.label || "Mini-Chart"}</div>${stim.html || ""}`;
+    return;
+  }
+
+  if(stim.kind === "paired"){
+    const metaRowsA = Object.entries(stim.metaA || {}).map(([k,v])=>`<tr><th>${k}</th><td>${v}</td></tr>`).join("");
+    const metaRowsB = Object.entries(stim.metaB || {}).map(([k,v])=>`<tr><th>${k}</th><td>${v}</td></tr>`).join("");
+
+    wrap.innerHTML = `
+      <div class="label">Paired Sources</div>
+      <div class="pair">
+        <div>
+          <div class="label">${stim.labelA || "Source A"}</div>
+          <table class="meta">${metaRowsA}</table>
+          <div class="excerpt">${stim.excerptA || ""}</div>
+        </div>
+        <div>
+          <div class="label">${stim.labelB || "Source B"}</div>
+          <table class="meta">${metaRowsB}</table>
+          <div class="excerpt">${stim.excerptB || ""}</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  wrap.innerHTML = `<div class="label">${stim.label || "Source"}</div>`;
+}
+
+function startGame(){
+  order = shuffle(QUESTIONS.map((_,idx)=>idx));
+  i = 0; correct = 0; misses = 0;
+  startedAt = new Date(); endedAt = null;
+
+  $("student").textContent = studentName;
+  $("start").textContent = fmt(startedAt);
+
+  $("ticket").style.display = "none";
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+
+  setStats();
+  renderItem();
+  tickNow();
+  if(timer) clearInterval(timer);
+  timer = setInterval(tickNow, 500);
+}
+
+function renderItem(){
+  locked = false;
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+
+  const q = QUESTIONS[order[i]];
+  $("qnum").textContent = `Item ${i+1} / ${QUESTIONS.length}`;
+  $("skill").textContent = q.skill || "Primary Source PLUS";
+  $("prompt").textContent = q.prompt;
+  $("pbar").style.width = `${(i / QUESTIONS.length) * 100}%`;
+
+  renderStim(q.stim || null);
+
+  // shuffle choices + remap answer
+  const indices = q.choices.map((_, idx)=>idx);
+  const sh = shuffle(indices);
+
+  const ansSet = new Set(q.answer);
+  const correctPos = sh.map((orig, pos)=> ansSet.has(orig) ? pos : null).filter(v=>v!==null);
+
+  q.__sh = sh;
+  q.__correctPos = correctPos;
+
+  const letters = ["A","B","C","D","E","F"];
+  const box = $("choices");
+  box.innerHTML = "";
+
+  sh.forEach((origIdx, pos)=>{
+    const div = document.createElement("div");
+    div.className = "choice";
+    div.dataset.pos = String(pos);
+    div.innerHTML = `<div class="badge">${letters[pos] || "•"}</div><div>${q.choices[origIdx]}</div>`;
+    div.addEventListener("click", ()=>onPick(pos, div));
+    box.appendChild(div);
+  });
+}
+
+function flash(el, ok){
+  el.classList.remove("correctFlash","wrongFlash");
+  el.classList.add(ok ? "correctFlash" : "wrongFlash");
+  setTimeout(()=> el.classList.remove("wrongFlash","correctFlash"), 550);
+}
+function showBad(text){
+  $("hint").textContent = text;
+  $("badMsg").style.display = "block";
+  $("goodMsg").style.display = "none";
+}
+function showGood(){
+  $("goodText").textContent = "Correct. Auto-advancing…";
+  $("goodMsg").style.display = "block";
+  $("badMsg").style.display = "none";
+}
+
+function onPick(pos, el){
+  if(locked) return;
+  locked = true;
+
+  const q = QUESTIONS[order[i]];
+  const ok = (q.__correctPos.length === 1 && q.__correctPos[0] === pos);
+
+  flash(el, ok);
+
+  if(ok){
+    correct++;
+    setStats();
+    showGood();
+    setTimeout(nextItem, 750);
+  }else{
+    misses++;
+    setStats();
+    showBad(q.hint || "Use both sources: compare purpose/bias, then corroborate with independent evidence.");
+    locked = false;
+  }
+}
+
+function nextItem(){
+  $("badMsg").style.display = "none";
+  $("goodMsg").style.display = "none";
+  i++;
+  if(i >= QUESTIONS.length) finish();
+  else renderItem();
+}
+
+function finish(){
+  endedAt = new Date();
+  if(timer) clearInterval(timer);
+  $("pbar").style.width = "100%";
+
+  const acc = computeAcc();
+  const passed = (misses === 0);
+
+  const ticket =
+`AMERICAN STUDIES — OST MASTERY HUB
+Game: AmStud 8.1 — Primary Source PLUS (Mastery)
+
+Student: ${studentName}
+Passed: ${passed ? "YES (Mastery)" : "NO"}
+Accuracy: ${acc.toFixed(1)}%
+Correct Items: ${correct}
+Misses: ${misses}
+
+Start: ${fmt(startedAt)}
+End:   ${fmt(endedAt)}
+Duration: ${durMS(startedAt, endedAt)}
+
+Reminder: Mastery requires 0 misses.`;
+
+  $("ticketText").textContent = ticket;
+  $("ticket").style.display = "block";
+
+  $("goodMsg").style.display = "block";
+  $("badMsg").style.display = "none";
+  $("goodText").textContent = passed
+    ? "Mastery earned. Screenshot your ticket."
+    : "Not mastery. Hit Restart and go again for 100%.";
+}
+
+/* Buttons */
+$("restartBtn").addEventListener("click", ()=>startGame());
+$("copyBtn").addEventListener("click", async ()=>{
+  try{
+    await navigator.clipboard.writeText($("ticketText").textContent);
+    $("copyBtn").textContent = "Copied!";
+    setTimeout(()=>$("copyBtn").textContent="Copy Ticket", 900);
+  }catch(e){
+    alert("Copy blocked by browser. Please screenshot instead.");
+  }
+});
+
+/* Name gate */
+const gate = $("gate");
+const nameInput = $("nameInput");
+const beginBtn = $("beginBtn");
+
+function begin(){
+  const v = (nameInput.value || "").trim();
+  if(!v){ nameInput.focus(); return; }
+  studentName = v;
+  localStorage.setItem("legend_amstud_student_name", studentName);
+  gate.style.display = "none";
+  startGame();
+}
+beginBtn.addEventListener("click", begin);
+nameInput.addEventListener("keydown", (e)=>{ if(e.key === "Enter") begin(); });
+
+const saved = localStorage.getItem("legend_amstud_student_name");
+if(saved){
+  nameInput.value = saved;
+  nameInput.select();
+}
+
+/* Clock */
+(function bootClock(){
+  $("now").textContent = fmt(new Date());
+  if(timer) clearInterval(timer);
+  timer = setInterval(()=> $("now").textContent = fmt(new Date()), 500);
+})();
+</script>
+</body>
+</html>
