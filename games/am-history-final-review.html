@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>American History Final Review Game</title>
+  <style>
+    :root {
+      --bg1:#08142f; --bg2:#162f68; --card:#ffffff; --ink:#10203f; --muted:#64748b;
+      --blue:#2563eb; --green:#16a34a; --red:#dc2626; --gold:#f59e0b; --line:#dbeafe;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+      color:var(--ink); background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      min-height:100vh;
+    }
+    .wrap { width:min(1100px,94vw); margin:0 auto; padding:28px 0 42px; }
+    .hero {
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18);
+      border-radius:24px; padding:24px; color:white; box-shadow:0 18px 40px rgba(0,0,0,.25);
+    }
+    .hero-top { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+    h1 { margin:0 0 6px; font-size:clamp(2rem,4vw,3.1rem); letter-spacing:-.04em; }
+    .subtitle { margin:0; opacity:.88; font-size:1.05rem; }
+    .pill-row { display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+    .pill {
+      display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:8px 12px;
+      background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.2); color:white; font-weight:800; font-size:.86rem;
+    }
+    .pill.live { background:rgba(22,163,74,.95); }
+    .panel {
+      margin-top:18px; background:var(--card); border-radius:24px; padding:24px;
+      box-shadow:0 20px 48px rgba(0,0,0,.22);
+    }
+    .start-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:20px; }
+    @media (max-width:800px) { .start-grid { grid-template-columns:1fr; } }
+    .directions h2, .name-card h2 { margin-top:0; }
+    .directions li { margin:8px 0; }
+    label { display:block; font-weight:900; margin-bottom:8px; }
+    input {
+      width:100%; padding:14px 14px; border:2px solid #cbd5e1; border-radius:14px; font-size:1rem;
+    }
+    button {
+      border:0; border-radius:14px; padding:13px 16px; font-weight:900; cursor:pointer;
+      background:var(--blue); color:white; font-size:1rem; box-shadow:0 8px 18px rgba(37,99,235,.25);
+    }
+    button.secondary { background:#0f172a; }
+    button:disabled { opacity:.55; cursor:not-allowed; }
+    .statbar { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px; }
+    @media (max-width:800px) { .statbar { grid-template-columns:repeat(2,1fr); } }
+    .stat {
+      background:#eff6ff; border:1px solid var(--line); border-radius:16px; padding:12px;
+      font-weight:900; color:#1e3a8a;
+    }
+    .progress { height:14px; background:#e5e7eb; border-radius:999px; overflow:hidden; margin-bottom:18px; }
+    .bar { height:100%; width:0%; background:linear-gradient(90deg,#2563eb,#16a34a); transition:.35s ease; }
+    .q-meta { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+    .tag { background:#eef2ff; color:#3730a3; border-radius:999px; padding:6px 10px; font-weight:900; font-size:.82rem; }
+    .question { font-size:1.45rem; font-weight:950; line-height:1.25; margin:12px 0 18px; }
+    .answers { display:grid; gap:11px; }
+    .answer {
+      width:100%; text-align:left; background:white; color:var(--ink); border:2px solid #dbeafe;
+      box-shadow:none; padding:15px 16px; display:flex; gap:12px; align-items:flex-start;
+    }
+    .letter {
+      flex:0 0 auto; width:32px; height:32px; border-radius:999px; display:inline-grid; place-items:center;
+      background:#e0ecff; color:#1d4ed8; font-weight:950;
+    }
+    .answer.correct { border-color:var(--green); background:#ecfdf5; }
+    .answer.correct .letter { background:var(--green); color:white; }
+    .answer.wrong { border-color:var(--red); background:#fef2f2; }
+    .answer.wrong .letter { background:var(--red); color:white; }
+    .feedback {
+      display:none; margin-top:16px; border-radius:18px; padding:16px; border:2px solid #e5e7eb; background:#f8fafc;
+      font-weight:750; line-height:1.45;
+    }
+    .feedback.good { display:block; border-color:#bbf7d0; background:#f0fdf4; color:#14532d; }
+    .feedback.bad { display:block; border-color:#fecaca; background:#fff1f2; color:#7f1d1d; }
+    .footer-actions { display:flex; gap:10px; justify-content:space-between; align-items:center; margin-top:18px; flex-wrap:wrap; }
+    .hidden { display:none !important; }
+    .ticket {
+      border:3px dashed #f59e0b; background:#fffbeb; border-radius:20px; padding:20px; margin-top:16px;
+      color:#78350f;
+    }
+    .ticket h3 { margin:0 0 10px; font-size:1.6rem; }
+    .ticket-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    @media (max-width:700px) { .ticket-grid { grid-template-columns:1fr; } }
+    .small { color:var(--muted); font-size:.92rem; }
+    .errorbox { white-space:pre-wrap; display:none; background:#7f1d1d; color:white; padding:12px; border-radius:12px; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <h1>American History Final Review</h1>
+          <p class="subtitle">50-question Ohio American History standards review. This study game matches the final exam.</p>
+        </div>
+        <div class="pill-row">
+          <span class="pill live">LIVE</span>
+          <span class="pill">50 Questions</span>
+          <span class="pill">Auto-Submit</span>
+          <span class="pill">Hints on Miss</span>
+          <span class="pill">Mastery Ticket</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="startPanel" class="panel">
+      <div class="start-grid">
+        <div class="directions">
+          <h2>Directions</h2>
+          <ul>
+            <li>Enter your name before starting.</li>
+            <li>Click an answer choice to submit automatically.</li>
+            <li>If you miss, read the hint and try again.</li>
+            <li>You must correct each question before advancing.</li>
+            <li>A perfect run earns a mastery ticket.</li>
+          </ul>
+          <p class="small"><strong>Answer distribution:</strong> A = 13, B = 13, C = 12, D = 12.</p>
+        </div>
+        <div class="name-card">
+          <h2>Start Review</h2>
+          <label for="studentName">Student name</label>
+          <input id="studentName" placeholder="Type your full name" autocomplete="name" />
+          <div style="height:12px"></div>
+          <button id="startBtn">Start Game</button>
+          <div id="errorbox" class="errorbox"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gamePanel" class="panel hidden">
+      <div class="statbar">
+        <div class="stat" id="statQuestion">Question 1 / 50</div>
+        <div class="stat" id="statScore">Correct: 0</div>
+        <div class="stat" id="statMisses">Misses: 0</div>
+        <div class="stat" id="statAccuracy">Accuracy: 100%</div>
+      </div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div class="q-meta"><span class="tag" id="csTag">CS1</span><span class="tag">American History</span></div>
+      <div class="question" id="questionText"></div>
+      <div class="answers" id="answers"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="footer-actions"><span class="small" id="statusText">Choose the best answer.</span></div>
+    </section>
+
+    <section id="finishPanel" class="panel hidden">
+      <h2 id="finishTitle">Review Complete</h2>
+      <p id="finishSummary"></p>
+      <div id="ticketArea"></div>
+      <div class="footer-actions"><button id="restartBtn" class="secondary">Restart</button></div>
+    </section>
+  </div>
+
+<script>
+"use strict";
+
+const GAME_TITLE = "American History Final Review Game";
+const questions = [
+  {id:1,cs:"CS1",question:"Which factor helps historians determine if a source is credible?",answers:["The color of the document","The author’s bias and qualifications","The age of the paper","The number of pages"],correct:1,explanation:"Credibility depends on reliability, author perspective, bias, qualifications, and agreement with other sources.",hint:"Think about what makes a source trustworthy."},
+  {id:2,cs:"CS2",question:"Historians use evidence mainly to:",answers:["Avoid making arguments","Memorize dates","Support or refute a thesis","Eliminate disagreement"],correct:2,explanation:"A thesis is a historical claim, and evidence is used to support or refute that claim.",hint:"Think about how historians prove an argument."},
+  {id:3,cs:"CS3",question:"Which is an example of a long-term cause of the Great Migration?",answers:["Jim Crow laws","Factory fires","Television","Airplanes"],correct:0,explanation:"Jim Crow segregation and discrimination pushed many African Americans to leave the South over time.",hint:"Look for the deeper, long-lasting push factor."},
+  {id:4,cs:"CS4",question:"According to the Declaration of Independence, governments receive power from:",answers:["Congress","Kings","The military","Consent of the governed"],correct:3,explanation:"The Declaration says legitimate government is based on the consent of the people.",hint:"Think about who gives government its authority."},
+  {id:5,cs:"CS5",question:"Which precedent was established by the Northwest Ordinance?",answers:["National bank","Public education","Income tax","Electoral College"],correct:1,explanation:"The Northwest Ordinance encouraged schools and education in the Northwest Territory.",hint:"Think about a governing practice for new territories."},
+  {id:6,cs:"CS6",question:"Federalism in the U.S. Constitution divides power between:",answers:["Citizens and courts","Congress and the President","State and national governments","Businesses and labor unions"],correct:2,explanation:"Federalism divides power between the national government and state governments.",hint:"Think about the two levels of government."},
+  {id:7,cs:"CS7",question:"The Anti-Federalists demanded the addition of:",answers:["The Bill of Rights","The New Deal","The Monroe Doctrine","The Marshall Plan"],correct:0,explanation:"Anti-Federalist concerns over individual liberties led to the Bill of Rights.",hint:"Think about protections added after ratification debates."},
+  {id:8,cs:"CS7",question:"Which freedom is protected by the 1st Amendment?",answers:["Trial by jury","Bearing arms","Voting at age 18","Freedom of speech"],correct:3,explanation:"The First Amendment protects speech, religion, press, assembly, and petition.",hint:"Think about one of the five freedoms."},
+  {id:9,cs:"CS8",question:"Industrialization caused many Americans to move from:",answers:["Cities to farms","Rural areas to cities","Europe to Asia","Factories to plantations"],correct:1,explanation:"Industrialization shifted work from farms to factories and encouraged urban growth.",hint:"Think about where factory jobs were located."},
+  {id:10,cs:"CS9",question:"Labor unions fought for:",answers:["Longer workdays","Lower wages","Safer working conditions","More child labor"],correct:2,explanation:"Labor unions pushed for shorter hours, higher pay, safer conditions, and limits on child labor.",hint:"Think about reforms workers wanted."},
+  {id:11,cs:"CS10",question:"The Great Migration involved:",answers:["African Americans moving north","Farmers moving west","Immigrants returning to Europe","Gold miners moving to Alaska"],correct:0,explanation:"The Great Migration was the movement of African Americans from the rural South to northern cities.",hint:"Think about movement away from Jim Crow and toward jobs."},
+  {id:12,cs:"CS11",question:"Which event reflected conflict between Americans and American Indians?",answers:["Battle of Gettysburg","Cuban Missile Crisis","Montgomery Bus Boycott","Wounded Knee Massacre"],correct:3,explanation:"Wounded Knee was one consequence of conflict during westward expansion and reservation policy.",hint:"Think about conflict connected to western settlement."},
+  {id:13,cs:"CS12",question:"Jim Crow laws enforced:",answers:["Racial segregation","Women’s suffrage","School integration","Religious freedom"],correct:0,explanation:"Jim Crow laws institutionalized racial segregation and discrimination after Reconstruction.",hint:"Think about legalized discrimination in the South."},
+  {id:14,cs:"CS13",question:"Progressive reformers were known for:",answers:["Supporting monopolies","Ending public education","Expanding child labor","Fighting political corruption"],correct:3,explanation:"Progressives tried to fix problems caused by industrial capitalism, urbanization, and political corruption.",hint:"Think about reform, not protecting corrupt systems."},
+  {id:15,cs:"CS13",question:"Which Progressive reform increased food safety?",answers:["Homestead Act","Kansas-Nebraska Act","Meat Inspection Act","Dawes Act"],correct:2,explanation:"The Meat Inspection Act improved federal oversight of meatpacking and food safety.",hint:"Think about consumer protection."},
+  {id:16,cs:"CS13",question:"The 19th Amendment granted:",answers:["Freedom of religion","Voting rights to women","Voting rights to 18-year-olds","Direct election of senators"],correct:1,explanation:"The 19th Amendment gave women the constitutional right to vote.",hint:"Think about women’s suffrage."},
+  {id:17,cs:"CS14",question:"Which action helped the United States become a world power?",answers:["Louisiana Purchase","Missouri Compromise","Reconstruction","Spanish-American War"],correct:3,explanation:"The Spanish-American War and overseas expansion helped the U.S. become a global power.",hint:"Think about overseas expansion in the early 1900s."},
+  {id:18,cs:"CS15",question:"Why did the United States reject joining the League of Nations?",answers:["Fear of foreign entanglements","Lack of military power","British opposition","Economic depression"],correct:0,explanation:"Many senators feared the League would pull the United States into foreign conflicts.",hint:"Think about isolationism after World War I."},
+  {id:19,cs:"CS15",question:"The Kellogg-Briand Pact attempted to:",answers:["Promote imperialism","Create NATO","Ban war as national policy","Divide Germany"],correct:2,explanation:"The Kellogg-Briand Pact attempted to outlaw war as an instrument of national policy.",hint:"Think about peace efforts after World War I."},
+  {id:20,cs:"CS16",question:"The Red Scare was fueled by fear of:",answers:["Capitalism","Communism","Imperialism","Fascism"],correct:1,explanation:"The First Red Scare grew from fears of communism, revolution, labor unrest, and immigrants being connected to radical ideas.",hint:"Think about fear after the Russian Revolution."},
+  {id:21,cs:"CS17",question:"Which invention changed communication during the 1920s?",answers:["Cotton gin","Telegraph","Commercial radio","Steam engine"],correct:2,explanation:"Commercial radio broadcasts changed communication and culture during the 1920s.",hint:"Think about mass media in the 1920s."},
+  {id:22,cs:"CS18",question:"The Harlem Renaissance celebrated:",answers:["Western expansion","Industrial growth","Women’s suffrage","African American culture"],correct:3,explanation:"The Harlem Renaissance celebrated African American art, music, literature, and cultural pride.",hint:"Think about Harlem, jazz, art, and literature."},
+  {id:23,cs:"CS18",question:"Prohibition increased:",answers:["Organized crime","Public trust in government","Farm production","Immigration"],correct:0,explanation:"Prohibition contributed to speakeasies and organized crime because alcohol became illegal but demand continued.",hint:"Think about unintended consequences."},
+  {id:24,cs:"CS19",question:"Buying stock “on margin” contributed to:",answers:["World War II","The Great Depression","Reconstruction","The Civil Rights Movement"],correct:1,explanation:"Stock speculation and buying on margin helped create conditions that led to the Great Depression.",hint:"Think about risky borrowing in the stock market."},
+  {id:25,cs:"CS19",question:"Which New Deal program helped protect bank deposits?",answers:["FDIC","TVA","WPA","NATO"],correct:0,explanation:"The Federal Deposit Insurance Corporation protected bank deposits and helped restore confidence in banks.",hint:"Think about deposit insurance."},
+  {id:26,cs:"CS19",question:"The Social Security Act provided:",answers:["Military draft registration","Land grants","Retirement assistance","Free college"],correct:2,explanation:"The Social Security Act created a federal system of retirement and support benefits.",hint:"Think about old-age assistance."},
+  {id:27,cs:"CS20",question:"The Neutrality Acts were designed to:",answers:["Enter World War II","Avoid foreign conflicts","Promote communism","Expand NATO"],correct:1,explanation:"The Neutrality Acts tried to keep the United States out of overseas conflicts in the 1930s.",hint:"Think about isolationism before World War II."},
+  {id:28,cs:"CS20",question:"The attack on Pearl Harbor caused the United States to:",answers:["Leave NATO","Join the League of Nations","Begin the Cold War","Enter World War II"],correct:3,explanation:"Japan’s attack on Pearl Harbor ended U.S. isolationism and led to entry into World War II.",hint:"Think about December 7, 1941."},
+  {id:29,cs:"CS21",question:"During World War II, rationing encouraged Americans to:",answers:["Stop working","Buy luxury items","Save resources for the war effort","Protest the government"],correct:2,explanation:"Rationing limited consumer use of scarce goods so resources could support the war effort.",hint:"Think about conserving food, fuel, and materials."},
+  {id:30,cs:"CS21",question:"Japanese Americans were placed in:",answers:["Internment camps","Military academies","Labor unions","Foreign embassies"],correct:0,explanation:"Japanese Americans were forced into internment camps during World War II.",hint:"Think about wartime mistreatment of a marginalized group."},
+  {id:31,cs:"CS21",question:"The Double V Campaign promoted:",answers:["Victory over poverty only","Voting rights for women","Opposition to World War II","Victory abroad and equality at home"],correct:3,explanation:"The Double V Campaign called for victory over fascism abroad and racism at home.",hint:"Think about African American wartime activism."},
+  {id:32,cs:"CS22",question:"Atomic weapons changed warfare because they:",answers:["Increased trench warfare","Could cause massive destruction","Eliminated military alliances","Ended all future wars"],correct:1,explanation:"Atomic weapons introduced a level of destructive power that changed warfare and began the nuclear age.",hint:"Think about mass destruction."},
+  {id:33,cs:"CS23",question:"The goal of containment was to:",answers:["Spread democracy through Europe","Expand the Soviet Union","Reduce world trade","Stop the spread of communism"],correct:3,explanation:"Containment was the U.S. policy of stopping the spread of communism during the Cold War.",hint:"Think about limiting Soviet influence."},
+  {id:34,cs:"CS23",question:"Which alliance was formed to resist Soviet expansion?",answers:["League of Nations","NATO","Warsaw Pact","Axis Powers"],correct:1,explanation:"NATO was a U.S.-backed alliance created to resist Soviet expansion in Europe.",hint:"Think about the Western alliance."},
+  {id:35,cs:"CS24",question:"McCarthyism involved:",answers:["Opposition to civil rights","Support for isolationism","Fear of communist influence","Expansion of women’s rights"],correct:2,explanation:"McCarthyism reflected Cold War fears of communist infiltration and subversion.",hint:"Think about accusations during the Second Red Scare."},
+  {id:36,cs:"CS25",question:"Which conflict divided Americans and sparked anti-war protests?",answers:["Vietnam War","Korean War","Spanish-American War","Gulf War"],correct:0,explanation:"The Vietnam War deeply divided Americans and sparked major anti-war protests.",hint:"Think about the war tied to protests in the 1960s and 1970s."},
+  {id:37,cs:"CS25",question:"The Cuban Missile Crisis involved tensions between the:",answers:["U.S. and Soviet Union","U.S. and Germany","U.S. and Japan","U.S. and China"],correct:0,explanation:"The Cuban Missile Crisis was a Cold War confrontation between the United States and Soviet Union.",hint:"Think about nuclear missiles in Cuba."},
+  {id:38,cs:"CS26",question:"The fall of the Berlin Wall symbolized:",answers:["The beginning of World War II","The end of the Cold War","The Great Depression","The Progressive Era"],correct:1,explanation:"The fall of the Berlin Wall symbolized the collapse of communist control in Eastern Europe and the end of the Cold War.",hint:"Think about 1989 and the decline of communism."},
+  {id:39,cs:"CS27",question:"Brown v. Board of Education declared:",answers:["Women could vote","Slavery illegal","Segregation in schools unconstitutional","Income taxes constitutional"],correct:2,explanation:"Brown v. Board of Education ruled that school segregation violated equal protection.",hint:"Think about the Supreme Court and public schools."},
+  {id:40,cs:"CS27",question:"The Montgomery Bus Boycott protested:",answers:["Factory conditions","School funding","Immigration quotas","Segregation on buses"],correct:3,explanation:"The Montgomery Bus Boycott challenged segregated seating on public buses.",hint:"Think about Rosa Parks and public transportation."},
+  {id:41,cs:"CS28",question:"The Baby Boom contributed to:",answers:["Declining birth rates","Population growth in suburbs","Urban overcrowding in Europe","The Dust Bowl"],correct:1,explanation:"The Baby Boom and postwar prosperity helped fuel suburban growth.",hint:"Think about families after World War II."},
+  {id:42,cs:"CS29",question:"Redlining discriminated against:",answers:["Factory owners","Veterans","Farmers","Minority home buyers"],correct:3,explanation:"Redlining was a discriminatory loan practice that limited housing opportunities for minorities.",hint:"Think about unfair access to home loans."},
+  {id:43,cs:"CS30",question:"The Environmental Protection Agency (EPA) was created to:",answers:["Protect the environment","Promote world trade","Expand military spending","Fight communism"],correct:0,explanation:"The EPA was created to address pollution and environmental protection concerns.",hint:"Think about government regulation of pollution."},
+  {id:44,cs:"CS30",question:"Reaganomics focused on:",answers:["Collective farming","Isolationism","Supply-side economics","Prohibition"],correct:2,explanation:"Reaganomics emphasized supply-side economics, tax cuts, and deregulation.",hint:"Think about the economic policy of the Reagan era."},
+  {id:45,cs:"CS31",question:"Globalization has contributed to:",answers:["More manufacturing jobs in the Rust Belt","The end of technology","Growth of service industry jobs","Elimination of trade deficits"],correct:2,explanation:"Globalization and overseas competition contributed to a shift from manufacturing to service-sector work.",hint:"Think about the changing U.S. economy after 1991."},
+  {id:46,cs:"CS32",question:"The USA PATRIOT Act increased debate over:",answers:["Civil liberties and national security","Women’s suffrage","Child labor","Segregation"],correct:0,explanation:"The USA PATRIOT Act raised questions about balancing national security with civil liberties after 9/11.",hint:"Think about rights versus security."},
+  {id:47,cs:"CS32",question:"The Transportation Security Administration (TSA) was created after:",answers:["Pearl Harbor","September 11 attacks","World War I","The Cold War"],correct:1,explanation:"The TSA was created after the September 11 attacks to strengthen transportation security.",hint:"Think about airport security after 9/11."},
+  {id:48,cs:"CS33",question:"Outsourcing refers to:",answers:["Expanding public schools","Increasing tariffs","Ending immigration","Sending jobs overseas"],correct:3,explanation:"Outsourcing means moving jobs or production to other countries.",hint:"Think about globalized business decisions."},
+  {id:49,cs:"CS33",question:"Which issue became a major foreign policy challenge after 9/11?",answers:["War on terrorism","Reconstruction","Homestead policies","Prohibition"],correct:0,explanation:"After 9/11, the war on terrorism became a major U.S. foreign policy challenge.",hint:"Think about U.S. military and security policy after 2001."},
+  {id:50,cs:"CS33",question:"Which organization addresses international economic cooperation?",answers:["NATO","WTO","HUAC","CCC"],correct:1,explanation:"The World Trade Organization deals with international trade rules and economic cooperation.",hint:"Think about global trade, not military alliances."}
+];
+
+let current = 0;
+let correctCount = 0;
+let missCount = 0;
+let locked = false;
+let studentName = "";
+let startTime = null;
+let endTime = null;
+
+const $ = (id) => document.getElementById(id);
+
+window.addEventListener("error", (e) => {
+  const box = $("errorbox");
+  if (box) {
+    box.style.display = "block";
+    box.textContent = "Runtime error: " + e.message + "\nLine: " + e.lineno;
+  }
+});
+
+function formatTime(d) {
+  return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" });
+}
+
+function formatDate(d) {
+  return d.toLocaleDateString([], { year: "numeric", month: "short", day: "numeric" });
+}
+
+function elapsedText(ms) {
+  const total = Math.max(0, Math.round(ms / 1000));
+  const min = Math.floor(total / 60);
+  const sec = total % 60;
+  return `${min} min ${sec} sec`;
+}
+
+function startGame() {
+  studentName = $("studentName").value.trim();
+  if (!studentName) {
+    $("errorbox").style.display = "block";
+    $("errorbox").textContent = "Please enter your name before starting.";
+    return;
+  }
+  $("errorbox").style.display = "none";
+  current = 0;
+  correctCount = 0;
+  missCount = 0;
+  locked = false;
+  startTime = new Date();
+  $("startPanel").classList.add("hidden");
+  $("finishPanel").classList.add("hidden");
+  $("gamePanel").classList.remove("hidden");
+  renderQuestion();
+}
+
+function updateStats() {
+  $("statQuestion").textContent = `Question ${current + 1} / ${questions.length}`;
+  $("statScore").textContent = `Correct: ${correctCount}`;
+  $("statMisses").textContent = `Misses: ${missCount}`;
+  const attempts = correctCount + missCount;
+  const acc = attempts === 0 ? 100 : Math.round((correctCount / attempts) * 100);
+  $("statAccuracy").textContent = `Accuracy: ${acc}%`;
+  $("bar").style.width = `${(current / questions.length) * 100}%`;
+}
+
+function renderQuestion() {
+  locked = false;
+  const q = questions[current];
+  updateStats();
+  $("csTag").textContent = q.cs;
+  $("questionText").textContent = q.question;
+  $("feedback").className = "feedback";
+  $("feedback").textContent = "";
+  $("statusText").textContent = "Choose the best answer.";
+  const container = $("answers");
+  container.innerHTML = "";
+
+  q.answers.forEach((answer, index) => {
+    const btn = document.createElement("button");
+    btn.className = "answer";
+    btn.type = "button";
+    btn.innerHTML = `<span class="letter">${String.fromCharCode(65 + index)}</span><span>${answer}</span>`;
+    btn.addEventListener("click", () => chooseAnswer(index, btn));
+    container.appendChild(btn);
+  });
+}
+
+function chooseAnswer(index, btn) {
+  if (locked) return;
+  const q = questions[current];
+
+  if (index === q.correct) {
+    locked = true;
+    btn.classList.add("correct");
+    correctCount++;
+    $("feedback").className = "feedback good";
+    $("feedback").innerHTML = `<strong>Correct.</strong> ${q.explanation}`;
+    $("statusText").textContent = "Correct — advancing shortly.";
+    updateStats();
+    setTimeout(advance, 4200);
+  } else {
+    missCount++;
+    btn.classList.add("wrong");
+    btn.disabled = true;
+    $("feedback").className = "feedback bad";
+    $("feedback").innerHTML = `<strong>Not yet.</strong> ${q.hint}`;
+    $("statusText").textContent = "Use the hint and select again.";
+    updateStats();
+  }
+}
+
+function advance() {
+  current++;
+  if (current >= questions.length) finishGame();
+  else renderQuestion();
+}
+
+function finishGame() {
+  endTime = new Date();
+  $("gamePanel").classList.add("hidden");
+  $("finishPanel").classList.remove("hidden");
+  const total = questions.length;
+  const perfect = missCount === 0 && correctCount === total;
+
+  $("finishTitle").textContent = perfect ? "LEGENDARY MASTERY ACHIEVED" : "Review Complete";
+  $("finishSummary").innerHTML = `
+    Final result: <strong>${correctCount} / ${total}</strong> corrected through the review.<br>
+    Missed attempts: <strong>${missCount}</strong><br>
+    Runtime: <strong>${elapsedText(endTime - startTime)}</strong>
+  `;
+
+  if (perfect) {
+    $("ticketArea").innerHTML = `
+      <div class="ticket">
+        <h3>PERFECT RUN TICKET</h3>
+        <div class="ticket-grid">
+          <div><strong>Name:</strong> ${studentName}</div>
+          <div><strong>Date:</strong> ${formatDate(endTime)}</div>
+          <div><strong>Start Time:</strong> ${formatTime(startTime)}</div>
+          <div><strong>End Time:</strong> ${formatTime(endTime)}</div>
+          <div><strong>Runtime:</strong> ${elapsedText(endTime - startTime)}</div>
+          <div><strong>Score:</strong> 50 / 50, 0 misses</div>
+        </div>
+        <p style="margin-bottom:0"><strong>Game:</strong> ${GAME_TITLE}</p>
+      </div>`;
+  } else {
+    $("ticketArea").innerHTML = `<div class="feedback bad" style="display:block">No mastery ticket generated. Restart and complete a perfect run with 0 missed attempts.</div>`;
+  }
+}
+
+function restart() {
+  $("finishPanel").classList.add("hidden");
+  $("startPanel").classList.remove("hidden");
+  $("studentName").focus();
+}
+
+$("startBtn").addEventListener("click", startGame);
+$("studentName").addEventListener("keydown", (e) => { if (e.key === "Enter") startGame(); });
+$("restartBtn").addEventListener("click", restart);
+</script>
+</body>
+</html>
